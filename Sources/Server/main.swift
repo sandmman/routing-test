@@ -35,8 +35,12 @@ router.get("/orders") { (queryParams: QueryParams, respondWith: ([User]?, Reques
         print("k1(strs): \(v1)")
     }
 
-     if let v1: [Int] = queryParams["k1"].intArray {
+    if let v1: [Int] = queryParams["k1"].intArray {
         print("k1(ints): \(v1)")
+    }
+
+    if let v1: Test = queryParams["k1"].codable(Test.self) {
+        print("k1(codable): \(v1)")
     }
 
 

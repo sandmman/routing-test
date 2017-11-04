@@ -18,3 +18,12 @@ public struct User: Codable {
     }
 
 }
+
+public struct Test: Codable {
+    public let name: String
+    public init(name: String) {
+        self.name = name
+    }
+}
+
+

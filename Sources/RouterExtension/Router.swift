@@ -64,6 +64,17 @@ public struct ParamValue {
         }
      }
 
+     public func codable<T: Codable>(_ type: T.Type) -> T? {
+        guard let rawValue = rawValue else {
+            return nil
+        } 
+        guard let data = rawValue.data(using: .utf8) else {
+            return nil
+        }
+        let obj: T? = try? JSONDecoder().decode(type, from: data)
+        return obj
+     }
+
     public init(_ rawValue: String?) {
         self.rawValue = rawValue
     }
