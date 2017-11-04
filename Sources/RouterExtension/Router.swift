@@ -24,10 +24,44 @@ extension Router {
                 }
                 next()
             }
-            // TODO: Update population logic for queryParameters (it does not support multiple values bound to the same key)
             print(request.queryParameters)
             let queryParameters = QueryParams(request.queryParameters)
             handler(queryParameters, resultHandler)
+        }
+    }
+
+    public func get<O: Codable>(_ route: String, handler: @escaping (Identifier..., ([O]?, RequestError?) -> Void) -> Void) {
+        get(route) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request")
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+
+            let id = request.parameters["id"] ?? ""
+            //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
+           let pattern1 = "\\/(:.+)/"
+            let pattern2 = "\\/(:.+)$"
+            let str = "/users/:id1/orders/:id2"
+            let regex = try! NSRegularExpression(pattern: pattern1, options: [])
+            let matches = regex.matches(in: str, options: [], range: NSRange(location: 0, length: str.characters.count))
+            print(matches.count)
+            let r: String = route
+            
+           // handler(resultHandler)
         }
     }
 }
