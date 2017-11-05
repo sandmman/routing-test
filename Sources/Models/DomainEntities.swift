@@ -19,6 +19,13 @@ public struct User: Codable {
 
 }
 
+public struct Order: Codable {
+    public let id: Int
+    public init(id: Int) {
+        self.id = id
+    }
+}
+
 public struct Test: Codable {
     public let name: String
     public init(name: String) {

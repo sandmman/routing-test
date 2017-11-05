@@ -24,17 +24,17 @@ extension Router {
                 }
                 next()
             }
-            print(request.queryParameters)
+            Log.verbose("queryParameters: \(request.queryParameters)")
             let queryParameters = QueryParams(request.queryParameters)
             handler(queryParameters, resultHandler)
         }
     }
 
-    public func get<O: Codable>(_ route: String, handler: @escaping (Identifier..., ([O]?, RequestError?) -> Void) -> Void) {
+    public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
         get(route) { request, response, next in
             Log.verbose("Received GET (plural) type-safe request")
             // Define result handler
-            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+            let resultHandler: CodableResultClosure<O> = { result, error in
                 do {
                     if let err = error {
                         let status = self.httpStatusCode(from: err)
@@ -51,18 +51,30 @@ extension Router {
                 next()
             }
 
-            let id = request.parameters["id"] ?? ""
-            //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
-           let pattern1 = "\\/(:.+)/"
-            let pattern2 = "\\/(:.+)$"
-            let str = "/users/:id1/orders/:id2"
-            let regex = try! NSRegularExpression(pattern: pattern1, options: [])
-            let matches = regex.matches(in: str, options: [], range: NSRange(location: 0, length: str.characters.count))
-            print(matches.count)
-            let r: String = route
-            
-           // handler(resultHandler)
+            let params = self.extractParams(from: route)
+            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try! Id(value: $0) }
+            handler(identifiers, resultHandler)
         }
+    }
+
+    private func extractParams(from route: String) -> [String] {
+        //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
+        let pattern = "/:([^/]*)(?:/|\\z)"
+        // pattern is valid; hence we force unwrap next value
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let matches = regex.matches(in: route, options: [], range: NSRange(location: 0, length: route.characters.count))
+        let parameters: [String] = matches.map({ (value: NSTextCheckingResult) -> String in
+            let range = value.range(at: 1)
+            let start = route.index(route.startIndex, offsetBy: range.location)
+            let end = route.index(start, offsetBy: range.length)
+            // let parameter = String(route[start..<end])
+            // let value = request.parameters[parameter] ?? ""
+            // let identifier = try! Id(value: value)
+            // return identifier
+            //let _ = try! Id(value:value)
+            return String(route[start..<end])
+        })
+        return parameters
     }
 }
 
