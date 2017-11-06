@@ -21,8 +21,10 @@ public struct User: Codable {
 
 public struct Order: Codable {
     public let id: Int
-    public init(id: Int) {
+    public let name: String
+    public init(id: Int, name: String) {
         self.id = id
+        self.name = name
     }
 }
 

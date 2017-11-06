@@ -110,7 +110,7 @@ public struct ParamValue {
         }
      }
 
-     public func codable<T: Codable>(_ type: T.Type) -> T? {
+    public func codable<T: Codable>(_ type: T.Type) -> T? {
         guard let rawValue = rawValue else {
             return nil
         } 
@@ -120,6 +120,58 @@ public struct ParamValue {
         let obj: T? = try? JSONDecoder().decode(type, from: data)
         return obj
      }
+
+    public var float: Float? {
+        get {
+            guard let rawValue = rawValue else {
+                return nil
+            }            
+            return Float(rawValue)
+        }
+    }
+
+    public var double: Double? {
+        get {
+            guard let rawValue = rawValue else {
+                return nil
+            }            
+            return Double(rawValue)
+        }
+    }
+
+    public var floatArray: [Float]? {
+         get { 
+            if let strs: [String] = rawValue?.components(separatedBy: ",") {
+                let floats: [Float] = strs.map { Float($0) }.filter { $0 != nil }.map { $0! }
+                if floats.count == strs.count {
+                    return floats
+                }
+            }
+            return nil
+        }
+     }
+
+    public var boolean: Bool? {
+        get {
+            guard let rawValue = rawValue else {
+                return nil
+            }            
+            return Bool(rawValue)
+        }
+    }
+
+    public var doubleArray: [Double]? {
+         get { 
+            if let strs: [String] = rawValue?.components(separatedBy: ",") {
+                let doubles: [Double] = strs.map { Double($0) }.filter { $0 != nil }.map { $0! }
+                if doubles.count == strs.count {
+                    return doubles
+                }
+            }
+            return nil
+        }
+     }
+
 
     public init(_ rawValue: String?) {
         self.rawValue = rawValue

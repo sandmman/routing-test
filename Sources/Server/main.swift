@@ -6,13 +6,13 @@ import Models
 // Dictionay of Employee entities
 var employeeStore: [Int: Employee] = [:]
 var userStore: [Int: User] = [1: User(id: 1, name: "Mike"), 2: User(id: 2, name: "Chris"), 3: User(id: 3, name: "Ricardo")]
+var orderStore: [Int: Order] = [1: Order(id: 1, name: "order1"), 2: Order(id: 2, name: "order2"), 3: Order(id: 3, name: "order3")]
 
 let router = Router()
 
 router.get("/test") { (request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) in
-    let p = request.queryParameters
-    let t = type(of: p)
-    print(t)
+    response.status(.OK)
+    next()
 }
 
 router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
@@ -44,9 +44,13 @@ router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, Request
 router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
     print("GET on /orders with query parameters")
     print("identifiers: \(identifiers)")
-    let order = Order(id: identifiers[1])
+    let order = orderStore[identifiers[1]]
     respondWith(order, nil)
 }
+
+// Besides what we see above, we would also need an additional API method to address the need where we have
+// queryParams and multiple identifiers...
+// router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)
