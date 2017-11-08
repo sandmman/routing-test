@@ -38,6 +38,10 @@ router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, Request
         print("k1(codable): \(v1)")
     }
 
+    if let start = queryParams["start"].int, let end = queryParams["end"].int {
+        print("start: \(start), end: \(end)")
+    }
+
     respondWith(userStore.map({ $0.value }), nil)
 }
 
@@ -46,6 +50,10 @@ router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (O
     print("identifiers: \(identifiers)")
     let order = orderStore[identifiers[1]]
     respondWith(order, nil)
+}
+
+router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestError?) -> Void) in
+
 }
 
 // Besides what we see above, we would also need an additional API method to address the need where we have

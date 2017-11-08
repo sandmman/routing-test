@@ -3,7 +3,13 @@ import KituraContracts
 import LoggerAPI
 import Foundation
 
+// Notes: Only a single variadic parameter '...' is permitted
 extension Router {
+
+    public func get<O: Codable>(_ route: String, handler: (String..., ([O]?, RequestError?) -> Void) -> Void) {
+        //getSafely(route, handler: handler)
+    }
+
     public func get<O: Codable>(_ route: String, handler: @escaping (QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
         get(route) { request, response, next in
             Log.verbose("Received GET (plural) type-safe request")
