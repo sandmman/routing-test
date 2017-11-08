@@ -52,8 +52,14 @@ router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (O
     respondWith(order, nil)
 }
 
+// A possible approach for providing query params... though it seems cleaner to me to use QueryParams
 router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestError?) -> Void) in
+    respondWith(userStore.map({ $0.value }), nil)
+}
 
+// A possible approach for URL parameters & codable
+router.get("path1", Int.parameter, "path2", String.parameter) { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
+    respondWith(userStore.map({ $0.value }), nil)
 }
 
 // Besides what we see above, we would also need an additional API method to address the need where we have

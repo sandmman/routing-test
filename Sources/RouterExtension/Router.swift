@@ -10,6 +10,10 @@ extension Router {
         //getSafely(route, handler: handler)
     }
 
+    public func get<O: Codable>(_ route: String..., handler: (QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
+        //getSafely(route, handler: handler)
+    }
+
     public func get<O: Codable>(_ route: String, handler: @escaping (QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
         get(route) { request, response, next in
             Log.verbose("Received GET (plural) type-safe request")
@@ -196,4 +200,21 @@ public struct QueryParams {
     public init(_ params: [String : String]) {
         self.params = params
     }
+}
+
+extension String {
+    public static var parameter: String {
+        get {
+            return ":string"
+        }
+    }
+}
+
+extension Int {
+    public static var parameter: String {
+        get {
+            return ":int"
+        }
+    }
+
 }
