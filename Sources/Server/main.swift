@@ -58,7 +58,13 @@ router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestErr
 }
 
 // A possible approach for URL parameters & codable
-router.get("path1", Int.parameter, "path2", String.parameter) { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
+router.get("path1", Int.parameter, "path2", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
+    if let param1 = routeParams.next(Int.self) {
+         print("param1: \(param1)")
+    }
+    if let param2 = routeParams.next(String.self) {
+        print("param2: \(param2)")
+    }
     respondWith(userStore.map({ $0.value }), nil)
 }
 

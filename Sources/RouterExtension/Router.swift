@@ -10,8 +10,31 @@ extension Router {
         //getSafely(route, handler: handler)
     }
 
-    public func get<O: Codable>(_ route: String..., handler: (QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
-        //getSafely(route, handler: handler)
+    public func get<O: Codable>(_ routes: String..., handler: @escaping (RouteParams, QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
+        let route = "/" + routes.joined(separator: "/")
+        get(route) { request, response, next in
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            Log.verbose("queryParameters: \(request.queryParameters)")
+            let queryParameters = QueryParams(request.queryParameters)
+            let routeParams = RouteParams(request.parameters)
+            handler(routeParams, queryParameters, resultHandler)
+        }
     }
 
     public func get<O: Codable>(_ route: String, handler: @escaping (QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
@@ -88,7 +111,7 @@ extension Router {
     }
 }
 
-public struct ParamValue {
+public class ParamValue {
     private let rawValue: String?
 
     public var string: String? {
@@ -188,7 +211,7 @@ public struct ParamValue {
     }
 }
 
-public struct QueryParams {
+public class QueryParams {
     private let params: [String : String]
     public var count: Int {
         get { return params.count } 
@@ -199,6 +222,22 @@ public struct QueryParams {
     }
     public init(_ params: [String : String]) {
         self.params = params
+    }
+}
+
+public class RouteParams {
+    private var iterator: IndexingIterator<Array<String>>
+    
+    init(_ params: [String : String]) {
+        let values = params.map { $0.1 }
+        self.iterator = values.makeIterator()
+    }
+
+    public func next<Id: Identifier>(_ type: Id.Type) -> Id? {
+        guard let item = iterator.next() else {
+            return nil
+        }
+        return try? Id(value: item)
     }
 }
 

@@ -43,3 +43,6 @@ func test(a1: String..., b1: Int, c1: Float) {
 }
 
 test(a1: "", "", "", b1: 1, c1: 2.3)
+let routes: [String] = ["users", ":int", "orders", ":string"]
+let route = "/" + routes.joined(separator: "/")
+print("route: \(route)")
