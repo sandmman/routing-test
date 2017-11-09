@@ -1,7 +1,7 @@
 import Models
 import Foundation
 
-print("Client running...")
+print("This is just a playground for trying things out...")
 
 func xyz(input: Codable) {
     print("----------")
@@ -46,3 +46,12 @@ test(a1: "", "", "", b1: 1, c1: 2.3)
 let routes: [String] = ["users", ":int", "orders", ":string"]
 let route = "/" + routes.joined(separator: "/")
 print("route: \(route)")
+
+let json = """
+{
+ "name": "John Doe",
+}
+""".data(using: .utf8)! // our data in native (JSON) format
+
+ let obj: Test = try! JSONDecoder().decode(Test.self, from: json)
+ print("obj: \(obj)")

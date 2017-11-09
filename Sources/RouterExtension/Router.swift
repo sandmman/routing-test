@@ -12,6 +12,7 @@ extension Router {
 
     public func get<O: Codable>(_ routes: String..., handler: @escaping (RouteParams, QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
         let route = "/" + routes.joined(separator: "/")
+        Log.verbose("Computed route is: \(route)")
         get(route) { request, response, next in
             // Define result handler
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -32,7 +33,8 @@ extension Router {
             }
             Log.verbose("queryParameters: \(request.queryParameters)")
             let queryParameters = QueryParams(request.queryParameters)
-            let routeParams = RouteParams(request.parameters)
+            let routeParamKeys = self.extractParams(from: route)
+            let routeParams = RouteParams(keys: routeParamKeys, dict: request.parameters)
             handler(routeParams, queryParameters, resultHandler)
         }
     }
@@ -150,6 +152,8 @@ public class ParamValue {
         guard let data = rawValue.data(using: .utf8) else {
             return nil
         }
+
+        print("rawValue: \(rawValue)")
         let obj: T? = try? JSONDecoder().decode(type, from: data)
         return obj
      }
@@ -228,8 +232,8 @@ public class QueryParams {
 public class RouteParams {
     private var iterator: IndexingIterator<Array<String>>
     
-    init(_ params: [String : String]) {
-        let values = params.map { $0.1 }
+    init(keys: [String], dict: [String : String]) {
+        let values = keys.map { dict[$0]! }
         self.iterator = values.makeIterator()
     }
 
