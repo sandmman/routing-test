@@ -77,7 +77,7 @@ router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestErr
 // We could also provide route params and query params as this: Params.route, Params.query
 // Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
 // way we do below...
-// localhost:8080/users/1234/orders/1VZXY3
+// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
 router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     if let param1 = routeParams.next(Int.self) {
          print("route param1 (int): \(param1)")
@@ -87,6 +87,10 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
     }
      respondWith(orderStore.map({ $0.value }), nil)
 }
+
+// router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in 
+
+// }
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)

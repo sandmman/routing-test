@@ -2,6 +2,7 @@ import Kitura
 import KituraContracts
 import LoggerAPI
 import Foundation
+import Contracts
 
 // Notes: Only a single variadic parameter '...' is permitted
 extension Router {
@@ -89,6 +90,32 @@ extension Router {
             let params = self.extractParams(from: route)
             let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try! Id(value: $0) }
             handler(identifiers, resultHandler)
+        }
+    }
+
+    public func get<O: Codable>(_ route: String, handler: @escaping (Query, ([O]?, RequestError?) -> Void) -> Void) {
+        get(route) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request")
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            Log.verbose("queryParameters: \(request.queryParameters)")
+            //let queryParameters = QueryParams(request.queryParameters)
+            //handler(queryParameters, resultHandler)
         }
     }
 

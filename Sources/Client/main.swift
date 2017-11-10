@@ -1,5 +1,7 @@
-import Models
 import Foundation
+import Models
+import Contracts
+//import LoggerAPI
 
 print("This is just a playground for trying things out...")
 
@@ -7,7 +9,6 @@ func xyz(input: Codable) {
     print("----------")
     print(input.self)
     print("----------")
-
 }
 
 func abc<I: Codable>(input: I) {
@@ -39,7 +40,7 @@ closure2("hello", 22)
 closure3("hello", 22, 272, 2892)
 
 func test(a1: String..., b1: Int, c1: Float) {
-
+    //empty method
 }
 
 test(a1: "", "", "", b1: 1, c1: 2.3)
@@ -53,5 +54,45 @@ let json = """
 }
 """.data(using: .utf8)! // our data in native (JSON) format
 
- let obj: Test = try! JSONDecoder().decode(Test.self, from: json)
- print("obj: \(obj)")
+let testObj: Test = try! JSONDecoder().decode(Test.self, from: json)
+print("testObj: \(testObj)")
+ 
+
+//https://stackoverflow.com/questions/46327302/init-an-object-conforming-to-codable-with-a-dictionary-array/46327303#46327303
+//https://makeitnew.io/reflection-in-swift-68a06ba0cf0e
+//https://stackoverflow.com/questions/33776699/how-to-get-a-mirror-in-swift-without-creating-an-instance
+
+
+func createQuery<Q: Query>(from rawParams: [String : String], queryType: Q.Type) throws -> Q {
+    var transformedDictionary: [String : Any] = [:]
+    let emptyQuery = queryType.init()
+    let queryMirror = Mirror(reflecting: emptyQuery)
+    for (name, value) in queryMirror.children {
+        guard let name = name else { continue }
+        guard let itemValue = rawParams[name] else { continue }
+        //print("\(name): \(type(of: value)) = '\(value)'")
+        let itemType = type(of: value)
+        switch itemType {
+            case is Int.Type, is Optional<Int>.Type:
+                transformedDictionary[name] = Int(itemValue)
+            case is String.Type, is Optional<String>.Type:
+                transformedDictionary[name] = itemValue
+            case is Float.Type, is Optional<Float>.Type:
+                transformedDictionary[name] = Float(itemValue)
+            case is Double.Type, is Optional<Double>.Type:
+                transformedDictionary[name] = Double(itemValue)
+            default:
+                print("default: \(itemType)")
+                transformedDictionary[name] = itemValue
+        }
+    }
+
+    print("transformed dictionary: \(transformedDictionary)")
+    let jsonData: Data = try JSONSerialization.data(withJSONObject: transformedDictionary)
+    let query: Q = try JSONDecoder().decode(Q.self, from: jsonData)
+    return query
+}
+
+let rawParams: [String : String] = ["id" : "71791791", "name" : "john doe"]
+let query: QueryTest = try createQuery(from: rawParams, queryType: QueryTest.self)
+print("query: \(query)")
