@@ -3,6 +3,49 @@ import Models
 import Contracts
 //import LoggerAPI
 
+private extension String {
+    var intArray: [Int]? {
+        let strs: [String] = self.components(separatedBy: ",")
+        let ints: [Int] = strs.map { Int($0) }.filter { $0 != nil }.map { $0! }
+        if ints.count == strs.count {
+            return ints
+        }
+        return nil
+    }
+
+    var floatArray: [Float]? {
+        let strs: [String] = self.components(separatedBy: ",")
+        let floats: [Float] = strs.map { Float($0) }.filter { $0 != nil }.map { $0! }
+        if floats.count == strs.count {
+            return floats
+        }
+        return nil
+    }
+
+    var doubleArray: [Double]? { 
+        let strs: [String] = self.components(separatedBy: ",")
+        let doubles: [Double] = strs.map { Double($0) }.filter { $0 != nil }.map { $0! }
+        if doubles.count == strs.count {
+            return doubles
+        }
+        return nil
+    }
+
+    var stringArray: [String] {
+        let strs: [String] = self.components(separatedBy: ",")
+        return strs
+    }
+
+    func codable<T: Codable>(_ type: T.Type) -> T? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        let obj: T? = try? JSONDecoder().decode(type, from: data)
+        return obj
+     }
+
+}
+
 print("This is just a playground for trying things out...")
 
 func xyz(input: Codable) {
@@ -70,29 +113,54 @@ func createQuery<Q: Query>(from rawParams: [String : String], queryType: Q.Type)
     for (name, value) in queryMirror.children {
         guard let name = name else { continue }
         guard let itemValue = rawParams[name] else { continue }
-        //print("\(name): \(type(of: value)) = '\(value)'")
+        print("\(name): \(type(of: value)) = '\(value)'")
         let itemType = type(of: value)
         switch itemType {
+            // Ints
             case is Int.Type, is Optional<Int>.Type:
                 transformedDictionary[name] = Int(itemValue)
+            case is Array<Int>.Type, is Optional<Array<Int>>.Type:
+                if let ints = itemValue.intArray {
+                    transformedDictionary[name] = ints
+                }
+                // log warning
+            // Strings
             case is String.Type, is Optional<String>.Type:
                 transformedDictionary[name] = itemValue
+            case is Array<String>.Type, is Optional<Array<String>>.Type:
+                transformedDictionary[name] = itemValue.stringArray
+            // Floats
             case is Float.Type, is Optional<Float>.Type:
                 transformedDictionary[name] = Float(itemValue)
+            case is Array<Float>.Type, is Optional<Array<Float>>.Type:
+                if let floats = itemValue.floatArray {
+                    transformedDictionary[name] = floats
+                }
+                // log warning
+            // Doubles
             case is Double.Type, is Optional<Double>.Type:
                 transformedDictionary[name] = Double(itemValue)
+            case is Array<Double>.Type, is Optional<Array<Double>>.Type:
+                if let doubles = itemValue.doubleArray {
+                    transformedDictionary[name] = doubles
+                }
+                // log warning
             default:
+                // log warning
                 print("default: \(itemType)")
                 transformedDictionary[name] = itemValue
         }
     }
 
     print("transformed dictionary: \(transformedDictionary)")
+    if transformedDictionary.count != rawParams.count {
+        print("warning.... query parameters provided to the route were not used...")
+    }
     let jsonData: Data = try JSONSerialization.data(withJSONObject: transformedDictionary)
     let query: Q = try JSONDecoder().decode(Q.self, from: jsonData)
     return query
 }
 
-let rawParams: [String : String] = ["id" : "71791791", "name" : "john doe"]
+let rawParams: [String : String] = ["id" : "71791791", "name" : "john doe", "counts": "3,4,5,6,7"]
 let query: QueryTest = try createQuery(from: rawParams, queryType: QueryTest.self)
 print("query: \(query)")
