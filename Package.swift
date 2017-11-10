@@ -25,8 +25,8 @@ let package = Package(
         .target(name: "Contracts", dependencies: []),
         .target(name: "Extensions", dependencies: []),
         .target(name: "Models", dependencies: [.target(name: "Contracts")]),
-        .target(name: "Client", dependencies: [.target(name: "Models"), "Extensions"]),
-        .target(name: "RouterExtension", dependencies: [.target(name: "Models"), "Kitura"]),
+        .target(name: "Client", dependencies: [.target(name: "Models"), .target(name: "Extensions")]),
+        .target(name: "RouterExtension", dependencies: [.target(name: "Models"), .target(name: "Extensions"), .target(name: "Contracts"), "Kitura"]),
         .target(
             name: "Server",
             dependencies: [.target(name: "Models"), .target(name: "RouterExtension"), "Kitura"]

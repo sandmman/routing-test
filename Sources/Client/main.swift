@@ -2,7 +2,6 @@ import Foundation
 import Models
 import Contracts
 import Extensions
-//import LoggerAPI
 
 print("This is just a playground for trying things out...")
 
