@@ -2,6 +2,7 @@ import Kitura
 import Foundation
 import Extensions
 import Contracts
+import LoggerAPI
 
 extension Router {
     func createQuery<Q: Query>(from rawParams: [String : String], queryType: Q.Type) throws -> Q {
@@ -21,7 +22,7 @@ extension Router {
                     if let ints = itemValue.intArray {
                         transformedDictionary[name] = ints
                     }
-                    // log warning
+                    Log.warning("Could not process query parameter named '\(name)'.")
                 // Strings
                 case is String.Type, is Optional<String>.Type:
                     transformedDictionary[name] = itemValue
@@ -34,7 +35,7 @@ extension Router {
                     if let floats = itemValue.floatArray {
                         transformedDictionary[name] = floats
                     }
-                    // log warning
+                    Log.warning("Could not process query parameter named '\(name)'.")
                 // Doubles
                 case is Double.Type, is Optional<Double>.Type:
                     transformedDictionary[name] = Double(itemValue)
@@ -42,20 +43,19 @@ extension Router {
                     if let doubles = itemValue.doubleArray {
                         transformedDictionary[name] = doubles
                     }
-                    // log warning
+                    Log.warning("Could not process query parameter named '\(name)'.")
                 default:
-                    // log warning
-                    print("default: \(itemType)")
-                    transformedDictionary[name] = itemValue
+                    Log.warning("Could not process query parameter named '\(name)'.")
             }
         }
 
-        print("transformed dictionary: \(transformedDictionary)")
+        Log.verbose("Transformed query parameters: \(transformedDictionary).")
         if transformedDictionary.count != rawParams.count {
-            print("warning.... query parameters provided to the route were not used...")
+            Log.warning("One or more query parameters provided in the request were not processed.")
         }
         let jsonData: Data = try JSONSerialization.data(withJSONObject: transformedDictionary)
         let query: Q = try JSONDecoder().decode(Q.self, from: jsonData)
+        Log.verbose("Query instance: \(query)")
         return query
     }
 

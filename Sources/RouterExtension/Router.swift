@@ -93,7 +93,7 @@ extension Router {
         }
     }
 
-    public func get<O: Codable>(_ route: String, handler: @escaping (Query, ([O]?, RequestError?) -> Void) -> Void) {
+    public func get<O: Codable, Q: Query>(_ route: String, handler: @escaping (Q, ([O]?, RequestError?) -> Void) -> Void) {
         get(route) { request, response, next in
             Log.verbose("Received GET (plural) type-safe request")
             // Define result handler
@@ -114,8 +114,9 @@ extension Router {
                 next()
             }
             Log.verbose("queryParameters: \(request.queryParameters)")
-            //let queryParameters = QueryParams(request.queryParameters)
-            //handler(queryParameters, resultHandler)
+            //todo: add do try block
+            let query: Q = try self.createQuery(from: request.queryParameters , queryType: Q.self)
+            handler(query, resultHandler)
         }
     }
 

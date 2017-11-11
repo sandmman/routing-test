@@ -88,9 +88,9 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
      respondWith(orderStore.map({ $0.value }), nil)
 }
 
-// router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in 
+router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in 
 
-// }
+}
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)
