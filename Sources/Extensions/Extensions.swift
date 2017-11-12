@@ -33,6 +33,26 @@ extension String {
         return strs
     }
 
+    private var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return dateFormatter
+    }
+
+    public var dateArray: [Date]? {
+        let strs: [String] = self.components(separatedBy: ",")
+        let dates: [Date] = strs.map { dateFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }
+        if dates.count == strs.count {
+            return dates
+        }
+        return nil
+    }
+
+    public var date: Date? {
+        return dateFormatter.date(from: self)
+    }
+
     public func codable<T: Codable>(_ type: T.Type) -> T? {
         guard let data = self.data(using: .utf8) else {
             return nil

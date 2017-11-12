@@ -44,6 +44,14 @@ extension Router {
                         transformedDictionary[name] = doubles
                     }
                     Log.warning("Could not process query parameter named '\(name)'.")
+                // Dates
+                case is Date.Type, is Optional<Date>.Type:
+                    transformedDictionary[name] = itemValue.date
+                case is Array<Date>.Type, is Optional<Array<Date>>.Type:
+                    if let dates = itemValue.dateArray {
+                        transformedDictionary[name] = dates
+                    }
+                    Log.warning("Could not process query parameter named '\(name)'.")
                 default:
                     Log.warning("Could not process query parameter named '\(name)'.")
             }

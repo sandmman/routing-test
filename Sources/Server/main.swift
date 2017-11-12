@@ -85,11 +85,32 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
     if let param2 = routeParams.next(String.self) {
         print("route param2 (str): \(param2)")
     }
-     respondWith(orderStore.map({ $0.value }), nil)
+    
+    respondWith(orderStore.map({ $0.value }), nil)
 }
 
 router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in 
+    if let category = query.category {
+        print("category = \(category)")
+    }
+	
+    if let date = query.date {
+        print("date = \(date)")
+    }
+	
+    if let weight = query.weight {
+        print("weight = \(weight)")
+    } 
 
+    if let start = query.start {
+        print("start = \(start)")
+    }
+
+    if let end = query.end {
+        print("end = \(end)")
+    }
+
+    respondWith(userStore.map({ $0.value }), nil)
 }
 
 // Add an HTTP server and connect it to the router
