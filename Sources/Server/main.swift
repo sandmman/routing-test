@@ -92,7 +92,7 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
 //localhost:8080/xyz?category=manager&weight=65&start=100&end=400
 router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
     print("In xyz with UserQuery")
-    if let category = query.category {
+    if let category: String = query.category {
         print("category = \(category)")
     }
 	
@@ -100,15 +100,15 @@ router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) ->
     //     print("date = \(date)")
     // }
 	
-    if let weight = query.weight {
+    if let weight: Float = query.weight {
         print("weight = \(weight)")
     } 
 
-    if let start = query.start {
+    if let start: Int = query.start {
         print("start = \(start)")
     }
 
-    if let end = query.end {
+    if let end: Int = query.end {
         print("end = \(end)")
     }
 
