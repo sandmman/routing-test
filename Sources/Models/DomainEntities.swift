@@ -37,14 +37,14 @@ public struct Test: Codable {
 
 public struct UserQuery: Query {
     public let category: String?
-	public let date: Date?
+	//public let date: Date?
 	public let weight: Float?
 	public let start: Int?
 	public let end: Int?
 
     public init() {
         category = nil
-        date = nil
+        //date = nil
         weight = nil
         start = nil
         end = nil 

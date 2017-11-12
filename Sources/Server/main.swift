@@ -89,14 +89,16 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
     respondWith(orderStore.map({ $0.value }), nil)
 }
 
-router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in 
+//localhost:8080/xyz?category=manager&weight=65&start=100&end=400
+router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
+    print("In xyz with UserQuery")
     if let category = query.category {
         print("category = \(category)")
     }
 	
-    if let date = query.date {
-        print("date = \(date)")
-    }
+    // if let date = query.date {
+    //     print("date = \(date)")
+    // }
 	
     if let weight = query.weight {
         print("weight = \(weight)")
