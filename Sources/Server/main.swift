@@ -1,3 +1,4 @@
+import Foundation
 import Kitura
 import KituraContracts
 import RouterExtension
@@ -89,16 +90,16 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
     respondWith(orderStore.map({ $0.value }), nil)
 }
 
-//localhost:8080/xyz?category=manager&weight=65&start=100&end=400
+//localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
 router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
     print("In xyz with UserQuery")
     if let category: String = query.category {
         print("category = \(category)")
     }
 	
-    // if let date = query.date {
-    //     print("date = \(date)")
-    // }
+    if let date: Date = query.date {
+        print("date = \(date)")
+    }
 	
     if let weight: Float = query.weight {
         print("weight = \(weight)")

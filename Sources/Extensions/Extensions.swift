@@ -50,7 +50,11 @@ extension String {
     }
 
     public var date: Date? {
-        return dateFormatter.date(from: self)
+
+        let date = dateFormatter.date(from: self)
+        print("date => \(date)")
+        print("me => \(self)")
+        return date
     }
 
     public func codable<T: Codable>(_ type: T.Type) -> T? {

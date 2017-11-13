@@ -121,3 +121,14 @@ func createQuery<Q: Query>(from rawParams: [String : String], queryType: Q.Type)
 let rawParams: [String : String] = ["id" : "71791791", "name" : "john doe", "counts": "3,4,5,6,7"]
 let query: QueryTest = try createQuery(from: rawParams, queryType: QueryTest.self)
 print("query: \(query)")
+
+// http://benscheirman.com/2017/06/ultimate-guide-to-json-parsing-with-swift-4/
+let encoder = JSONEncoder()
+struct Foo : Encodable {
+    let date: Date
+    let name: String = "sklsl"
+}
+
+let foo = Foo(date: Date())
+let data = try! encoder.encode(foo)
+print("data: \(data)")
