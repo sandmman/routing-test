@@ -97,22 +97,6 @@ router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) ->
     respondWith(userStore.map({ $0.value }), nil)
 }
 
-// A possible approach for URL route parameters & codable
-// We could also provide route params and query params as this: Params.route, Params.query
-// Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
-// way we do below...
-// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
-router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
-    if let param1 = routeParams.next(Int.self) {
-         print("route param1 (int): \(param1)")
-    }
-    if let param2 = routeParams.next(String.self) {
-        print("route param2 (str): \(param2)")
-    }
-    
-    respondWith(orderStore.map({ $0.value }), nil)
-}
-
 // A possible implementation for multiple URL route params - codable
 // Developer does not need to specify the identifiers for each entity in the path
 // Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity
@@ -133,6 +117,22 @@ router.get("/customers/orders") { (identifiers: [Int], respondWith: (Order?, Req
 //     let order = orderStore[identifiers[1]]
 //     respondWith(order, nil)
 // }
+
+// Another possible approach for URL route parameters & codable
+// We could also provide route params and query params as this: Params.route, Params.query
+// Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
+// way we do below...
+// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
+router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
+    if let param1 = routeParams.next(Int.self) {
+         print("route param1 (int): \(param1)")
+    }
+    if let param2 = routeParams.next(String.self) {
+        print("route param2 (str): \(param2)")
+    }
+    
+    respondWith(orderStore.map({ $0.value }), nil)
+}
 
 // Note for self: Besides what we see above, we would also need an additional API method to address the need where we have queryParams and multiple identifiers...
 // router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
