@@ -190,3 +190,6 @@ let myTest = MyTest()
 myTest.get(param1: "", closure: closureA)
 myTest.get(param1: "", closure: closureB)
 
+let str = "12345"
+let strs = str.stringArray
+print("strs: \(str)")
