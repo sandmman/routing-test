@@ -115,7 +115,7 @@ extension Router {
             }
             Log.verbose("queryParameters: \(request.queryParameters)")
             //todo: add do try block
-            let query: Q = try self.createQuery(from: request.queryParameters , queryType: Q.self)
+            let query: Q = try Q.create(from: request.queryParameters)
             handler(query, resultHandler)
         }
     }
