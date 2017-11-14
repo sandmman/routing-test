@@ -27,27 +27,27 @@ router.get("/basic") { (request: RouterRequest, response: RouterResponse, next: 
 router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
     print("GET on /orders with query parameters")
 
-    if let category: String = queryParams["category"].string {
+    if let category: String = queryParams["category"]?.string {
         print("category(str): \(category)")
     }
 
-    if let percentage: Int = queryParams["percentage"].int {
+    if let percentage: Int = queryParams["percentage"]?.int {
         print("percentagek1(int): \(percentage)")
     }
 
-    if let tags: [String] = queryParams["tags"].stringArray {
+    if let tags: [String] = queryParams["tags"]?.stringArray {
         print("tags(strs): \(tags)")
     }
 
-    if let weights: [Int] = queryParams["weights"].intArray {
+    if let weights: [Int] = queryParams["weights"]?.intArray {
         print("weights(ints): \(weights)")
     }
 
-    if let object: Test = queryParams["object"].codable(Test.self) {
+    if let object: Test = queryParams["object"]?.codable(Test.self) {
         print("object(codable): \(object)")
     }
 
-    if let start = queryParams["start"].int, let end = queryParams["end"].int {
+    if let start = queryParams["start"]?.int, let end = queryParams["end"]?.int {
         print("start: \(start), end: \(end)")
     }
 

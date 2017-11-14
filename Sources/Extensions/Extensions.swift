@@ -1,6 +1,43 @@
 import Foundation
 
 extension String {
+    public static var parameter: String {
+        get {
+            return ":string"
+        }
+    }
+}
+
+extension Int {
+    public static var parameter: String {
+        get {
+            return ":int"
+        }
+    }
+}
+
+extension String {
+
+    public var int: Int? {
+        return Int(self)
+    }
+
+    public var float: Float? {
+        return Float(self)
+    }
+
+     public var double: Double? {         
+        return Double(self)
+    }
+
+    public var boolean: Bool? {
+        return Bool(self)
+    }
+
+    public var string: String {
+        get { return self}
+    }
+
     public var intArray: [Int]? {
         let strs: [String] = self.components(separatedBy: ",")
         let ints: [Int] = strs.map { Int($0) }.filter { $0 != nil }.map { $0! }

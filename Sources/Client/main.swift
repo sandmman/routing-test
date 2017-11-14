@@ -132,3 +132,61 @@ struct Foo : Encodable {
 let foo = Foo(date: Date())
 let data = try! encoder.encode(foo)
 print("data: \(data)")
+print("data: \(data)")
+
+//A few points from my end.
+//Let's take a look at the following code:
+
+func func3(param: String) { }
+func func4<A: CustomStringConvertible>(param: A) { 
+    //print("size: \(param.count)") // this line won't compile as expected
+}
+func func5<A: CustomStringConvertible>(param: [A]) { print("size: \(param.count)") }
+let a: [String] = ["h1", "h2", "h3"]
+//func3(param: a)   // this won't compile, as expected (we are passing an array)
+func4(param: a)     // this compiles, which I found it odd... I was expecting this to not compile
+func5(param: a)     // this compiles as expected
+
+// Let's now also look at this
+
+// aliases
+public typealias CodableResultClosure<O: Codable> = (O?, Error?) -> Void
+public typealias CodableArrayResultClosure<O: Codable> = ([O]?, Error?) -> Void
+
+// sample usage
+func func1<O: Codable>(param1: String, closure: @escaping CodableResultClosure<O>) { }
+
+
+func func2<O: Codable>(param1: String, closure: @escaping CodableArrayResultClosure<O>) { }
+
+let closureA: (User?, Error?) -> Void = { (user, error) -> Void in
+    // the code does not compile, as expected
+    // if let users = users {
+    //     print(users.count)
+    // }
+}
+
+let closureB: ([User]?, Error?) -> Void = { (users, error) -> Void in
+    // the code below compiles without having to cast to an array (as expected)
+    if let users = users {
+        print(users.count)
+    }
+}
+
+func1(param1: "a string", closure: closureA)
+func2(param1: "a string", closure: closureB)
+//func2(param1: "a string", closure: closureA)  // this does not not compile, as expected
+func1(param1: "a string", closure: closureB)    //this compiles (as the above example), which I find odd.
+
+
+class MyTest {
+
+    func get<O: Codable>(param1: String, closure: @escaping CodableResultClosure<O>) { }
+    func get<O: Codable>(param1: String, closure: @escaping CodableArrayResultClosure<O>) { }
+
+}
+
+let myTest = MyTest()
+myTest.get(param1: "", closure: closureA)
+myTest.get(param1: "", closure: closureB)
+

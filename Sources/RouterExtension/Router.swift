@@ -141,6 +141,7 @@ extension Router {
     }
 }
 
+/*
 public class ParamValue {
     private let rawValue: String?
 
@@ -242,15 +243,20 @@ public class ParamValue {
         self.rawValue = rawValue
     }
 }
+*/
 
 public class QueryParams {
     private let params: [String : String]
     public var count: Int {
         get { return params.count } 
     }
-    public subscript(key: String) -> ParamValue {
-        let value = params[key]
-        return ParamValue(value)
+    // public subscript(key: String) -> ParamValue {
+    //     let value = params[key]
+    //     return ParamValue(value)
+    // }
+    public subscript(key: String) -> String? {
+        let value: String? = params[key]
+        return value
     }
     public init(_ params: [String : String]) {
         self.params = params
@@ -271,21 +277,4 @@ public class RouteParams {
         }
         return try? Id(value: item)
     }
-}
-
-extension String {
-    public static var parameter: String {
-        get {
-            return ":string"
-        }
-    }
-}
-
-extension Int {
-    public static var parameter: String {
-        get {
-            return ":int"
-        }
-    }
-
 }
