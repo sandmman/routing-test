@@ -20,9 +20,10 @@ router.get("/basic") { (request: RouterRequest, response: RouterResponse, next: 
 }
 
 // A possible implementation for query params
-// Codable routing with type-safe like query parameters - supports
-// codable as a value assigned to a key in a query parameter
-// arrays assigned to a single key
+// Codable routing with type-safe LIKE query parameters
+// This even supports Codable as a value assigned to a key in a query parameter
+// If we don't go with this approach for the Codable APIs, I am still thinking we should consider adding
+// this QueryParams functionality to the traditional routing API (there is value in it as shown below)
 // localhost:8080/users?category=animal&percentage=65&tags=tag1&tags=tag2&weights=32&weights=34&object=%7B"name":"john"%7D&start=100&end=400
 router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
     print("GET on /orders with query parameters")
@@ -54,42 +55,17 @@ router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, Request
     respondWith(userStore.map({ $0.value }), nil)
 }
 
-// A possible implementation for multiple route params - codable
-// See the identifiers array and its type
-// localhost:8080/customers/3233/orders/1
-router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
-    print("GET on /orders with query parameters")
-    print("identifiers: \(identifiers)")
-    let order = orderStore[identifiers[1]]
-    respondWith(order, nil)
-}
-
-// Besides what we see above, we would also need an additional API method to address the need where we have
-// queryParams and multiple identifiers...
-// router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
-
-// Another possible approach for providing query params... though it seems cleaner to use QueryParams
+// Another possible approach for providing query params... though it seems cleaner to use QueryParams (see above).
 router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestError?) -> Void) in
-    // this is not implemented...
+    // FYI: this is not prototyped...
     respondWith(userStore.map({ $0.value }), nil)
 }
 
-// A possible approach for URL parameters & codable
-// We could also provide route params and query params as this: Params.route, Params.query
-// Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
-// way we do below...
-// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
-router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
-    if let param1 = routeParams.next(Int.self) {
-         print("route param1 (int): \(param1)")
-    }
-    if let param2 = routeParams.next(String.self) {
-        print("route param2 (str): \(param2)")
-    }
-    
-    respondWith(orderStore.map({ $0.value }), nil)
-}
-
+// Another possible implementation for query params... this one uses a concrete type that the developer must implement.
+// This concrete type must conform to the Query Protocol
+// There is approach is closer to what we consider type-safe to be.
+// However due to limitations in the reflection API in Swift, the developer must make all the fields in the 
+// Query class optional. 
 //localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
 router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
     print("In xyz with UserQuery")
@@ -115,6 +91,35 @@ router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) ->
 
     respondWith(userStore.map({ $0.value }), nil)
 }
+
+// A possible approach for URL route parameters & codable
+// We could also provide route params and query params as this: Params.route, Params.query
+// Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
+// way we do below...
+// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
+router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
+    if let param1 = routeParams.next(Int.self) {
+         print("route param1 (int): \(param1)")
+    }
+    if let param2 = routeParams.next(String.self) {
+        print("route param2 (str): \(param2)")
+    }
+    
+    respondWith(orderStore.map({ $0.value }), nil)
+}
+
+// Another possible implementation for multiple URL route params - codable
+// See the identifiers array and its type
+// localhost:8080/customers/3233/orders/1
+router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
+    print("GET on /orders with query parameters")
+    print("identifiers: \(identifiers)")
+    let order = orderStore[identifiers[1]]
+    respondWith(order, nil)
+}
+
+// Note for self: Besides what we see above, we would also need an additional API method to address the need where we have queryParams and multiple identifiers...
+// router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)
