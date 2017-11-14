@@ -17,7 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/IBM-Swift/Kitura.git", .branch("issue.encoding")),
-        .package(url: "https://github.com/IBM-Swift/Kitura-CORS", .upToNextMinor(from: "2.0.0")),
+        .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", .upToNextMajor(from: "1.7.1")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -29,7 +29,7 @@ let package = Package(
         .target(name: "RouterExtension", dependencies: [.target(name: "Models"), .target(name: "Extensions"), .target(name: "Contracts"), "Kitura"]),
         .target(
             name: "Server",
-            dependencies: [.target(name: "Models"), .target(name: "RouterExtension"), "Kitura"]
+            dependencies: [.target(name: "Models"), .target(name: "RouterExtension"), "Kitura", "HeliumLogger"]
         ),
     ]
 )

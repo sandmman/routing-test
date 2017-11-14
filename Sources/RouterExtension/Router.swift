@@ -34,7 +34,7 @@ extension Router {
             }
             Log.verbose("queryParameters: \(request.queryParameters)")
             let queryParameters = QueryParams(request.queryParameters)
-            let routeParamKeys = self.extractParams(from: route)
+            let routeParamKeys = Router.extractParams(from: route)
             let routeParams = RouteParams(keys: routeParamKeys, dict: request.parameters)
             handler(routeParams, queryParameters, resultHandler)
         }
@@ -67,8 +67,19 @@ extension Router {
     }
 
     public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
-        get(route) { request, response, next in
-            Log.verbose("Received GET (plural) type-safe request")
+
+        let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }
+        let params = (0...(entities.count-1)).map({ (index: Int) -> String in
+            return "id\(index)"
+        })
+        let routeComponents = (0...(entities.count-1)).map({ (index: Int) -> String in
+            return "\(entities[index])/:\(params[index])"
+        })
+        let routeWithIds = "/" + routeComponents.joined(separator: "/")
+        Log.verbose("routeWithIds: \(routeWithIds)")
+
+        get(routeWithIds) { request, response, next in
+            Log.verbose("HERE!!!! Received GET (plural) type-safe request")
             // Define result handler
             let resultHandler: CodableResultClosure<O> = { result, error in
                 do {
@@ -87,9 +98,7 @@ extension Router {
                 next()
             }
 
-            // Generate params from route - developer only specifies the entities in the route path
-            let params = self.extractParams(from: route)
-            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try! Id(value: $0) }
+            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try? Id(value: $0) }.filter { $0 != nil }.map { $0! }
             handler(identifiers, resultHandler)
         }
     }
@@ -121,7 +130,7 @@ extension Router {
         }
     }
 
-    private func extractParams(from route: String) -> [String] {
+    private static func extractParams(from route: String) -> [String] {
         //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
         let pattern = "/:([^/]*)(?:/|\\z)"
         // pattern is valid; hence we force unwrap next value

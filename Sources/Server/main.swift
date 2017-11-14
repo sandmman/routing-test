@@ -3,6 +3,11 @@ import Kitura
 import KituraContracts
 import RouterExtension
 import Models
+import LoggerAPI
+import HeliumLogger
+
+// HeliumLogger disables all buffering on stdout
+HeliumLogger.use(LoggerMessageType.verbose)
 
 // Dictionay of Employee entities
 var employeeStore: [Int: Employee] = [:]
@@ -108,11 +113,12 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
     respondWith(orderStore.map({ $0.value }), nil)
 }
 
-// Another possible implementation for multiple URL route params - codable
-// See the identifiers array and its type
-// localhost:8080/customers/3233/orders/1
-router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
-    print("GET on /orders with query parameters")
+// A possible implementation for multiple URL route params - codable
+// Developer does not need to specify the identifiers for each entity in the path
+// Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity
+// localhost:8080/customers/3233/orders/1432
+router.get("/customers/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
+    print("GET on /orders with inferred route parameters")
     print("identifiers: \(identifiers)")
     let order = orderStore[identifiers[1]]
     respondWith(order, nil)
@@ -121,12 +127,12 @@ router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (O
 // Another possible implementation for multiple URL route params - codable
 // See the identifiers array and its type
 // localhost:8080/customers/3233/orders/1
-router.get("/customers/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
-    print("GET on /orders with query parameters")
-    print("identifiers: \(identifiers)")
-    let order = orderStore[identifiers[1]]
-    respondWith(order, nil)
-}
+// router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
+//     print("GET on /orders with query parameters")
+//     print("identifiers: \(identifiers)")
+//     let order = orderStore[identifiers[1]]
+//     respondWith(order, nil)
+// }
 
 // Note for self: Besides what we see above, we would also need an additional API method to address the need where we have queryParams and multiple identifiers...
 // router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
