@@ -118,6 +118,16 @@ router.get("/customers/:id1/orders/:id2") { (identifiers: [Int], respondWith: (O
     respondWith(order, nil)
 }
 
+// Another possible implementation for multiple URL route params - codable
+// See the identifiers array and its type
+// localhost:8080/customers/3233/orders/1
+router.get("/customers/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
+    print("GET on /orders with query parameters")
+    print("identifiers: \(identifiers)")
+    let order = orderStore[identifiers[1]]
+    respondWith(order, nil)
+}
+
 // Note for self: Besides what we see above, we would also need an additional API method to address the need where we have queryParams and multiple identifiers...
 // router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
 
