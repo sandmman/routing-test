@@ -87,6 +87,7 @@ extension Router {
                 next()
             }
 
+            // Generate params from route - developer only specifies the entities in the route path
             let params = self.extractParams(from: route)
             let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try! Id(value: $0) }
             handler(identifiers, resultHandler)

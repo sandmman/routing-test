@@ -114,16 +114,21 @@ func1(param1: "a string", closure: closureB)    //this compiles (as the above ex
 
 
 class MyTest {
-
     func get<O: Codable>(param1: String, closure: @escaping CodableResultClosure<O>) { }
     func get<O: Codable>(param1: String, closure: @escaping CodableArrayResultClosure<O>) { }
-
 }
 
 let myTest = MyTest()
 myTest.get(param1: "", closure: closureA)
 myTest.get(param1: "", closure: closureB)
 
-let str = "12345"
-let strs = str.stringArray
-print("strs: \(str)")
+let str = "///customers///orders/items///"
+let entities: [String] = str.components(separatedBy: "/").filter { !$0.isEmpty }
+print("entities: \(entities)")
+let routeComponents = (0...(entities.count-1)).map({ (index: Int) -> String in
+    return "\(entities[index]):id\(index)"
+})
+print("routeComponents: \(routeComponents)")
+
+let finalRoute = "/" + routeComponents.joined(separator: "/")
+print(finalRoute)
