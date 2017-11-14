@@ -141,119 +141,11 @@ extension Router {
     }
 }
 
-/*
-public class ParamValue {
-    private let rawValue: String?
-
-    public var string: String? {
-        get { return rawValue}
-     }
-
-    public var stringArray: [String]? {
-         get { return rawValue?.components(separatedBy: ",") }
-     }
-
-    public var int: Int? {
-        get {
-            guard let rawValue = rawValue else {
-                return nil
-            }            
-            return Int(rawValue)
-        }
-    }
-
-    public var intArray: [Int]? {
-         get { 
-            if let strs: [String] = rawValue?.components(separatedBy: ",") {
-                let ints: [Int] = strs.map { Int($0) }.filter { $0 != nil }.map { $0! }
-                if ints.count == strs.count {
-                    return ints
-                }
-            }
-            return nil
-        }
-     }
-
-    public func codable<T: Codable>(_ type: T.Type) -> T? {
-        guard let rawValue = rawValue else {
-            return nil
-        } 
-        guard let data = rawValue.data(using: .utf8) else {
-            return nil
-        }
-
-        print("rawValue: \(rawValue)")
-        let obj: T? = try? JSONDecoder().decode(type, from: data)
-        return obj
-     }
-
-    public var float: Float? {
-        get {
-            guard let rawValue = rawValue else {
-                return nil
-            }            
-            return Float(rawValue)
-        }
-    }
-
-    public var double: Double? {
-        get {
-            guard let rawValue = rawValue else {
-                return nil
-            }            
-            return Double(rawValue)
-        }
-    }
-
-    public var floatArray: [Float]? {
-         get { 
-            if let strs: [String] = rawValue?.components(separatedBy: ",") {
-                let floats: [Float] = strs.map { Float($0) }.filter { $0 != nil }.map { $0! }
-                if floats.count == strs.count {
-                    return floats
-                }
-            }
-            return nil
-        }
-     }
-
-    public var boolean: Bool? {
-        get {
-            guard let rawValue = rawValue else {
-                return nil
-            }            
-            return Bool(rawValue)
-        }
-    }
-
-    public var doubleArray: [Double]? {
-         get { 
-            if let strs: [String] = rawValue?.components(separatedBy: ",") {
-                let doubles: [Double] = strs.map { Double($0) }.filter { $0 != nil }.map { $0! }
-                if doubles.count == strs.count {
-                    return doubles
-                }
-            }
-            return nil
-        }
-     }
-
-
-    public init(_ rawValue: String?) {
-        self.rawValue = rawValue
-    }
-}
-*/
-
 public class QueryParams {
     private let params: [String : String]
     public var count: Int {
         get { return params.count } 
     }
-    // public subscript(key: String) -> ParamValue {
-    //     let value = params[key]
-    //     return ParamValue(value)
-    // }
     public subscript(key: String) -> String? {
         let value: String? = params[key]
         return value
@@ -278,3 +170,4 @@ public class RouteParams {
         return try? Id(value: item)
     }
 }
+

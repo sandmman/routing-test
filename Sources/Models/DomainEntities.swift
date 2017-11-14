@@ -50,15 +50,3 @@ public struct UserQuery: Query {
         end = nil 
     }
 }
-
-public struct QueryTest: Query {
-    public let id: Int?
-    public let name: String?
-    public let counts: [Int]?
-    public init() {
-        id = nil
-        name = nil
-        counts = nil
-    }
- }
-

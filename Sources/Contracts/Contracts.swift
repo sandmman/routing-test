@@ -22,7 +22,11 @@ extension Query {
 // This would be the default deserialization logic
 // Developers could override this default behavior in their
 // own extensions... though ideally, they should just leverage this
-// implementation
+// implementation.
+// Limitations that exist today with swift and reflection (not yet quite let what you get in Java :-/)
+//https://stackoverflow.com/questions/46327302/init-an-object-conforming-to-codable-with-a-dictionary-array/46327303#46327303
+//https://makeitnew.io/reflection-in-swift-68a06ba0cf0e
+//https://stackoverflow.com/questions/33776699/how-to-get-a-mirror-in-swift-without-creating-an-instance
 extension Query {
     public static func create(from rawParams: [String : String]) throws -> Self {        
         var transformedDictionary: [String : Any] = [:]
@@ -73,7 +77,7 @@ extension Query {
                 case is Array<Date>.Type, is Optional<Array<Date>>.Type:
                     transformedDictionary[name] = itemValue.stringArray
                 default:
-                    Log.warning("Could not process query parameter named '\(name)'.")
+                    Log.warning("Could not process query parameter named '\(name)' (unknown type).")
             }
         }    
 
@@ -83,13 +87,9 @@ extension Query {
         }
         let jsonData: Data = try JSONSerialization.data(withJSONObject: transformedDictionary)
         let decoder = JSONDecoder()
-        //TBD - http://benscheirman.com/2017/06/ultimate-guide-to-json-parsing-with-swift-4/
         decoder.dateDecodingStrategy = .formatted(Self.dateDecodingFormatter)
-        //TBD
-        //let query: Q = try decoder.decode(Q.self, from: jsonData)
         let query: Self = try decoder.decode(Self.self, from: jsonData)
-        // Log.verbose("Query instance: \(query)")
-        return query
-        //return emptyQuery        
+        Log.verbose("Query instance: \(query)")
+        return query   
     }
 }
