@@ -121,14 +121,3 @@ class MyTest {
 let myTest = MyTest()
 myTest.get(param1: "", closure: closureA)
 myTest.get(param1: "", closure: closureB)
-
-let str = "///customers///orders/items///"
-let entities: [String] = str.components(separatedBy: "/").filter { !$0.isEmpty }
-print("entities: \(entities)")
-let routeComponents = (0...(entities.count-1)).map({ (index: Int) -> String in
-    return "\(entities[index]):id\(index)"
-})
-print("routeComponents: \(routeComponents)")
-
-let finalRoute = "/" + routeComponents.joined(separator: "/")
-print(finalRoute)
