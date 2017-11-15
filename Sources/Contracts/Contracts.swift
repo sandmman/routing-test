@@ -3,7 +3,9 @@ import LoggerAPI
 import Extensions
 
 public protocol Query: Codable {
-    init()
+    init() // unfortunately we need this constructor to exist...
+            // swift reflection does not have a mechanism to get the types of the field variables
+            // unless you have a concrete instance of the type... :-/
     static var dateDecodingFormatter: DateFormatter { get }
 }
 
