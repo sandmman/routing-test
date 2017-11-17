@@ -72,14 +72,25 @@ print("data: \(data)")
 //Let's take a look at the following code:
 
 func func3(param: String) { }
-func func4<A: CustomStringConvertible>(param: A) { 
+func func4(param: [String]) { }
+func func5<A: CustomStringConvertible>(param: A) { 
     //print("size: \(param.count)") // this line won't compile as expected
 }
-func func5<A: CustomStringConvertible>(param: [A]) { print("size: \(param.count)") }
+func func6<A: CustomStringConvertible>(param: [A]) { print("size: \(param.count)") }
 let a: [String] = ["h1", "h2", "h3"]
-//func3(param: a)   // this won't compile, as expected (we are passing an array)
-func4(param: a)     // this compiles, which I found it odd... I was expecting this to not compile
-func5(param: a)     // this compiles as expected
+//func3(param: a)   // this won't compile as expected (we are passing an array)
+func4(param: a)     // this compiles as expected (we are passing an array)
+func5(param: a)     // this compiles, which I found it odd... I was expecting this to not compile
+func6(param: a)     // this compiles as expected
+
+struct MyError: Error {}
+
+func func7(param: Error) { }
+func func8(param: [Error]) { }
+let errors: [MyError] = [MyError(),MyError(),MyError()]
+func7(param: MyError())
+///func7(param: errors) // this won't compile as expected (we are passing an array)
+func8(param: errors)
 
 // Let's now also look at this
 

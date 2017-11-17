@@ -23,8 +23,8 @@
         "package": "Kitura",
         "repositoryURL": "https://github.com/IBM-Swift/Kitura.git",
         "state": {
-          "branch": "issue.encoding",
-          "revision": "5a272c99d6fc94ad01ec3162220740f260f3db6b",
+          "branch": "issue.ro-codable",
+          "revision": "21cb70231f4944b3e51f4ad3acbbfcd1231ab442",
           "version": null
         }
       },

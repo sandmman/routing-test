@@ -24,6 +24,16 @@ router.get("/basic") { (request: RouterRequest, response: RouterResponse, next: 
     next()
 }
 
+router.get("/abc") { (respondWith: ([User]?, RequestError?) -> Void) in
+    print("In abc")
+    respondWith(userStore.map({ $0.value }), nil)	
+}
+
+router.get("/health") { (respondWith: (User?, RequestError?) -> Void) in
+    print("In def")
+    respondWith(userStore[1], nil)	
+}
+
 // A possible implementation for query params
 // Codable routing with type-safe LIKE query parameters
 // This even supports Codable as a value assigned to a key in a query parameter
