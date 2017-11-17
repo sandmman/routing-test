@@ -1,5 +1,7 @@
 import Foundation
 import Contracts
+import Credentials
+import CredentialsHTTP
 
 public struct Employee: Codable {
     public let serial: Int
@@ -49,4 +51,34 @@ public struct UserQuery: Query {
         start = nil
         end = nil 
     }
+}
+
+public class AuthUser: UserProfile, AuthenticatedUser {
+    public static func createCredentials() -> Credentials {
+        // Configuration of Credentials object would go here
+        let credentials = Credentials()
+        let users = ["john" : "pwd1", "mary" : "pwd2"]
+        let basicCredentials = CredentialsHTTPBasic(verifyPassword: { userId, password, callback in
+            print("Checking authentication credentials...")
+            if let storedPassword = users[userId], storedPassword == password {
+                print("Valid credentials... creating UserProfile.")
+                callback(UserProfile(id: userId, displayName: userId, provider: "HTTPBasic"))
+            } else {
+                print("Invalid credentials!")
+                callback(nil)
+            }
+        })
+        credentials.register(plugin: basicCredentials)
+        return credentials
+    }
+
+    // Child extension (via inheritance)
+    public var xyz: String? {
+        return extendedProperties["xyz"] as? String
+    }
+
+    public var abc: Int? {
+        return extendedProperties["abc"] as? Int
+    }
+
 }
