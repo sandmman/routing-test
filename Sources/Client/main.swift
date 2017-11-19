@@ -121,3 +121,11 @@ class MyTest {
 let myTest = MyTest()
 myTest.get(param1: "", closure: closureA)
 myTest.get(param1: "", closure: closureB)
+
+let closureMirror = Mirror(reflecting: closureB)
+print("closureMirror: \(closureMirror)")
+print("closureMirror.children: \(closureMirror.children)")
+//print("closureMirror.displayStyle: \(closureMirror.displayStyle)")
+print("closureMirror.subjectType: \(closureMirror.subjectType)")
+let t = type(of: closureMirror.subjectType)
+print("t: \(t)")
