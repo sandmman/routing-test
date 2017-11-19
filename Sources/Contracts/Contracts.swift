@@ -38,6 +38,7 @@ extension Query {
             guard let name = name else { continue }
             guard let itemValue = rawParams[name] else { continue }
             Log.verbose("\(name): \(type(of: value)) = '\(value)'")
+            // Issue: https://bugs.swift.org/browse/SR-6025
             let itemType = type(of: value)
             switch itemType {
                 // Ints
