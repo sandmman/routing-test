@@ -80,6 +80,7 @@ extension Query {
                 case is Array<Date>.Type, is Optional<Array<Date>>.Type:
                     transformedDictionary[name] = itemValue.stringArray
                 default:
+                    //transformedDictionary[name] = itemValue.codable(itemType.self)    // does not compile :-/
                     Log.warning("Could not process query parameter named '\(name)' (unknown type).")
             }
         }    

@@ -54,13 +54,24 @@ let json = """
 }
 """.data(using: .utf8)! // our data in native (JSON) format
 
-let testObj: Test = try! JSONDecoder().decode(Test.self, from: json)
-print("testObj: \(testObj)")
- 
+let testObj1: Test = try! JSONDecoder().decode(Test.self, from: json)
+print("testObj1: \(testObj1)")
+
+let testOb2: Test = Test(name: "testName")
+let testType = type(of: testOb2)
+let testObj3: Test = try! JSONDecoder().decode(testType.self, from: json)
+print("testObj3: \(testObj3)")
+
+//let anyType = testType as Any.Type
+//let testObj4: Test = try! JSONDecoder().decode(anyType.self, from: json) // does not compile :-/
+// http://inessential.com/2015/07/20/swift_diary_1_class_or_struct_from_str :-/
+let clazz = NSClassFromString("Models.AuthUser")
+print("clazz = \(clazz)")
+
 let encoder = JSONEncoder()
 struct Foo : Encodable {
     let date: Date
-    let name: String = "sklsl"
+    let name: String = "fooName"
 }
 
 let foo = Foo(date: Date())
@@ -127,5 +138,4 @@ print("closureMirror: \(closureMirror)")
 print("closureMirror.children: \(closureMirror.children)")
 //print("closureMirror.displayStyle: \(closureMirror.displayStyle)")
 print("closureMirror.subjectType: \(closureMirror.subjectType)")
-let t = type(of: closureMirror.subjectType)
-print("t: \(t)")
+
