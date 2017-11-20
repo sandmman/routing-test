@@ -159,7 +159,7 @@ extension Router {
         let pattern = "/:([^/]*)(?:/|\\z)"
         // pattern is valid; hence we force unwrap next value
         let regex = try! NSRegularExpression(pattern: pattern, options: [])
-        let matches = regex.matches(in: route, options: [], range: NSRange(location: 0, length: route.characters.count))
+        let matches = regex.matches(in: route, options: [], range: NSRange(location: 0, length: route.count))
         let parameters: [String] = matches.map({ (value: NSTextCheckingResult) -> String in
             let range = value.range(at: 1)
             let start = route.index(route.startIndex, offsetBy: range.location)
