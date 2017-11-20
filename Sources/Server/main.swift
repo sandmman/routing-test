@@ -177,7 +177,9 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
 // john:pwd1@localhost:8080/authenticatedPost
 router.post("/authenticatedPost") { (authUser: AuthUser, order: Order, respondWith: (Order?, RequestError?) -> Void) in
     print("Valid credentials must have been provided if we see this output.")
-    print("UserProfile: \(authUser)")
+    print("UserProfile.id: \(authUser.id)")
+    print("UserProfile.provider: \(authUser.provider)")
+    print("UserProfile.displayName: \(authUser.displayName)")
     print("extendend properties: \(String(describing: authUser.xyz))")
     print("Order: \(order)")
     respondWith(order, nil)
