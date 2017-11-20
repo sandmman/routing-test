@@ -66,6 +66,30 @@ extension Router {
         }
     }
 
+    public func get<O: Codable>(_ route: String, handler: @escaping ([String:String], ([O]?, RequestError?) -> Void) -> Void) {
+        get(route) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request")
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            handler(request.queryParameters, resultHandler)
+        }
+    }
+
     public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
 
         let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }

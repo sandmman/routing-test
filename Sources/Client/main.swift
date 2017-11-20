@@ -65,8 +65,8 @@ print("testObj3: \(testObj3)")
 //let anyType = testType as Any.Type
 //let testObj4: Test = try! JSONDecoder().decode(anyType.self, from: json) // does not compile :-/
 // http://inessential.com/2015/07/20/swift_diary_1_class_or_struct_from_str :-/
-let clazz = NSClassFromString("Models.AuthUser")
-print("clazz = \(clazz)")
+let clazz: AnyClass? = NSClassFromString("Models.AuthUser")
+print("clazz = \(clazz!)")
 
 let encoder = JSONEncoder()
 struct Foo : Encodable {

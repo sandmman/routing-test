@@ -10,7 +10,7 @@ import HeliumLogger
 HeliumLogger.use(LoggerMessageType.verbose)
 
 // Dictionay of Employee entities
-var employeeStore: [Int: Employee] = [:]
+var employeeStore: [Int: Employee] = [1: Employee(serial: 1, name: "John"), 2: Employee(serial: 2, name: "Peter")]
 var userStore: [Int: User] = [1: User(id: 1, name: "Mike"), 2: User(id: 2, name: "Chris"), 3: User(id: 3, name: "Ricardo")]
 // Dictionary of Order entities
 var orderStore: [Int: Order] = [1: Order(id: 1, name: "order1"), 2: Order(id: 2, name: "order2"), 3: Order(id: 3, name: "order3")]
@@ -28,7 +28,7 @@ router.get("/basic") { (request: RouterRequest, response: RouterResponse, next: 
 // Codable routing with type-safe LIKE query parameters
 // This even supports Codable as a value assigned to a key in a query parameter
 // If we don't go with this approach for the Codable APIs, I am still thinking we should consider adding
-// this QueryParams functionality to the traditional routing API (there is value in it as shown below)
+// this QueryParams functionality to the traditional routing API (see next example below)
 // localhost:8080/users?category=animal&percentage=65&tags=tag1&tags=tag2&weights=32&weights=34&object=%7B"name":"john"%7D&start=100&end=400
 router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, RequestError?) -> Void) in
     print("GET on /orders with query parameters")
@@ -60,15 +60,51 @@ router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, Request
     respondWith(userStore.map({ $0.value }), nil)
 }
 
+// Traditional routing style with enchancements to query parameters
+// Very similar to approach as above but using non-codable API with new enhanced query parameters
+// localhost:8080/employees?category=animal&percentage=65&tags=tag1&tags=tag2&weights=32&weights=34&object=%7B"name":"john"%7D&start=100&end=400
+router.get("/employees") { (request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) in
+    print("Traditional non-codable APIs with enhanced query parameters...")
+    let queryParams = request.queryParameters
+    if let category: String = queryParams["category"]?.string {
+        print("category(str): \(category)")
+    }
+
+    if let percentage: Int = queryParams["percentage"]?.int {
+        print("percentagek1(int): \(percentage)")
+    }
+
+    if let tags: [String] = queryParams["tags"]?.stringArray {
+        print("tags(strs): \(tags)")
+    }
+
+    if let weights: [Int] = queryParams["weights"]?.intArray {
+        print("weights(ints): \(weights)")
+    }
+
+    if let object: Test = queryParams["object"]?.codable(Test.self) {
+        print("object(codable): \(object)")
+    }
+
+    if let start = queryParams["start"]?.int, let end = queryParams["end"]?.int {
+        print("start: \(start), end: \(end)")
+    }
+
+    let employees = employeeStore.map({ $0.value })
+    response.status(.OK).send(employees)
+    next()
+}
+
 // Another possible approach for providing query params... though it seems cleaner to use QueryParams (see above).
+// More than likely we won't take this route
 router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestError?) -> Void) in
     // FYI: this is not prototyped...
     respondWith(userStore.map({ $0.value }), nil)
 }
 
-// Another possible implementation for query params... this one uses a concrete type that the developer must implement.
+// Another possible implementation for query params. This one uses a concrete type that the developer must implement.
 // This concrete type must conform to the Query Protocol
-// There is approach is closer to what we consider type-safe to be.
+// Thhis approach is closer to what we consider type-safe to be.
 // However due to limitations in the reflection API in Swift, the developer must make all the fields in the 
 // Query class optional. 
 //localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
