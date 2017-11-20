@@ -174,8 +174,8 @@ router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: R
 // router.get("/objs1/:id1/objs2:id2") { (queryParams: QueryParams, identifiers: [Int], respondWith: ([O]?, RequestError?) -> Void) in
 
 // A codable approach for authentication (inspired by code from cbailey @ https://github.com/seabaylea/CodableAuth)
-// john:pwd1@localhost:8080/authenticatedPost
-router.post("/authenticatedPost") { (authUser: AuthUser, order: Order, respondWith: (Order?, RequestError?) -> Void) in
+// john:pwd1@localhost:8080/orders
+router.post("/orders") { (authUser: AuthUser, order: Order, respondWith: (Order?, RequestError?) -> Void) in
     print("Valid credentials must have been provided if we see this output.")
     print("UserProfile.id: \(authUser.id)")
     print("UserProfile.provider: \(authUser.provider)")

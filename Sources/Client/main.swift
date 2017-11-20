@@ -139,3 +139,7 @@ print("closureMirror.children: \(closureMirror.children)")
 //print("closureMirror.displayStyle: \(closureMirror.displayStyle)")
 print("closureMirror.subjectType: \(closureMirror.subjectType)")
 
+let url = URL(string: "http://user:password@localhost:8080")
+print("url: \(url!)")
+print("url: \(url!.user!)")
+print("url: \(url!.password!)")
