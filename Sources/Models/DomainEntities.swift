@@ -60,6 +60,7 @@ public class AuthUser: UserProfile, AuthenticatedUser {
         let users = ["john" : "pwd1", "mary" : "pwd2"]
         let basicCredentials = CredentialsHTTPBasic(verifyPassword: { userId, password, callback in
             print("Checking authentication credentials...")
+            print("userId: \(userId), password: \(password)")
             if let storedPassword = users[userId], storedPassword == password {
                 print("Valid credentials... creating UserProfile.")
                 callback(UserProfile(id: userId, displayName: userId, provider: "HTTPBasic"))
