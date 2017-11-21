@@ -7,6 +7,7 @@ public protocol Query: Codable {
             // swift reflection does not have a mechanism to get the types of the field variables
             // unless you have a concrete instance of the type... :-/
     static var dateDecodingFormatter: DateFormatter { get }
+    static func create(from rawParams: [String : String]) throws -> Self        
 }
 
 // This would be the default date decoding formatter
