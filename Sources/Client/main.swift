@@ -143,3 +143,9 @@ let url = URL(string: "http://user:password@localhost:8080")
 print("url: \(url!)")
 print("url: \(url!.user!)")
 print("url: \(url!.password!)")
+
+let userQuery = UserQuery(category: "category1", date: Date(), weight: 23.39, start: 10, end: 15)
+let rawDict = userQuery.rawDictionary
+print("rawDict: \(rawDict)")
+print("string: \(userQuery.string)")
+let blah: Any? = nil

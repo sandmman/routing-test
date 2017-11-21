@@ -7,7 +7,9 @@ public protocol Query: Codable {
             // swift reflection does not have a mechanism to get the types of the field variables
             // unless you have a concrete instance of the type... :-/
     static var dateDecodingFormatter: DateFormatter { get }
-    static func create(from rawParams: [String : String]) throws -> Self        
+    static func create(from rawParams: [String : String]) throws -> Self
+    var rawDictionary: [String : String] { get }
+    var string: String { get }
 }
 
 // This would be the default date decoding formatter
@@ -96,5 +98,96 @@ extension Query {
         let query: Self = try decoder.decode(Self.self, from: jsonData)
         Log.verbose("Query instance: \(query)")
         return query   
+    }
+}
+
+extension Query {
+     public var rawDictionary: [String : String] {
+        let queryMirror = Mirror(reflecting: self)
+        var queryParams: [String : String] = [:]
+        for (name, value) in queryMirror.children {
+            guard let name = name else { continue }
+            print("name: \(name), value: \(value)")
+            // Issue: https://bugs.swift.org/browse/SR-6025
+            let valueType = type(of: value)
+            print("valueType: \(valueType)")
+            switch valueType {
+                // Ints
+                case is Int.Type, is Optional<Int>.Type:
+                    if let integer = value as? Int {
+                        queryParams[name] = String(integer)
+                    } else {
+                        Log.warning("Could not process query parameter named '\(name)'.")
+                    }
+                case is Array<Int>.Type, is Optional<Array<Int>>.Type:
+                    if let integers = value as? [Int] {
+                         let strs: [String] = integers.map { String($0) }
+                         queryParams[name] = strs.joined(separator: ",")
+                    } else {
+                        Log.warning("Could not process query parameter named '\(name)'.")
+                    }
+                // Strings
+                case is String.Type, is Optional<String>.Type:
+                    if let string = value as? String {
+                        queryParams[name] = string
+                    }
+                case is Array<String>.Type, is Optional<Array<String>>.Type:
+                     if let strings = value as? [String] {
+                        queryParams[name] = strings.joined(separator: ",")
+                     }
+                // Floats
+                case is Float.Type, is Optional<Float>.Type:
+                    if let float = value as? Float {
+                        queryParams[name] = String(float)
+                    }
+                case is Array<Float>.Type, is Optional<Array<Float>>.Type:
+                    if let floats = value as? [Float] {
+                         let strs: [String] = floats.map { String($0) }
+                         queryParams[name] = strs.joined(separator: ",")
+                    } else {
+                        Log.warning("Could not process query parameter named '\(name)'.")
+                    }
+                // Doubles
+                case is Double.Type, is Optional<Double>.Type:
+                    if let double = value as? Double {
+                        queryParams[name] = String(double)
+                    } else {
+                        Log.warning("Could not process query parameter named '\(name)'.")
+                    }
+                case is Array<Double>.Type, is Optional<Array<Double>>.Type:
+                    if let doubles = value as? [Double] {
+                         let strs: [String] = doubles.map { String($0) }
+                         queryParams[name] = strs.joined(separator: ",")
+                    } else {
+                        Log.warning("Could not process query parameter named '\(name)'.")
+                    }               
+                // Dates (dates must be treated like strings)
+                // See http://benscheirman.com/2017/06/ultimate-guide-to-json-parsing-with-swift-4/
+                case is Date.Type, is Optional<Date>.Type:
+                    if let date = value as? Date {
+                        queryParams[name] = Self.dateDecodingFormatter.string(from: date)
+                    }
+                case is Array<Date>.Type, is Optional<Array<Date>>.Type:
+                    if let dates = value as? [Date] {
+                        let strs: [String] = dates.map { Self.dateDecodingFormatter.string(from: $0) }
+                        queryParams[name] = strs.joined(separator: ",")
+                    }
+                default:
+                    Log.warning("Doing best attempt effort for instance field named '\(name)' (unknown type).")
+                    queryParams[name] = String(describing: value)
+            }
+        }
+         return queryParams
+     }
+}
+
+extension Query {
+    public var string: String {
+        //https://stackoverflow.com/questions/33558933/why-is-the-return-value-of-string-addingpercentencoding-optional
+        let dict = self.rawDictionary
+        let desc: String = dict.map { key, value in "\(key)=\(value)" }
+            .reduce("") {pair1, pair2 in "\(pair1)&\(pair2)"}
+            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        return "?" + String(desc.dropFirst())
     }
 }

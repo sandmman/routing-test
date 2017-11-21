@@ -45,11 +45,15 @@ public struct UserQuery: Query {
 	public let end: Int?
 
     public init() {
-        category = nil
-        date = nil
-        weight = nil
-        start = nil
-        end = nil 
+        self.init(category: nil, date: nil, weight: nil, start: nil, end: nil) 
+    }
+
+    public init(category: String? = nil, date: Date? = nil, weight: Float? = nil, start: Int? = nil, end: Int? = nil) {
+        self.category = category
+        self.date = date
+        self.weight = weight
+        self.start = start
+        self.end = end
     }
 }
 
