@@ -22,6 +22,10 @@ extension String {
         return Int(self)
     }
 
+    public var uInt: UInt? {
+        return UInt(self)
+    }
+
     public var float: Float? {
         return Float(self)
     }
