@@ -144,12 +144,11 @@ public class MyDecoder: Decoder {
                 throw DecodingError()
             }
         // Dates
-        case is Date.Type, is Optional<Date>.Type:
+        case is Date.Type://, is Optional<Date>.Type:
             if let stringValue = fieldValue?.string, let dateValue = MyDecoder.dateDecodingFormatter.date(from: stringValue) as? T {
                 return dateValue
             }
             else {
-                print("OOOOHHHHH NOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!")
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
@@ -189,7 +188,8 @@ public class MyDecoder: Decoder {
         }
         
         func decodeNil(forKey key: Key) throws -> Bool {
-            return true
+            print("decodeNil, key: \(key)")
+            return false
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -207,6 +207,7 @@ public class MyDecoder: Decoder {
         }
         
         func superDecoder(forKey key: Key) throws -> Decoder {
+            print("superDecoder, key: \(key)")
             return decoder
         }
     }
