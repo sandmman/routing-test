@@ -1,17 +1,23 @@
 import Foundation
 import LoggerAPI
 
-public class MyDecoder: Decoder {
-    public var codingPath: [CodingKey] = []
-    
-    public var userInfo: [CodingUserInfoKey : Any] = [:]
+protocol Coder {
+    static var dateDecodingFormatter: DateFormatter { get }
+}
 
+extension Coder {
     public static var dateDecodingFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return dateFormatter
     }
+}
+
+public class QueryDecoder: Coder, Decoder {
+    public var codingPath: [CodingKey] = []
+    
+    public var userInfo: [CodingUserInfoKey : Any] = [:]
     
     public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
         print("In container<Key>...")
@@ -33,7 +39,7 @@ public class MyDecoder: Decoder {
     // }
 
     public static func decode<T: Decodable>(_ type: T.Type, dictionary: [String : String]) throws -> T {
-        return try MyDecoder(dictionary: dictionary).decode(T.self)
+        return try QueryDecoder(dictionary: dictionary).decode(T.self)
     }
     
    // fileprivate let data: Data
@@ -145,7 +151,7 @@ public class MyDecoder: Decoder {
             }
         // Dates
         case is Date.Type://, is Optional<Date>.Type:
-            if let stringValue = fieldValue?.string, let dateValue = MyDecoder.dateDecodingFormatter.date(from: stringValue) as? T {
+            if let stringValue = fieldValue?.string, let dateValue = QueryDecoder.dateDecodingFormatter.date(from: stringValue) as? T {
                 return dateValue
             }
             else {
@@ -154,7 +160,7 @@ public class MyDecoder: Decoder {
             }
         case is Array<Date>.Type, is Optional<Array<Date>>.Type:
             if let strings = fieldValue?.stringArray,
-                let dates = (strings.map { MyDecoder.dateDecodingFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }) as? T {
+                let dates = (strings.map { QueryDecoder.dateDecodingFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }) as? T {
                 return dates
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
@@ -167,7 +173,7 @@ public class MyDecoder: Decoder {
     }
     
     private struct KeyedContainer<Key: CodingKey>: KeyedDecodingContainerProtocol {
-        var decoder: MyDecoder
+        var decoder: QueryDecoder
         
         var codingPath: [CodingKey] { return [] }
         
@@ -213,7 +219,7 @@ public class MyDecoder: Decoder {
     }
     
     private struct UnkeyedContainer: UnkeyedDecodingContainer, SingleValueDecodingContainer {
-        var decoder: MyDecoder
+        var decoder: QueryDecoder
         
         var codingPath: [CodingKey] { return [] }
         

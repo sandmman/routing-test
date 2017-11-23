@@ -152,8 +152,9 @@ let blah: Any? = nil
 
 
 
-struct orm: Codable {
+struct MyQuery: Codable {
     let intField: Int
+    let optionalIntField: Int?
     let stringField: String
     let intArray: [Int]
     let dateField: Date
@@ -190,8 +191,8 @@ let t = type(of: intArray)
 print(t)
 
 print("==========Decoding with dictionary (instead of data) ==========")
-let dict: [String : String] = ["intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000"]
-let obj3 = try! MyDecoder.decode(orm.self, dictionary: dict)
+let dict: [String : String] = ["optionalIntField": "282", "intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000"]
+let obj3 = try! QueryDecoder.decode(MyQuery.self, dictionary: dict)
 print("============Done============")
 print(obj3)
 print(obj3.intField)
@@ -199,3 +200,4 @@ print(obj3.stringField)
 print(obj3.intArray)
 print(obj3.dateField)
 print(obj3.optionalDateField!)
+print(obj3.optionalIntField!)
