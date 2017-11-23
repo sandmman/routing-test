@@ -59,6 +59,7 @@ public class MyDecoder: Decoder {
 
     
         switch type {
+        // Ints
         case is Array<Int>.Type:
             if let ints = fieldValue?.intArray as? T {
                 return ints
@@ -81,6 +82,7 @@ public class MyDecoder: Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
+        // Floats
         case is Float.Type:
             if let floatValue = fieldValue?.float as? T {
                 print("floatValue: \(floatValue)")
@@ -89,10 +91,25 @@ public class MyDecoder: Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")            
                 throw DecodingError()
             }
+        case is Array<Float>.Type:
+            if let floats = fieldValue?.floatArray as? T {
+                return floats
+            } else {
+                Log.error("Could not process field named '\(fieldName)'.")
+                throw DecodingError()
+            }
+        // Doubles
         case is Double.Type:
             if let doubleValue = fieldValue?.double as? T {
                 print("doubleValue: \(doubleValue)")
                 return doubleValue
+            } else {
+                Log.error("Could not process field named '\(fieldName)'.")
+                throw DecodingError()
+            }
+        case is Array<Double>.Type:
+            if let doubles = fieldValue?.doubleArray as? T {
+                return doubles
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
@@ -107,6 +124,7 @@ public class MyDecoder: Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
+        // Strings
         case is String.Type:
             if let stringValue = fieldValue?.string as? T {
                 print("stringValue: \(stringValue)")
@@ -115,6 +133,13 @@ public class MyDecoder: Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
+        case is Array<String>.Type:
+            if let strings = fieldValue?.stringArray as? T {
+                return strings
+            } else {
+                Log.error("Could not process field named '\(fieldName)'.")
+                throw DecodingError()
+            }    
         default:
             Log.verbose("Decoding: \(T.Type.self)")
             return try! T(from: self)
