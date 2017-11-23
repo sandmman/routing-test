@@ -30,7 +30,7 @@ extension String {
         return Float(self)
     }
 
-     public var double: Double? {         
+    public var double: Double? {         
         return Double(self)
     }
 
