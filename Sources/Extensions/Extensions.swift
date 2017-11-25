@@ -74,7 +74,7 @@ extension String {
         return strs
     }
 
-    public func codable<T: Codable>(_ type: T.Type) -> T? {
+    public func decodable<T: Decodable>(_ type: T.Type) -> T? {
         guard let data = self.data(using: .utf8) else {
             return nil
         }

@@ -49,8 +49,8 @@ router.get("/users") { (queryParams: QueryParams, respondWith: ([User]?, Request
         print("weights(ints): \(weights)")
     }
 
-    if let object: Test = queryParams["object"]?.codable(Test.self) {
-        print("object(codable): \(object)")
+    if let object: Test = queryParams["object"]?.decodable(Test.self) {
+        print("object(decodable): \(object)")
     }
 
     if let start = queryParams["start"]?.int, let end = queryParams["end"]?.int {
@@ -82,8 +82,8 @@ router.get("/employees") { (request: RouterRequest, response: RouterResponse, ne
         print("weights(ints): \(weights)")
     }
 
-    if let object: Test = queryParams["object"]?.codable(Test.self) {
-        print("object(codable): \(object)")
+    if let object: Test = queryParams["object"]?.decodable(Test.self) {
+        print("object(decodable): \(object)")
     }
 
     if let start = queryParams["start"]?.int, let end = queryParams["end"]?.int {

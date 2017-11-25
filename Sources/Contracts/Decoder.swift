@@ -145,7 +145,7 @@ public class QueryDecoder: Coder, Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
-        case is Array<Date>.Type, is Optional<Array<Date>>.Type:
+        case is Array<Date>.Type://, is Optional<Array<Date>>.Type:
             if let strings = fieldValue?.stringArray,
                 let dates = (strings.map { QueryDecoder.dateDecodingFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }) as? T {
                 return dates
@@ -155,7 +155,16 @@ public class QueryDecoder: Coder, Decoder {
             }
         default:
             Log.verbose("Decoding: \(T.Type.self)")
-            return try! T(from: self)
+            if fieldName.isEmpty {
+                return try T(from: self)
+            } else {    // processing an instance member of the class/struct
+                if let decodable = fieldValue?.decodable(T.self) {
+                    return decodable
+                } else {
+                    Log.error("Could not process field named '\(fieldName)'.")
+                    throw DecodingError()
+                }
+            }
         }
     }
     

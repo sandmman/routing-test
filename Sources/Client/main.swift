@@ -159,7 +159,7 @@ struct MyQuery: Codable {
     let intArray: [Int]
     let dateField: Date
     let optionalDateField: Date?
-    //let nested: Nested
+    let nested: Nested
 }
 
 struct Nested: Codable {
@@ -191,7 +191,7 @@ let t = type(of: intArray)
 print(t)
 
 print("==========Decoding with dictionary (instead of data) ==========")
-let dict: [String : String] = ["optionalIntField": "282", "intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000"]
+let dict: [String : String] = ["optionalIntField": "282", "intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000", "nested": "{\"nestedIntField\":333,\"nestedStringField\":\"nested string\"}" ]
 let obj3 = try! QueryDecoder.decode(MyQuery.self, dictionary: dict)
 print("============Done============")
 print(obj3)
@@ -201,3 +201,4 @@ print(obj3.intArray)
 print(obj3.dateField)
 print(obj3.optionalDateField!)
 print(obj3.optionalIntField!)
+print(obj3.nested)
