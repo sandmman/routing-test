@@ -49,7 +49,7 @@ public class QueryDecoder: Coder, Decoder {
         print("In decode()...")
         print("decode type \(T.Type.self)")
         //if !codingPath.isEmpty {
-        let fieldName = codingPath.flatMap({"\($0)"}).joined(separator: ".")
+        let fieldName = QueryDecoder.getFieldName(from: codingPath)
         print("fieldName: \(fieldName)")
         let fieldValue = dictionary[fieldName]
         //}
@@ -68,6 +68,13 @@ public class QueryDecoder: Coder, Decoder {
         case is Int.Type:
             if let intValue = fieldValue?.int as? T {
                 return intValue
+            } else {
+                Log.error("Could not process field named '\(fieldName)'.")
+                throw DecodingError()
+            }
+        case is Array<UInt>.Type:
+            if let uInts = fieldValue?.uIntArray as? T {
+                return uInts
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()

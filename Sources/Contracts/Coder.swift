@@ -11,4 +11,8 @@ extension Coder {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return dateFormatter
     }
+
+    public static func getFieldName(from codingPath: [CodingKey]) -> String {
+        return codingPath.flatMap({"\($0)"}).joined(separator: ".")
+    }
 }

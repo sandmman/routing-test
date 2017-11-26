@@ -1,27 +1,60 @@
 import Foundation
 
 public class QueryEncoder: Coder, Encoder {
+
+    private var dictionary: [String : String]
     
     public var codingPath: [CodingKey] = []
     
     public var userInfo: [CodingUserInfoKey : Any] = [:]
+
+    // public func xyz(v: Codable) {
+
+    // }
+
+    public init() {
+        //super.init()
+        self.dictionary = [:]
+    }
     
     public func encode<T: Encodable>(_ value: T) {
-
-        
+        let fieldName = QueryEncoder.getFieldName(from: codingPath)   
         switch value {
+        // Ints
         case let v as Int:
-            print("\(codingPath.flatMap({"\($0)"}).joined(separator: ".")) = Int \(value)")
+            self.dictionary[fieldName] = String(v)
+            print("\(fieldName) = Int \(value)")
+        case let v as Array<Int>:
+            let strs: [String] = v.map { String($0) }
+            self.dictionary[fieldName] = strs.joined(separator: ",")
         case let v as UInt:
-           print("\(codingPath) = UInt \(value)")
+            self.dictionary[fieldName] = String(v)
+        case let v as Array<UInt>:
+            let strs: [String] = v.map { String($0) }
+            self.dictionary[fieldName] = strs.joined(separator: ",")
+        // Floats
         case let v as Float:
+            self.dictionary[fieldName] = String(v)
             print("\(codingPath) = Float \(value)")
+        case let v as Array<Float>:
+            let strs: [String] = v.map { String($0) }
+            self.dictionary[fieldName] = strs.joined(separator: ",")
+        // Doubles     
         case let v as Double:
+            self.dictionary[fieldName] = String(v)
             print("\(codingPath) = Double \(value)")
+        case let v as Array<Double>:
+            let strs: [String] = v.map { String($0) }
+            self.dictionary[fieldName] = strs.joined(separator: ",")
+        // Boolean     
         case let v as Bool:
+            self.dictionary[fieldName] = String(v)
             print("\(codingPath) = Bool \(value)")
+        // Strings
         case let v as String:
-            print("\(codingPath.flatMap({"\($0)"}).joined(separator: ".")) = String \(value)")
+            self.dictionary[fieldName] = v
+        case let v as Array<String>:
+            self.dictionary[fieldName] = v.joined(separator: ",")
         default:
             print("Encoding \(T.Type.self)")
             try! value.encode(to: self)

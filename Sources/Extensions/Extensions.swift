@@ -51,6 +51,15 @@ extension String {
         return nil
     }
 
+    public var uIntArray: [Int]? {
+        let strs: [String] = self.components(separatedBy: ",")
+        let uInts: [Int] = strs.map { Int($0) }.filter { $0 != nil }.map { $0! }
+        if uInts.count == strs.count {
+            return uInts
+        }
+        return nil
+    }
+
     public var floatArray: [Float]? {
         let strs: [String] = self.components(separatedBy: ",")
         let floats: [Float] = strs.map { Float($0) }.filter { $0 != nil }.map { $0! }
