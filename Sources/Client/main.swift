@@ -152,7 +152,7 @@ print(type(of: intArray))
 
 print("==========Decoding with dictionary (instead of data) ==========")
 let dict: [String : String] = ["optionalIntField": "282", "intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000", "nested": "{\"nestedIntField\":333,\"nestedStringField\":\"nested string\"}" ]
-let myQuery1 = try QueryDecoder.decode(MyQuery.self, from: dict)
+let myQuery1 = try QueryDecoder(dictionary: dict).decode(MyQuery.self)
 print("============Done============")
 print(myQuery1)
 print(myQuery1.intField)
@@ -164,9 +164,9 @@ print(myQuery1.optionalIntField!)
 print(myQuery1.nested)
 
 print("==========Encoding query object to dictionary ==========")
-let myQuery1Dict: [String : String] = try QueryEncoder.encode(myQuery1)
+let myQuery1Dict: [String : String] = try QueryEncoder().encode(myQuery1)
 print("myQuery1Dict: \(myQuery1Dict)")
-let myQuery1Str: String = try QueryEncoder.encode(myQuery1)
+let myQuery1Str: String = try QueryEncoder().encode(myQuery1)
 print("myQuery1Str: \(myQuery1Str)")
 print("============Done============")
 

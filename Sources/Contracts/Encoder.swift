@@ -13,17 +13,9 @@ public class QueryEncoder: Coder, Encoder {
     
     public var userInfo: [CodingUserInfoKey : Any] = [:]
 
-    public static func encode<T: Encodable>(_ value: T) throws -> [String : String] {
-        return try QueryEncoder().encode(value)
-    }
-
-    public static func encode<T: Encodable>(_ value: T) throws -> String {
-        let dict: [String : String] = try QueryEncoder.encode(value)
-        let desc: String = dict.map { key, value in "\(key)=\(value)" }
-            .reduce("") {pair1, pair2 in "\(pair1)&\(pair2)"}
-            .addingPercentEncoding(withAllowedCharacters: CharacterSet.customURLQueryAllowed)!
-        return "?" + String(desc.dropFirst())
-    }
+    // public static func encode<T: Encodable>(_ value: T) throws -> [String : String] {
+    //     return try QueryEncoder().encode(value)
+    // }
 
     public override init() {
         self.dictionary = [:]
@@ -35,8 +27,16 @@ public class QueryEncoder: Coder, Encoder {
         let errorCtx = EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.", underlyingError: underlyingError)
         return EncodingError.invalidValue(value, errorCtx)
     }
+
+    public func encode<T: Encodable>(_ value: T) throws -> String {
+        let dict: [String : String] = try encode(value)
+        let desc: String = dict.map { key, value in "\(key)=\(value)" }
+            .reduce("") {pair1, pair2 in "\(pair1)&\(pair2)"}
+            .addingPercentEncoding(withAllowedCharacters: CharacterSet.customURLQueryAllowed)!
+        return "?" + String(desc.dropFirst())
+    }
     
-    func encode<T: Encodable>(_ value: T) throws -> [String : String] {
+    public func encode<T: Encodable>(_ value: T) throws -> [String : String] {
         let fieldName = Coder.getFieldName(from: codingPath)
         Log.verbose("fieldName: \(fieldName), fieldValue: \(value)")  
         switch value {
@@ -79,6 +79,7 @@ public class QueryEncoder: Coder, Encoder {
             self.dictionary[fieldName] = strs.joined(separator: ",")
         default:
             if fieldName.isEmpty {
+                self.dictionary = [:]   // Make encoder instance reusable
                 try value.encode(to: self)
             } else {
                 do {
@@ -112,7 +113,7 @@ public class QueryEncoder: Coder, Encoder {
         func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
             self.encoder.codingPath.append(key)
             defer { self.encoder.codingPath.removeLast() }
-            let _ = try encoder.encode(value)
+            let _: [String : String] = try encoder.encode(value)
         }
         
         func encodeNil(forKey key: Key) throws { }
@@ -156,7 +157,7 @@ public class QueryEncoder: Coder, Encoder {
         func encodeNil() throws {}
         
         func encode<T>(_ value: T) throws where T : Encodable {
-            let _ = try encoder.encode(value)
+            let _: [String : String] = try encoder.encode(value)
         }
     }
 }

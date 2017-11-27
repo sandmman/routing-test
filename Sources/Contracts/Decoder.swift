@@ -18,11 +18,11 @@ public class QueryDecoder: Coder, Decoder {
         return UnkeyedContainer(decoder: self)
     }
 
-    public static func decode<T: Decodable>(_ type: T.Type, from dictionary: [String : String]) throws -> T {
-        return try QueryDecoder(dictionary: dictionary).decode(T.self)
-    }
+    // public static func decode<T: Decodable>(_ type: T.Type, from dictionary: [String : String]) throws -> T {
+    //     return try QueryDecoder(dictionary: dictionary).decode(T.self)
+    // }
     
-    private let dictionary: [String : String]
+    public var dictionary: [String : String]
 
     public init(dictionary: [String : String]) {
         self.dictionary = dictionary
@@ -37,7 +37,7 @@ public class QueryDecoder: Coder, Decoder {
         return DecodingError.dataCorrupted(errorCtx)
     }
     
-    func decode<T: Decodable>(_ type: T.Type) throws -> T {
+    public func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let fieldName = Coder.getFieldName(from: codingPath)
         let fieldValue = dictionary[fieldName]
         Log.verbose("fieldName: \(fieldName), fieldValue: \(String(describing: fieldValue))")
