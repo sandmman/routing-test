@@ -91,4 +91,20 @@ extension String {
         return obj
      }
 
+    public func date(_ formatter: DateFormatter) -> Date? {
+        return formatter.date(from: self)
+    }
+
+    public func dateArray(_ formatter: DateFormatter) -> [Date]? {
+        let strs: [String] = self.components(separatedBy: ",")
+        let dates = strs.map { formatter.date(from: $0) }.filter { $0 != nil }.map { $0! }
+        if dates.count == strs.count {
+            return dates
+        }
+        return nil
+    }
 }
+
+
+
+

@@ -1,6 +1,10 @@
 import Foundation
 import LoggerAPI
 
+extension CharacterSet {
+    static let customURLQueryAllowed = CharacterSet(charactersIn: "\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~=:&")
+}
+
 public class QueryEncoder: Coder, Encoder {
 
     private var dictionary: [String : String]
@@ -13,11 +17,11 @@ public class QueryEncoder: Coder, Encoder {
         return try QueryEncoder().encode(value)
     }
 
-     public static func encode<T: Encodable>(_ value: T) throws -> String {
+    public static func encode<T: Encodable>(_ value: T) throws -> String {
         let dict: [String : String] = try QueryEncoder.encode(value)
         let desc: String = dict.map { key, value in "\(key)=\(value)" }
             .reduce("") {pair1, pair2 in "\(pair1)&\(pair2)"}
-            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+            .addingPercentEncoding(withAllowedCharacters: CharacterSet.customURLQueryAllowed)!
         return "?" + String(desc.dropFirst())
     }
 
@@ -25,10 +29,10 @@ public class QueryEncoder: Coder, Encoder {
         self.dictionary = [:]
     }
 
-    private func throwEncodingError(_ value: Any) throws {
+    private func encodingError(_ value: Any, underlyingError: Error?) -> EncodingError {
         let fieldName = QueryEncoder.getFieldName(from: codingPath)
-        let errorCtx = EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.")
-        throw EncodingError.invalidValue(value, errorCtx)
+        let errorCtx = EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.", underlyingError: underlyingError)
+        return EncodingError.invalidValue(value, errorCtx)
     }
     
     func encode<T: Encodable>(_ value: T) throws -> [String : String] {
@@ -36,7 +40,7 @@ public class QueryEncoder: Coder, Encoder {
         Log.verbose("fieldName: \(fieldName), fieldValue: \(value)")  
         switch value {
         // Ints
-        case let fieldValue as Int:
+        case let fieldValue as Int: 
             self.dictionary[fieldName] = String(fieldValue)
         case let fieldValue as Array<Int>:
             let strs: [String] = fieldValue.map { String($0) }
@@ -76,25 +80,26 @@ public class QueryEncoder: Coder, Encoder {
             if fieldName.isEmpty {
                 try value.encode(to: self)
             } else {
-                let jsonData = try JSONEncoder().encode(value) 
-                self.dictionary[fieldName] = String(data: jsonData, encoding: .utf8)         
+                do {
+                    let jsonData = try JSONEncoder().encode(value) 
+                    self.dictionary[fieldName] = String(data: jsonData, encoding: .utf8)
+                } catch let error {
+                    throw encodingError(value, underlyingError: error)
+                }       
             }           
         }
         return self.dictionary
     }    
     
     public func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
-        //print("container")
         return KeyedEncodingContainer(KeyedContainer<Key>(encoder: self))
     }
     
     public func unkeyedContainer() -> UnkeyedEncodingContainer {
-        //print("unkeyed container")
         return UnkeyedContanier(encoder: self)
     }
     
     public func singleValueContainer() -> SingleValueEncodingContainer {
-        //print("single value container")
         return UnkeyedContanier(encoder: self)
     }
     

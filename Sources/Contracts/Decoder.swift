@@ -7,17 +7,14 @@ public class QueryDecoder: Coder, Decoder {
     public var userInfo: [CodingUserInfoKey : Any] = [:]
     
     public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        //print("In container<Key>...")
         return KeyedDecodingContainer(KeyedContainer<Key>(decoder: self))
     }
     
     public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        //print("In unkeyedContainer...")
         return UnkeyedContainer(decoder: self)
     }
     
     public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        //print("In singleValueContainer...")
         return UnkeyedContainer(decoder: self)
     }
 
@@ -50,103 +47,84 @@ public class QueryDecoder: Coder, Decoder {
             if let ints = fieldValue?.intArray as? T {
                 return ints
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         case is Int.Type:
             if let intValue = fieldValue?.int as? T {
                 return intValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         case is Array<UInt>.Type:
             if let uInts = fieldValue?.uIntArray as? T {
                 return uInts
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         case is UInt.Type:
             if let uIntValue = fieldValue?.uInt as? T {
-                print("uIntValue: \(uIntValue)")
                 return uIntValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         // Floats
         case is Float.Type:
             if let floatValue = fieldValue?.float as? T {
-                print("floatValue: \(floatValue)")
                 return floatValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")            
                 throw decodingError()
             }
         case is Array<Float>.Type:
             if let floats = fieldValue?.floatArray as? T {
                 return floats
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         // Doubles
         case is Double.Type:
             if let doubleValue = fieldValue?.double as? T {
-                print("doubleValue: \(doubleValue)")
                 return doubleValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         case is Array<Double>.Type:
             if let doubles = fieldValue?.doubleArray as? T {
                 return doubles
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         // Boolean
         case is Bool.Type:
             if let booleanValue = fieldValue?.boolean as? T {
-                print("booleanValue: \(booleanValue)")
                 return booleanValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         // Strings
         case is String.Type:
             if let stringValue = fieldValue?.string as? T {
-                print("stringValue: \(stringValue)")
                 return stringValue
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                throw decodingError()
             }
         case is Array<String>.Type:
             if let strings = fieldValue?.stringArray as? T {
                 return strings
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         // Dates
         case is Date.Type:
-            if let stringValue = fieldValue?.string, let dateValue = QueryDecoder.dateDecodingFormatter.date(from: stringValue) as? T {
+            if let dateValue = fieldValue?.date(QueryDecoder.dateDecodingFormatter) as? T {
                 return dateValue
             }
             else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         case is Array<Date>.Type:
-            if let strings = fieldValue?.stringArray,
-                let dates = (strings.map { QueryDecoder.dateDecodingFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }) as? T {
+            if let dates = fieldValue?.dateArray(QueryDecoder.dateDecodingFormatter) as? T {
                 return dates
             } else {
-                Log.error("Could not process field named '\(fieldName)'.")
                 throw decodingError()
             }
         default:
@@ -157,7 +135,6 @@ public class QueryDecoder: Coder, Decoder {
                 if let decodable = fieldValue?.decodable(T.self) {
                     return decodable
                 } else {
-                    Log.error("Could not process field named '\(fieldName)'.")
                     throw decodingError()
                 }
             }
@@ -182,17 +159,14 @@ public class QueryDecoder: Coder, Decoder {
         }
         
         func decodeNil(forKey key: Key) throws -> Bool {
-            //print("decodeNil, key: \(key)")
             return false
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-            //print("nestedContainer: decode type \(NestedKey.Type.self) forKey \(key)")
             return try decoder.container(keyedBy: type)
         }
         
         func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
-            //print("nestedUnkeyedContainer: decode forKey \(key)")
             return try decoder.unkeyedContainer()
         }
         
@@ -201,7 +175,6 @@ public class QueryDecoder: Coder, Decoder {
         }
         
         func superDecoder(forKey key: Key) throws -> Decoder {
-            //print("superDecoder, key: \(key)")
             return decoder
         }
     }
