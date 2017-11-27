@@ -41,8 +41,8 @@ public class QueryDecoder: Coder, Decoder {
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let fieldName = QueryDecoder.getFieldName(from: codingPath)
-        print("fieldName: \(fieldName)")
         let fieldValue = dictionary[fieldName]
+        Log.verbose("fieldName: \(fieldName), fieldValue: \(String(describing: fieldValue))")
       
         switch type {
         // Ints

@@ -1,4 +1,5 @@
 import Foundation
+import LoggerAPI
 
 public class QueryEncoder: Coder, Encoder {
 
@@ -23,7 +24,8 @@ public class QueryEncoder: Coder, Encoder {
     }
     
     func encode<T: Encodable>(_ value: T) throws -> [String : String] {
-        let fieldName = QueryEncoder.getFieldName(from: codingPath)   
+        let fieldName = QueryEncoder.getFieldName(from: codingPath)
+        Log.verbose("fieldName: \(fieldName), fieldValue: \(value)")  
         switch value {
         // Ints
         case let fieldValue as Int:
