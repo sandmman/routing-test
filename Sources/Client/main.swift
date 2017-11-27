@@ -3,7 +3,7 @@ import Models
 import Contracts
 import Extensions
 
-print("This is just a playground for trying things out...")
+print("This is just a playground for trying things out... (hence, not a client program).")
 
 func xyz(input: Codable) {
     print("----------")
@@ -63,7 +63,7 @@ let testObj3: Test = try! JSONDecoder().decode(testType.self, from: json)
 print("testObj3: \(testObj3)")
 
 //let anyType = testType as Any.Type
-//let testObj4: Test = try! JSONDecoder().decode(anyType.self, from: json) // does not compile :-/
+//let testObj4: Test = try! JSONDecoder().decode(anyType.self, from: json) // does not compile since T must conform to Decodable
 // http://inessential.com/2015/07/20/swift_diary_1_class_or_struct_from_str :-/
 let clazz: AnyClass? = NSClassFromString("Models.AuthUser")
 print("clazz = \(clazz!)")
@@ -77,11 +77,8 @@ struct Foo : Encodable {
 let foo = Foo(date: Date())
 let data = try! encoder.encode(foo)
 print("data: \(data)")
-print("data: \(data)")
 
-//A few points from my end.
-//Let's take a look at the following code:
-
+// Prototyping...
 func func3(param: String) { }
 func func4<A: CustomStringConvertible>(param: A) { 
     //print("size: \(param.count)") // this line won't compile as expected
@@ -89,7 +86,7 @@ func func4<A: CustomStringConvertible>(param: A) {
 func func5<A: CustomStringConvertible>(param: [A]) { print("size: \(param.count)") }
 let a: [String] = ["h1", "h2", "h3"]
 //func3(param: a)   // this won't compile, as expected (we are passing an array)
-func4(param: a)     // this compiles, which I found it odd... I was expecting this to not compile
+func4(param: a)     // this does compile, though I was initially expecting this to not compile
 func5(param: a)     // this compiles as expected
 
 // Let's now also look at this
@@ -121,7 +118,7 @@ let closureB: ([User]?, Error?) -> Void = { (users, error) -> Void in
 func1(param1: "a string", closure: closureA)
 func2(param1: "a string", closure: closureB)
 //func2(param1: "a string", closure: closureA)  // this does not not compile, as expected
-func1(param1: "a string", closure: closureB)    //this compiles (as the above example), which I find odd.
+func1(param1: "a string", closure: closureB)    //this compiles (as the above example), which I, initially, find odd.
 
 
 class MyTest {
@@ -151,23 +148,24 @@ print("string: \(userQuery.string)")
 let blah: Any? = nil
 
 let intArray: [Int] = [1,2,3]
-let t = type(of: intArray)
-print(t)
+print(type(of: intArray))
 
 print("==========Decoding with dictionary (instead of data) ==========")
 let dict: [String : String] = ["optionalIntField": "282", "intField": "23", "stringField": "a string", "intArray" : "1,2,3", "dateField" : "2017-10-31T16:15:56+0000", "optionalDateField" : "2017-10-31T16:15:56+0000", "nested": "{\"nestedIntField\":333,\"nestedStringField\":\"nested string\"}" ]
-let obj3 = try QueryDecoder.decode(MyQuery.self, from: dict)
+let myQuery1 = try QueryDecoder.decode(MyQuery.self, from: dict)
 print("============Done============")
-print(obj3)
-print(obj3.intField)
-print(obj3.stringField)
-print(obj3.intArray)
-print(obj3.dateField)
-print(obj3.optionalDateField!)
-print(obj3.optionalIntField!)
-print(obj3.nested)
+print(myQuery1)
+print(myQuery1.intField)
+print(myQuery1.stringField)
+print(myQuery1.intArray)
+print(myQuery1.dateField)
+print(myQuery1.optionalDateField!)
+print(myQuery1.optionalIntField!)
+print(myQuery1.nested)
 
 print("==========Encoding query object to dictionary ==========")
-let retVal = try QueryEncoder.encode(obj3)
-print("retVal (encoded): \(retVal)")
+let myQuery1Dict: [String : String] = try QueryEncoder.encode(myQuery1)
+print("myQuery1Dict: \(myQuery1Dict)")
+let myQuery1Str: String = try QueryEncoder.encode(myQuery1)
+print("myQuery1Str: \(myQuery1Str)")
 print("============Done============")

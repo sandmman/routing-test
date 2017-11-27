@@ -13,6 +13,14 @@ public class QueryEncoder: Coder, Encoder {
         return try QueryEncoder().encode(value)
     }
 
+     public static func encode<T: Encodable>(_ value: T) throws -> String {
+        let dict: [String : String] = try QueryEncoder.encode(value)
+        let desc: String = dict.map { key, value in "\(key)=\(value)" }
+            .reduce("") {pair1, pair2 in "\(pair1)&\(pair2)"}
+            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        return "?" + String(desc.dropFirst())
+    }
+
     init() {
         self.dictionary = [:]
     }

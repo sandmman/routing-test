@@ -136,8 +136,7 @@ router.get("/query1") { (query: UserQuery, respondWith: ([User]?, RequestError?)
 // Another possible implementation for query params. This one also uses a concrete type that the developer must implement.
 // This concrete type must conform to the Codable Protocol.
 // This approach is even closer to what we consider type-safe to be.
-// In this approach, we do not use the reflection API in Swift; instead we use a custom the developer must make all the fields in the 
-// Query class optional. 
+// In this approach, we do not use the reflection API in Swift; instead we use a custom encoder/decoder.
 //localhost:8080/query2?optionalIntField=2929&optionalDateField=2016-10-31T16:15:56%2B0000&intField=1234&stringField=str&intArray=100,101,102&dateField=2017-10-31T16:15:56%2B0000&nested=%7B"nestedIntField":333,"nestedStringField":"nested string"%7D
 router.get("/query2") { (query: MyQuery, respondWith: ([User]?, RequestError?) -> Void) in
     print("In query2 with MyQuery")
