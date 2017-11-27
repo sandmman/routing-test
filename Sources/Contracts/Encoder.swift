@@ -20,6 +20,7 @@ public class QueryEncoder: Coder, Encoder {
         case let v as Int:
             self.dictionary[fieldName] = String(v)
             print("\(fieldName) = Int \(value)")
+            //return self.dictionary
         case let v as Array<Int>:
             let strs: [String] = v.map { String($0) }
             self.dictionary[fieldName] = strs.joined(separator: ",")
@@ -69,8 +70,7 @@ public class QueryEncoder: Coder, Encoder {
                 }           
             }           
         }
-    }
-    
+    }    
     
     public func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
         //print("container")

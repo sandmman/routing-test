@@ -7,36 +7,25 @@ public class QueryDecoder: Coder, Decoder {
     public var userInfo: [CodingUserInfoKey : Any] = [:]
     
     public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        print("In container<Key>...")
+        //print("In container<Key>...")
         return KeyedDecodingContainer(KeyedContainer<Key>(decoder: self))
     }
     
     public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        print("In unkeyedContainer...")
+        //print("In unkeyedContainer...")
         return UnkeyedContainer(decoder: self)
     }
     
     public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        print("In singleValueContainer...")
+        //print("In singleValueContainer...")
         return UnkeyedContainer(decoder: self)
     }
-    
-    // static func decode<T: Decodable>(_ type: T.Type, data: Data) throws -> T {
-    //     return try MyDecoder(data: data).decode(T.self)
-    // }
 
     public static func decode<T: Decodable>(_ type: T.Type, dictionary: [String : String]) throws -> T {
         return try QueryDecoder(dictionary: dictionary).decode(T.self)
     }
     
-   // fileprivate let data: Data
-    //fileprivate var cursor = 0
     private let dictionary: [String : String]
-    
-    // public init(data: Data) {
-    //     self.data = data
-    //     self.dictionary = nil
-    // }
 
     public init(dictionary: [String : String]) {
         //https://stackoverflow.com/questions/29625133/convert-dictionary-to-json-in-swift
@@ -184,27 +173,23 @@ public class QueryDecoder: Coder, Decoder {
         }
         
         func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-            print("KeyedContainer: decode type \(T.Type.self) forKey \(key)")
-            print("key: \(key), type: \(type)")
-            print("self.decoder.codingPath: \(self.decoder.codingPath)")
             self.decoder.codingPath.append(key)
-            print("self.decoder.codingPath: \(self.decoder.codingPath)")
             defer { self.decoder.codingPath.removeLast() }
             return try decoder.decode(T.self)
         }
         
         func decodeNil(forKey key: Key) throws -> Bool {
-            print("decodeNil, key: \(key)")
+            //print("decodeNil, key: \(key)")
             return false
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-             print("nestedContainer: decode type \(NestedKey.Type.self) forKey \(key)")
+            //print("nestedContainer: decode type \(NestedKey.Type.self) forKey \(key)")
             return try decoder.container(keyedBy: type)
         }
         
         func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
-            print("nestedUnkeyedContainer: decode forKey \(key)")
+            //print("nestedUnkeyedContainer: decode forKey \(key)")
             return try decoder.unkeyedContainer()
         }
         
@@ -213,7 +198,7 @@ public class QueryDecoder: Coder, Decoder {
         }
         
         func superDecoder(forKey key: Key) throws -> Decoder {
-            print("superDecoder, key: \(key)")
+            //print("superDecoder, key: \(key)")
             return decoder
         }
     }
