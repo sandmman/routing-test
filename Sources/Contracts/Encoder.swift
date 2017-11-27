@@ -25,18 +25,19 @@ public class QueryEncoder: Coder, Encoder {
         return "?" + String(desc.dropFirst())
     }
 
-    init() {
+    public override init() {
         self.dictionary = [:]
+        super.init()
     }
 
     private func encodingError(_ value: Any, underlyingError: Error?) -> EncodingError {
-        let fieldName = QueryEncoder.getFieldName(from: codingPath)
+        let fieldName = Coder.getFieldName(from: codingPath)
         let errorCtx = EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.", underlyingError: underlyingError)
         return EncodingError.invalidValue(value, errorCtx)
     }
     
     func encode<T: Encodable>(_ value: T) throws -> [String : String] {
-        let fieldName = QueryEncoder.getFieldName(from: codingPath)
+        let fieldName = Coder.getFieldName(from: codingPath)
         Log.verbose("fieldName: \(fieldName), fieldValue: \(value)")  
         switch value {
         // Ints
@@ -72,9 +73,9 @@ public class QueryEncoder: Coder, Encoder {
             self.dictionary[fieldName] = fieldValue.joined(separator: ",")
         // Dates
         case let fieldValue as Date:
-            self.dictionary[fieldName] = QueryEncoder.dateDecodingFormatter.string(from: fieldValue)
+            self.dictionary[fieldName] = dateFormatter.string(from: fieldValue)
         case let fieldValue as Array<Date>:
-            let strs: [String] = fieldValue.map { QueryEncoder.dateDecodingFormatter.string(from: $0) }
+            let strs: [String] = fieldValue.map { dateFormatter.string(from: $0) }
             self.dictionary[fieldName] = strs.joined(separator: ",")
         default:
             if fieldName.isEmpty {

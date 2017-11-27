@@ -24,12 +24,13 @@ public class QueryDecoder: Coder, Decoder {
     
     private let dictionary: [String : String]
 
-    init(dictionary: [String : String]) {
+    public init(dictionary: [String : String]) {
         self.dictionary = dictionary
+        super.init()
     }
 
     private func decodingError() -> DecodingError {
-        let fieldName = QueryDecoder.getFieldName(from: codingPath)
+        let fieldName = Coder.getFieldName(from: codingPath)
         let errorMsg = "Could not process field named '\(fieldName)'."
         Log.error(errorMsg)
         let errorCtx = DecodingError.Context(codingPath: codingPath, debugDescription: errorMsg)
@@ -37,7 +38,7 @@ public class QueryDecoder: Coder, Decoder {
     }
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
-        let fieldName = QueryDecoder.getFieldName(from: codingPath)
+        let fieldName = Coder.getFieldName(from: codingPath)
         let fieldValue = dictionary[fieldName]
         Log.verbose("fieldName: \(fieldName), fieldValue: \(String(describing: fieldValue))")
       
@@ -115,14 +116,14 @@ public class QueryDecoder: Coder, Decoder {
             }
         // Dates
         case is Date.Type:
-            if let dateValue = fieldValue?.date(QueryDecoder.dateDecodingFormatter) as? T {
+            if let dateValue = fieldValue?.date(dateFormatter) as? T {
                 return dateValue
             }
             else {
                 throw decodingError()
             }
         case is Array<Date>.Type:
-            if let dates = fieldValue?.dateArray(QueryDecoder.dateDecodingFormatter) as? T {
+            if let dates = fieldValue?.dateArray(dateFormatter) as? T {
                 return dates
             } else {
                 throw decodingError()
