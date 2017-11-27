@@ -104,12 +104,12 @@ router.get("route") { (queryParams: String..., respondWith: ([User]?, RequestErr
 
 // Another possible implementation for query params. This one uses a concrete type that the developer must implement.
 // This concrete type must conform to the Query Protocol
-// Thhis approach is closer to what we consider type-safe to be.
+// This approach is closer to what we consider type-safe to be.
 // However due to limitations in the reflection API in Swift, the developer must make all the fields in the 
 // Query class optional. 
-//localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
-router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
-    print("In xyz with UserQuery")
+//localhost:8080/query1?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
+router.get("/query1") { (query: UserQuery, respondWith: ([User]?, RequestError?) -> Void) in
+    print("In query1 with UserQuery")
     if let category: String = query.category {
         print("category = \(category)")
     }
@@ -133,33 +133,30 @@ router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) ->
     respondWith(userStore.map({ $0.value }), nil)
 }
 
-// Another possible implementation for query params. This one uses a concrete type that the developer must implement.
-// This concrete type must conform to the Query Protocol
-// Thhis approach is closer to what we consider type-safe to be.
-// However due to limitations in the reflection API in Swift, the developer must make all the fields in the 
+// Another possible implementation for query params. This one also uses a concrete type that the developer must implement.
+// This concrete type must conform to the Codable Protocol.
+// This approach is even closer to what we consider type-safe to be.
+// In this approach, we do not use the reflection API in Swift; instead we use a custom the developer must make all the fields in the 
 // Query class optional. 
-//localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
-router.get("/query") { (query: MyQuery, respondWith: ([User]?, RequestError?) -> Void) in
-    // print("In xyz with UserQuery")
-    // if let category: String = query.category {
-    //     print("category = \(category)")
-    // }
-	
-    // if let date: Date = query.date {
-    //     print("date = \(date)")
-    // }
-	
-    // if let weight: Float = query.weight {
-    //     print("weight = \(weight)")
-    // } 
+//localhost:8080/query2?optionalIntField=2929&optionalDateField=2016-10-31T16:15:56%2B0000&intField=1234&stringField=str&intArray=100,101,102&dateField=2017-10-31T16:15:56%2B0000&nested=%7B"nestedIntField":333,"nestedStringField":"nested string"%7D
+router.get("/query2") { (query: MyQuery, respondWith: ([User]?, RequestError?) -> Void) in
+    print("In query2 with MyQuery")
 
-    // if let start: Int = query.start {
-    //     print("start = \(start)")
-    // }
-
-    // if let end: Int = query.end {
-    //     print("end = \(end)")
-    // }
+    print("intField = \(query.intField)")
+    print("stringField = \(query.stringField)")
+    print("intArray = \(query.intArray)")
+    print("dateField = \(query.dateField)")
+    print("nested = \(query.nested)")
+    print("nestedIntField = \(query.nested.nestedIntField)")
+    print("nestedStringField = \(query.nested.nestedStringField)")
+    
+    if let optionalIntField: Int = query.optionalIntField {
+        print("optionalIntField = \(optionalIntField)")
+    }
+	
+    if let optionalDateField: Date = query.optionalDateField {
+        print("optionalDateField = \(optionalDateField)")
+    }
 
     respondWith(userStore.map({ $0.value }), nil)
 }
