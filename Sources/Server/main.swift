@@ -133,6 +133,37 @@ router.get("/xyz") { (query: UserQuery, respondWith: ([User]?, RequestError?) ->
     respondWith(userStore.map({ $0.value }), nil)
 }
 
+// Another possible implementation for query params. This one uses a concrete type that the developer must implement.
+// This concrete type must conform to the Query Protocol
+// Thhis approach is closer to what we consider type-safe to be.
+// However due to limitations in the reflection API in Swift, the developer must make all the fields in the 
+// Query class optional. 
+//localhost:8080/xyz?category=manager&weight=65&start=100&end=400&date=2017-10-31T16:15:56%2B0000
+router.get("/query") { (query: MyQuery, respondWith: ([User]?, RequestError?) -> Void) in
+    // print("In xyz with UserQuery")
+    // if let category: String = query.category {
+    //     print("category = \(category)")
+    // }
+	
+    // if let date: Date = query.date {
+    //     print("date = \(date)")
+    // }
+	
+    // if let weight: Float = query.weight {
+    //     print("weight = \(weight)")
+    // } 
+
+    // if let start: Int = query.start {
+    //     print("start = \(start)")
+    // }
+
+    // if let end: Int = query.end {
+    //     print("end = \(end)")
+    // }
+
+    respondWith(userStore.map({ $0.value }), nil)
+}
+
 // A possible implementation for multiple URL route params - codable
 // Developer does not need to specify the identifiers for each entity in the path
 // Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity

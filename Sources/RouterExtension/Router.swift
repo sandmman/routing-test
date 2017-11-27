@@ -154,6 +154,33 @@ extension Router {
         }
     }
 
+    public func get<O: Codable, Q: Codable>(_ route: String, handler: @escaping (Q, ([O]?, RequestError?) -> Void) -> Void) {
+        get(route) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request")
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            Log.verbose("queryParameters: \(request.queryParameters)")
+            //todo: add do try block
+            let query: Q = try QueryDecoder.decode(Q.self, from: request.queryParameters)
+            handler(query, resultHandler)
+        }
+    }
+
     private static func extractParams(from route: String) -> [String] {
         //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
         let pattern = "/:([^/]*)(?:/|\\z)"

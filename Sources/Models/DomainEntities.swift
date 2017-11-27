@@ -57,6 +57,21 @@ public struct UserQuery: Query {
     }
 }
 
+public struct MyQuery: Codable {
+    public let intField: Int
+    public let optionalIntField: Int?
+    public let stringField: String
+    public let intArray: [Int]
+    public let dateField: Date
+    public let optionalDateField: Date?
+    public let nested: Nested
+}
+
+public struct Nested: Codable {
+    public let nestedIntField: Int
+    public let nestedStringField: String
+}
+
 public class AuthUser: UserProfile, AuthenticatedUser {
     public static func createCredentials() -> Credentials {
         // Configuration of Credentials object would go here

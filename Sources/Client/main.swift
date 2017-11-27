@@ -150,42 +150,6 @@ print("rawDict: \(rawDict)")
 print("string: \(userQuery.string)")
 let blah: Any? = nil
 
-
-
-struct MyQuery: Codable {
-    let intField: Int
-    let optionalIntField: Int?
-    let stringField: String
-    let intArray: [Int]
-    let dateField: Date
-    let optionalDateField: Date?
-    let nested: Nested
-}
-
-struct Nested: Codable {
-    let nestedIntField: Int
-    let nestedStringField: String
-}
-
-// extension orm {
-//     static func bing() {
-
-//         let bing = self.CodingKeys.init(intValue: 10)
-//         print(bing)
-//     }
-// }
-
-// let nested = Nested(nestedIntField: 100, nestedStringField: "NestedString")
-// let obj = orm(intField: 10, stringField: "String", nested: nested)
-
-// print("==========Encoding==========")
-// let data = try! MyEncoder().encode(obj)
-// print("==========Decoding==========")
-// let data2 = Data()
-// let obj2 = try! MyDecoder.decode(orm.self, data: data2)
-// print("============Done============")
-// print(obj2.stringField)
-
 let intArray: [Int] = [1,2,3]
 let t = type(of: intArray)
 print(t)
