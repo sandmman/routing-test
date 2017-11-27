@@ -30,6 +30,12 @@ public class QueryDecoder: Coder, Decoder {
     init(dictionary: [String : String]) {
         self.dictionary = dictionary
     }
+
+    private func throwDecodingError() throws {
+        let fieldName = QueryDecoder.getFieldName(from: codingPath)
+        let errorCtx = Swift.DecodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.")
+        throw Swift.DecodingError.dataCorrupted(errorCtx)
+    }
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let fieldName = QueryDecoder.getFieldName(from: codingPath)
@@ -151,7 +157,9 @@ public class QueryDecoder: Coder, Decoder {
                 } else {
                     Log.error("Could not process field named '\(fieldName)'.")
                     //https://developer.apple.com/documentation/swift/decodingerror
-                    throw DecodingError()
+                    //throw DecodingError()
+                    let f = Swift.DecodingError.Context(codingPath: codingPath, debugDescription: "")
+                    throw Swift.DecodingError.dataCorrupted(f)
                 }
             }
         }
