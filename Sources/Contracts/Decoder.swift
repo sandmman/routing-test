@@ -31,10 +31,12 @@ public class QueryDecoder: Coder, Decoder {
         self.dictionary = dictionary
     }
 
-    private func throwDecodingError() throws {
+    private func decodingError() -> DecodingError {
         let fieldName = QueryDecoder.getFieldName(from: codingPath)
-        let errorCtx = Swift.DecodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.")
-        throw Swift.DecodingError.dataCorrupted(errorCtx)
+        let errorMsg = "Could not process field named '\(fieldName)'."
+        Log.error(errorMsg)
+        let errorCtx = DecodingError.Context(codingPath: codingPath, debugDescription: errorMsg)
+        return DecodingError.dataCorrupted(errorCtx)
     }
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
@@ -49,21 +51,21 @@ public class QueryDecoder: Coder, Decoder {
                 return ints
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         case is Int.Type:
             if let intValue = fieldValue?.int as? T {
                 return intValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         case is Array<UInt>.Type:
             if let uInts = fieldValue?.uIntArray as? T {
                 return uInts
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         case is UInt.Type:
             if let uIntValue = fieldValue?.uInt as? T {
@@ -71,7 +73,7 @@ public class QueryDecoder: Coder, Decoder {
                 return uIntValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         // Floats
         case is Float.Type:
@@ -80,14 +82,14 @@ public class QueryDecoder: Coder, Decoder {
                 return floatValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")            
-                throw DecodingError()
+                throw decodingError()
             }
         case is Array<Float>.Type:
             if let floats = fieldValue?.floatArray as? T {
                 return floats
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         // Doubles
         case is Double.Type:
@@ -96,14 +98,14 @@ public class QueryDecoder: Coder, Decoder {
                 return doubleValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         case is Array<Double>.Type:
             if let doubles = fieldValue?.doubleArray as? T {
                 return doubles
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         // Boolean
         case is Bool.Type:
@@ -112,7 +114,7 @@ public class QueryDecoder: Coder, Decoder {
                 return booleanValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         // Strings
         case is String.Type:
@@ -121,14 +123,14 @@ public class QueryDecoder: Coder, Decoder {
                 return stringValue
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+               throw decodingError()
             }
         case is Array<String>.Type:
             if let strings = fieldValue?.stringArray as? T {
                 return strings
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         // Dates
         case is Date.Type:
@@ -137,7 +139,7 @@ public class QueryDecoder: Coder, Decoder {
             }
             else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         case is Array<Date>.Type:
             if let strings = fieldValue?.stringArray,
@@ -145,7 +147,7 @@ public class QueryDecoder: Coder, Decoder {
                 return dates
             } else {
                 Log.error("Could not process field named '\(fieldName)'.")
-                throw DecodingError()
+                throw decodingError()
             }
         default:
             Log.verbose("Decoding: \(T.Type.self)")
@@ -156,10 +158,7 @@ public class QueryDecoder: Coder, Decoder {
                     return decodable
                 } else {
                     Log.error("Could not process field named '\(fieldName)'.")
-                    //https://developer.apple.com/documentation/swift/decodingerror
-                    //throw DecodingError()
-                    let f = Swift.DecodingError.Context(codingPath: codingPath, debugDescription: "")
-                    throw Swift.DecodingError.dataCorrupted(f)
+                    throw decodingError()
                 }
             }
         }

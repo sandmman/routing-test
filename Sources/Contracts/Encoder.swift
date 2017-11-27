@@ -18,8 +18,8 @@ public class QueryEncoder: Coder, Encoder {
 
     private func throwEncodingError(_ value: Any) throws {
         let fieldName = QueryEncoder.getFieldName(from: codingPath)
-        let errorCtx = Swift.EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.")
-        throw Swift.EncodingError.invalidValue(value, errorCtx)
+        let errorCtx = EncodingError.Context(codingPath: codingPath, debugDescription: "Could not process field named '\(fieldName)'.")
+        throw EncodingError.invalidValue(value, errorCtx)
     }
     
     func encode<T: Encodable>(_ value: T) throws -> [String : String] {
