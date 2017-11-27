@@ -204,6 +204,6 @@ print(obj3.optionalIntField!)
 print(obj3.nested)
 
 print("==========Encoding query object to dictionary ==========")
-try QueryEncoder().encode(obj3)
+let retVal = try QueryEncoder().encode(obj3)
 //QueryEncoder.xyz(obj3)
 print("============Done============")

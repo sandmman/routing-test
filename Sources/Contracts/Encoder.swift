@@ -8,16 +8,12 @@ public class QueryEncoder: Coder, Encoder {
     
     public var userInfo: [CodingUserInfoKey : Any] = [:]
 
-    // public func xyz(v: Codable) {
-
-    // }
-
     public init() {
-        //super.init()
         self.dictionary = [:]
     }
     
-    public func encode<T: Encodable>(_ value: T) {
+    public func encode<T: Encodable>(_ value: T) throws {
+        print("In encode() 1")
         let fieldName = QueryEncoder.getFieldName(from: codingPath)   
         switch value {
         // Ints
@@ -55,9 +51,23 @@ public class QueryEncoder: Coder, Encoder {
             self.dictionary[fieldName] = v
         case let v as Array<String>:
             self.dictionary[fieldName] = v.joined(separator: ",")
+        // Dates
+        case let v as Date:
+            self.dictionary[fieldName] = QueryEncoder.dateDecodingFormatter.string(from: v)
+        case let v as Array<Date>:
+            let strs: [String] = v.map { QueryEncoder.dateDecodingFormatter.string(from: $0) }
+            self.dictionary[fieldName] = strs.joined(separator: ",")
         default:
             print("Encoding \(T.Type.self)")
-            try! value.encode(to: self)
+            if fieldName.isEmpty {
+                try value.encode(to: self)
+            } else {
+                if let jsonData = try? JSONEncoder().encode(value) {
+                    self.dictionary[fieldName] = String(data: jsonData, encoding: .utf8)
+                }  else {
+                    throw EncodingError()
+                }           
+            }           
         }
     }
     
@@ -83,6 +93,7 @@ public class QueryEncoder: Coder, Encoder {
         var codingPath: [CodingKey] { return [] }
         
         func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
+             print("In encode() 2")
             //print("Keyed container \(value) \(key)")
             self.encoder.codingPath.append(key)
             defer { self.encoder.codingPath.removeLast() }

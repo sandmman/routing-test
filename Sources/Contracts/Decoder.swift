@@ -48,14 +48,11 @@ public class QueryDecoder: Coder, Decoder {
         //print("decode type \(T.Type.self)")
         print("In decode()...")
         print("decode type \(T.Type.self)")
-        //if !codingPath.isEmpty {
+   
         let fieldName = QueryDecoder.getFieldName(from: codingPath)
         print("fieldName: \(fieldName)")
         let fieldValue = dictionary[fieldName]
-        //}
-        
-        print("type: \(type)")
-
+      
         switch type {
         // Ints
         case is Array<Int>.Type:
@@ -164,7 +161,7 @@ public class QueryDecoder: Coder, Decoder {
             Log.verbose("Decoding: \(T.Type.self)")
             if fieldName.isEmpty {
                 return try T(from: self)
-            } else {    // processing an instance member of the class/struct
+            } else {    // Processing an instance member of the class/struct
                 if let decodable = fieldValue?.decodable(T.self) {
                     return decodable
                 } else {
