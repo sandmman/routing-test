@@ -205,5 +205,6 @@ print(obj3.nested)
 
 print("==========Encoding query object to dictionary ==========")
 let retVal = try QueryEncoder().encode(obj3)
+print("retVal (encoded): \(retVal)")
 //QueryEncoder.xyz(obj3)
 print("============Done============")
