@@ -21,23 +21,19 @@ public class QueryDecoder: Coder, Decoder {
         return UnkeyedContainer(decoder: self)
     }
 
-    public static func decode<T: Decodable>(_ type: T.Type, dictionary: [String : String]) throws -> T {
+    public static func decode<T: Decodable>(_ type: T.Type, from dictionary: [String : String]) throws -> T {
         return try QueryDecoder(dictionary: dictionary).decode(T.self)
     }
     
     private let dictionary: [String : String]
 
-    public init(dictionary: [String : String]) {
+    init(dictionary: [String : String]) {
         //https://stackoverflow.com/questions/29625133/convert-dictionary-to-json-in-swift
         self.dictionary = dictionary
         //self.data = try! JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
     }
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
-        //print("decode type \(T.Type.self)")
-        print("In decode()...")
-        print("decode type \(T.Type.self)")
-   
         let fieldName = QueryDecoder.getFieldName(from: codingPath)
         print("fieldName: \(fieldName)")
         let fieldValue = dictionary[fieldName]

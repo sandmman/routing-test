@@ -8,11 +8,15 @@ public class QueryEncoder: Coder, Encoder {
     
     public var userInfo: [CodingUserInfoKey : Any] = [:]
 
-    public init() {
+    public static func encode<T: Encodable>(_ value: T) throws -> [String : String] {
+        return try QueryEncoder().encode(value)
+    }
+
+    init() {
         self.dictionary = [:]
     }
     
-    public func encode<T: Encodable>(_ value: T) throws -> [String : String] {
+    func encode<T: Encodable>(_ value: T) throws -> [String : String] {
         let fieldName = QueryEncoder.getFieldName(from: codingPath)   
         switch value {
         // Ints
