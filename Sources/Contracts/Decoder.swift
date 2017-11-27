@@ -28,9 +28,7 @@ public class QueryDecoder: Coder, Decoder {
     private let dictionary: [String : String]
 
     init(dictionary: [String : String]) {
-        //https://stackoverflow.com/questions/29625133/convert-dictionary-to-json-in-swift
         self.dictionary = dictionary
-        //self.data = try! JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
     }
     
     func decode<T: Decodable>(_ type: T.Type) throws -> T {
@@ -101,6 +99,7 @@ public class QueryDecoder: Coder, Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
+        // Boolean
         case is Bool.Type:
             if let booleanValue = fieldValue?.boolean as? T {
                 print("booleanValue: \(booleanValue)")
@@ -126,7 +125,7 @@ public class QueryDecoder: Coder, Decoder {
                 throw DecodingError()
             }
         // Dates
-        case is Date.Type://, is Optional<Date>.Type:
+        case is Date.Type:
             if let stringValue = fieldValue?.string, let dateValue = QueryDecoder.dateDecodingFormatter.date(from: stringValue) as? T {
                 return dateValue
             }
@@ -134,7 +133,7 @@ public class QueryDecoder: Coder, Decoder {
                 Log.error("Could not process field named '\(fieldName)'.")
                 throw DecodingError()
             }
-        case is Array<Date>.Type://, is Optional<Array<Date>>.Type:
+        case is Array<Date>.Type:
             if let strings = fieldValue?.stringArray,
                 let dates = (strings.map { QueryDecoder.dateDecodingFormatter.date(from: $0) }.filter { $0 != nil }.map { $0! }) as? T {
                 return dates
@@ -151,6 +150,7 @@ public class QueryDecoder: Coder, Decoder {
                     return decodable
                 } else {
                     Log.error("Could not process field named '\(fieldName)'.")
+                    //https://developer.apple.com/documentation/swift/decodingerror
                     throw DecodingError()
                 }
             }
