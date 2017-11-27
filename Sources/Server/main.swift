@@ -163,6 +163,8 @@ router.get("/query2") { (query: MyQuery, respondWith: ([User]?, RequestError?) -
 // A possible implementation for multiple URL route params - codable
 // Developer does not need to specify the identifiers for each entity in the path
 // Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity
+// Though these is a hole in this approach... it assumes that an identifier is needed for the last element in the path... which may or may not be the case
+// dependending on the use case :-/
 // localhost:8080/customers/3233/orders/1432
 router.get("/customers/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
