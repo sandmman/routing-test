@@ -170,3 +170,13 @@ let myQuery1Str: String = try QueryEncoder().encode(myQuery1)
 print("myQuery1Str: \(myQuery1Str)")
 print("============Done============")
 
+
+var myDictionary: [String : Codable] = [:]
+
+myDictionary["key1"] = 1
+myDictionary["key2"] = "value2"
+myDictionary["key3"] = myQuery1
+print(myDictionary["key1"]!)
+print(myDictionary["key2"]!)
+print(myDictionary["key3"]!)
+
