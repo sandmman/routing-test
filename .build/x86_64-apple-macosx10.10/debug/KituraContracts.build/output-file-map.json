@@ -1,0 +1,17 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/ClousureAliases.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/ClousureAliases.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/ClousureAliases.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/ClousureAliases~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/ClousureAliases.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/Contracts.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/Contracts.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/Contracts.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/Contracts~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/KituraContracts.build/Contracts.swiftdeps"
+  }
+}

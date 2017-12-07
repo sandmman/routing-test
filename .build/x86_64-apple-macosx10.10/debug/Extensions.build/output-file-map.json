@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Extensions.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/Sources/Extensions/Extensions.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Extensions.build/Extensions.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Extensions.build/Extensions.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Extensions.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Extensions.build/Extensions.swiftdeps"
+  }
+}

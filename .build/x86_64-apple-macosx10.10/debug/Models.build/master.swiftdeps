@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "6ca248f9c566cd79e36fac578d399d99"
+build_time: [1512596763, 369092000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/Sources/Models/DomainEntities.swift": [1512163543, 0]

@@ -1,0 +1,7 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "f8ba40eb969a3c837dcba45efef0c342"
+build_time: [1512600625, 863675000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraKit.git-7736120830793145726/Sources/KituraKit/Client.swift": [1512597513, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraKit.git-7736120830793145726/Sources/KituraKit/PersistableExtension.swift": [1512596534, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraKit.git-7736120830793145726/Sources/KituraKit/RequestErrorExtension.swift": [1512596534, 0]

@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "8d0b37475a6bc5a49e03ddffd7d0cf10"
+build_time: [1512596544, 566343000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-TemplateEngine.git--5059963620657797085/Sources/KituraTemplateEngine/TemplateEngine.swift": [1512596534, 0]

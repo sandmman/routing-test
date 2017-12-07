@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/Coder.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Coder.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Coder.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Coder~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Coder.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/Contracts.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Contracts.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Contracts.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Contracts~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/Contracts.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/QueryDecoder.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryDecoder.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryDecoder.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryDecoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryDecoder.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/QueryEncoder.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryEncoder.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryEncoder.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryEncoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Contracts.build/QueryEncoder.swiftdeps"
+  }
+}

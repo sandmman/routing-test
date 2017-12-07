@@ -37,7 +37,7 @@ router.post("/orders") { (authUser: AuthUser, order: Order, respondWith: (Order?
 
 // A codable approach for authentication (inspired by code from cbailey @ https://github.com/seabaylea/CodableAuth)
 // john:pwd1@localhost:8080/orders
-router.get("/orders") { (authUser: AuthUser, respondWith: (AuthUser?, [Order]?, RequestError?) -> Void) in
+router.get("/orders") { (authUser: AuthUser, respondWith: ([Order]?, RequestError?) -> Void) in
   print("Valid credentials must have been provided if we see this output.")
   print("UserProfile.id: \(authUser.id)")
   print("UserProfile.provider: \(authUser.provider)")
@@ -45,7 +45,7 @@ router.get("/orders") { (authUser: AuthUser, respondWith: (AuthUser?, [Order]?, 
   print("extendend properties: \(String(describing: authUser.xyz))")
   //print("Order: \(order)")
   let orders: [Order] = orderStore.map { return $1}
-  respondWith(authUser, orders, nil)
+  respondWith(orders, nil)
 }
 
 let credentials = Credentials()

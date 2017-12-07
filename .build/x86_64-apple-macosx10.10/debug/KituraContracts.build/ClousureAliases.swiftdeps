@@ -1,0 +1,42 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ResultClosure"
+- "CodableResultClosure"
+- "CodableArrayResultClosure"
+- "IdentifierCodableResultClosure"
+- "IdentifierCodableClosure"
+- "CodableClosure"
+- "CodableIdentifierClosure"
+- "NonCodableClosure"
+- "IdentifierNonCodableClosure"
+- "CodableArrayClosure"
+- "SimpleCodableClosure"
+- "IdentifierSimpleCodableClosure"
+provides-nominal:
+provides-member:
+provides-dynamic-lookup:
+depends-top-level:
+- "Codable"
+- "CodableArrayClosure"
+- "CodableArrayResultClosure"
+- "CodableClosure"
+- "CodableIdentifierClosure"
+- "CodableResultClosure"
+- "Identifier"
+- "IdentifierCodableClosure"
+- "IdentifierCodableResultClosure"
+- "IdentifierNonCodableClosure"
+- "IdentifierSimpleCodableClosure"
+- "NonCodableClosure"
+- "RequestError"
+- "ResultClosure"
+- "SimpleCodableClosure"
+- "Void"
+depends-member:
+depends-nominal:
+depends-dynamic-lookup:
+depends-external:
+- "/Library/Developer/Toolchains/swift-4.0.2-RELEASE.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Library/Developer/Toolchains/swift-4.0.2-RELEASE.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CHTTPParser.build/module.modulemap"
+interface-hash: "82b02cbafa710b0a7c799774fa650275"

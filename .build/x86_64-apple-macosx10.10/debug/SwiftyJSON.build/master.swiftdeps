@@ -1,0 +1,6 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "c2c8df0e20be7baf5a89b56e05929689"
+build_time: [1512596544, 543905000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyJSON.git--6955445084174387031/Sources/SwiftyJSON/LclJSONSerialization.swift": [1512596540, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyJSON.git--6955445084174387031/Sources/SwiftyJSON/SwiftyJSON.swift": [1512596540, 0]

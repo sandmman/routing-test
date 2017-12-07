@@ -1,0 +1,53 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/BaseCacheElement.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/BaseCacheElement.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/BaseCacheElement.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/BaseCacheElement~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/BaseCacheElement.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/Credentials.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Credentials.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Credentials.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Credentials~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Credentials.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/CredentialsPluginProtocol.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/CredentialsPluginProtocol.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/CredentialsPluginProtocol.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/CredentialsPluginProtocol~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/CredentialsPluginProtocol.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/Extensions.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Extensions.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Extensions.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/Extensions.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/RouterExtension.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterExtension.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterExtension.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterExtension~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterExtension.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/RouterRequest+UserProfile.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterRequest+UserProfile.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterRequest+UserProfile.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterRequest+UserProfile~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/RouterRequest+UserProfile.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/UserProfile.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfile.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfile.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfile~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfile.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/Kitura-Credentials.git-1137106172743287290/Sources/Credentials/UserProfileDelegate.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfileDelegate.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfileDelegate.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfileDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/Credentials.build/UserProfileDelegate.swiftdeps"
+  }
+}

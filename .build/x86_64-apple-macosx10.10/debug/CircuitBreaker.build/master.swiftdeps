@@ -1,0 +1,7 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "6d5208a72140ad0f9df1d85582e96bde"
+build_time: [1512596545, 18175000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/CircuitBreaker.swift": [1512596538, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/Stats.swift": [1512596538, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/Utils.swift": [1512596538, 0]

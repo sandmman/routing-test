@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/HTTPMethod.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/HTTPMethod.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/HTTPMethod.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/HTTPMethod~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/HTTPMethod.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/JSON.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/JSON.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/JSON.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/JSON~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/JSON.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/MultipartFormData.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/MultipartFormData.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/MultipartFormData.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/MultipartFormData~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/MultipartFormData.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/RestRequest.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestRequest.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestRequest.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestRequest~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestRequest.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/RestToken.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestToken.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestToken.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestToken~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestToken.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/RestUtilities.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestUtilities.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestUtilities.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestUtilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/RestUtilities.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/SwiftyRequest.git-6576371758510018075/Sources/SwiftyRequest/StringExtensions.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/StringExtensions.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/StringExtensions.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/StringExtensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/SwiftyRequest.build/StringExtensions.swiftdeps"
+  }
+}

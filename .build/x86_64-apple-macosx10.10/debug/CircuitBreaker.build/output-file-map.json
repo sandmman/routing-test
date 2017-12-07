@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/master.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/CircuitBreaker.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/CircuitBreaker.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/CircuitBreaker.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/CircuitBreaker~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/CircuitBreaker.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/Stats.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Stats.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Stats.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Stats~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Stats.swiftdeps"
+  },
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/CircuitBreaker.git-2769702059765205370/Sources/CircuitBreaker/Utils.swift": {
+    "dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Utils.d",
+    "object": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Utils.swift.o",
+    "swiftmodule": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Utils~partial.swiftmodule",
+    "swift-dependencies": "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CircuitBreaker.build/Utils.swiftdeps"
+  }
+}

@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "7e3666f4194d88374e07eaa86e39325c"
+build_time: [1512597002, 824803000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/Sources/Server/main.swift": !dirty [1512410334, 0]

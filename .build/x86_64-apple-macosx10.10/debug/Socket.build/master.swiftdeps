@@ -1,0 +1,7 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "ad9202c4b65e94bb6b3fb0fb9cecae92"
+build_time: [1512596544, 548418000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/BlueSocket.git-3162807777605905816/Sources/Socket/Socket.swift": [1512596537, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/BlueSocket.git-3162807777605905816/Sources/Socket/SocketProtocols.swift": [1512596537, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/BlueSocket.git-3162807777605905816/Sources/Socket/SocketUtils.swift": [1512596537, 0]

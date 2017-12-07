@@ -1,0 +1,6 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "4ca8d447b0b64de61f8c67c460091143"
+build_time: [1512596545, 383131000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/HeliumLogger.git-2106793442615829935/Sources/HeliumLogger/HeliumLogger.swift": [1512596539, 0]
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/HeliumLogger.git-2106793442615829935/Sources/HeliumLogger/HeliumStreamLogger.swift": [1512596539, 0]

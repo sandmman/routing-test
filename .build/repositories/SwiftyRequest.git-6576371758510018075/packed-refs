@@ -1,0 +1,27 @@
+# pack-refs with: peeled fully-peeled 
+2985c8e6bc3d04ba5d6d4c12f40ef38d18eda5c4 refs/heads/docs
+099241a75b0183ff61aef4f5b993b435b41dec7f refs/heads/issue.body
+f5c5606e4a7dd3b566f25527cba3af6d8c0c7063 refs/heads/issue.build
+adeaf54706677a12d810fe3c9483a090b2368745 refs/heads/issue.circuit
+c060adce2a4aab757e779a66517a829b303b2a0c refs/heads/issue.restKitUpdates
+4c571be415d71f1f45d5c44ccc92b17a47acde88 refs/heads/master
+0524c7a22f22657e56d54af14bd1fb0e74a995a2 refs/pull/1/head
+9d5123ad809fec4828e7643f2f797245c45ec916 refs/pull/10/head
+c060adce2a4aab757e779a66517a829b303b2a0c refs/pull/11/head
+0178a6e5e68a5ebcf687db2f249a53cfc790b38c refs/pull/2/head
+832b0bdb46e398bb4b661c7c0cc94e82af5f355b refs/pull/3/head
+9fbbbd0acf9c1535b29496f2aa0579d948c6c594 refs/pull/4/head
+a7fcbabae4820ac41e464a50640649b8e5e63c39 refs/pull/5/head
+26ce94be0e829fbb0c4313e2e62aafb030821277 refs/pull/6/head
+2985c8e6bc3d04ba5d6d4c12f40ef38d18eda5c4 refs/pull/7/head
+8354a5f648395ae81fd974a9c1e78aad1869bbae refs/pull/8/head
+bca7cc655e748864ffa0cec5873aeee1edc2f359 refs/pull/8/merge
+099241a75b0183ff61aef4f5b993b435b41dec7f refs/pull/9/head
+ad3d839cdb0b075f875e7e318a9f9a976f5b3f2c refs/pull/9/merge
+117899d839a884bf49704634a2029870fec779c1 refs/tags/0.0.1
+fb25eb73f22c3f97d780f659168731a02b015da0 refs/tags/0.0.2
+994695641c14ea3140e95cf392359271b07b921b refs/tags/0.0.3
+c3d6ca08de32d457413364396ca9428473a8e303 refs/tags/0.0.4
+bcfe1ca04d291034dae47a2ec2613c6488c5dc69 refs/tags/0.0.5
+0bfab0f6ead80636eb92ada433b10586bdb7faff refs/tags/0.0.6
+4c571be415d71f1f45d5c44ccc92b17a47acde88 refs/tags/1.0.0

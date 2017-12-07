@@ -1,0 +1,41 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "RenderingOptions"
+- "NullRenderingOptions"
+- "TemplateEngine"
+provides-nominal:
+- "20KituraTemplateEngine16RenderingOptionsP"
+- "20KituraTemplateEngine20NullRenderingOptionsV"
+- "20KituraTemplateEngine0bC0P"
+provides-member:
+- ["20KituraTemplateEngine16RenderingOptionsP", ""]
+- ["20KituraTemplateEngine20NullRenderingOptionsV", ""]
+- ["20KituraTemplateEngine0bC0P", ""]
+- ["20KituraTemplateEngine0bC0P", "render"]
+- ["20KituraTemplateEngine0bC0P", "render"]
+- ["20KituraTemplateEngine0bC0P", "setRootPaths"]
+provides-dynamic-lookup:
+depends-top-level:
+- "NullRenderingOptions"
+- "RenderingOptions"
+- "String"
+- "TemplateEngine"
+depends-member:
+- ["20KituraTemplateEngine20NullRenderingOptionsV", "deinit"]
+- ["20KituraTemplateEngine20NullRenderingOptionsV", "init"]
+- ["20KituraTemplateEngine16RenderingOptionsP", ""]
+- ["20KituraTemplateEngine0bC0P", "RenderingOptions"]
+- ["20KituraTemplateEngine0bC0P", "String"]
+- ["20KituraTemplateEngine0bC0P", "fileExtension"]
+- ["20KituraTemplateEngine0bC0P", "render"]
+- ["20KituraTemplateEngine0bC0P", "setRootPaths"]
+depends-nominal:
+- "20KituraTemplateEngine20NullRenderingOptionsV"
+- "20KituraTemplateEngine16RenderingOptionsP"
+- "20KituraTemplateEngine0bC0P"
+depends-dynamic-lookup:
+depends-external:
+- "/Library/Developer/Toolchains/swift-4.0.2-RELEASE.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Library/Developer/Toolchains/swift-4.0.2-RELEASE.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/AaronLiberatore/Documents/auth/.build/x86_64-apple-macosx10.10/debug/CHTTPParser.build/module.modulemap"
+interface-hash: "857a2c2bfe406845c55ee85873724a11"

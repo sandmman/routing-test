@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
+options: "2b64558536075450991e24223c529dbd"
+build_time: [1512596552, 565850000]
+inputs:
+  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/BlueSSLService.git--6577639804771281610/Sources/SSLService/SSLService.swift": [1512596538, 0]
