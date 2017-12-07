@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CircuitBreaker",
+        "repositoryURL": "https://github.com/IBM-Swift/CircuitBreaker.git",
+        "state": {
+          "branch": null,
+          "revision": "7f6fe4ced83ddea67ac59f86724638d4e1619039",
+          "version": "2.0.1"
+        }
+      },
+      {
         "package": "CommonCrypto",
         "repositoryURL": "https://github.com/IBM-Swift/CommonCrypto.git",
         "state": {
@@ -101,6 +110,15 @@
         }
       },
       {
+        "package": "KituraKit",
+        "repositoryURL": "https://github.com/IBM-Swift/KituraKit.git",
+        "state": {
+          "branch": "ro-auth",
+          "revision": "2c1992cd72950001bcdf16b8d3c612a1d047de96",
+          "version": null
+        }
+      },
+      {
         "package": "LoggerAPI",
         "repositoryURL": "https://github.com/IBM-Swift/LoggerAPI.git",
         "state": {
@@ -134,6 +152,15 @@
           "branch": null,
           "revision": "1190845cf7d25a5c8ea7653fe03dcdd39a082056",
           "version": "17.0.0"
+        }
+      },
+      {
+        "package": "SwiftyRequest",
+        "repositoryURL": "https://github.com/IBM-Swift/SwiftyRequest.git",
+        "state": {
+          "branch": null,
+          "revision": "0bfab0f6ead80636eb92ada433b10586bdb7faff",
+          "version": "0.0.6"
         }
       }
     ]

@@ -17,6 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/IBM-Swift/Kitura.git", .branch("issue.encoding")),
+        .package(url: "https://github.com/IBM-Swift/KituraKit.git", .branch("ro-auth")),
         .package(url: "https://github.com/IBM-Swift/Kitura-CredentialsHTTP.git", .branch("ro-codable")),
         .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", .upToNextMajor(from: "1.7.1")),
     ],
@@ -24,13 +25,14 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(name: "Extensions", dependencies: []),
-        .target(name: "Contracts", dependencies: ["Kitura", .target(name: "Extensions")]),        
-        .target(name: "Models", dependencies: [.target(name: "Contracts"), "CredentialsHTTP"]),
-        .target(name: "Client", dependencies: [.target(name: "Models"), .target(name: "Extensions")]),
-        .target(name: "RouterExtension", dependencies: [.target(name: "Models"), .target(name: "Extensions"), .target(name: "Contracts"), "Kitura"]),
+        .target(name: "KituraKitExtensions", dependencies: ["KituraKit", "Contracts", "Models", "Extensions"]),
+        .target(name: "Contracts", dependencies: ["Kitura", "Extensions"]),
+        .target(name: "Models", dependencies: ["Contracts", "CredentialsHTTP"]),
+        .target(name: "Client", dependencies: ["Models", "KituraKitExtensions"]),
+        .target(name: "RouterExtension", dependencies: ["Models", "Extensions", "Contracts", "Kitura"]),
         .target(
             name: "Server",
-            dependencies: [.target(name: "Models"), .target(name: "RouterExtension"), "Kitura", "HeliumLogger"]
+            dependencies: ["Models", "RouterExtension", "Kitura", "HeliumLogger"]
         ),
     ]
 )

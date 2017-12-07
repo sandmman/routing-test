@@ -3,15 +3,6 @@ import Contracts
 import Credentials
 import CredentialsHTTP
 
-public struct Employee: Codable {
-    public let serial: Int
-    public let name: String
-    public init(serial: Int, name: String) {
-        self.serial = serial
-        self.name = name
-    }
-}
-
 public struct User: Codable {
     public let id: Int
     public let name: String
@@ -30,49 +21,14 @@ public struct Order: Codable {
     }
 }
 
-public struct Test: Codable {
-    public let name: String
-    public init(name: String) {
-        self.name = name
-    }
-}
-
-public struct UserQuery: Query {
-    public let category: String?
-	public let date: Date?
-	public let weight: Float?
-	public let start: Int?
-	public let end: Int?
-
-    public init() {
-        self.init(category: nil, date: nil, weight: nil, start: nil, end: nil) 
-    }
-
-    public init(category: String? = nil, date: Date? = nil, weight: Float? = nil, start: Int? = nil, end: Int? = nil) {
-        self.category = category
-        self.date = date
-        self.weight = weight
-        self.start = start
-        self.end = end
-    }
-}
-
-public struct MyQuery: Codable {
-    public let intField: Int
-    public let optionalIntField: Int?
-    public let stringField: String
-    public let intArray: [Int]
-    public let dateField: Date
-    public let optionalDateField: Date?
-    public let nested: Nested
-}
-
-public struct Nested: Codable {
-    public let nestedIntField: Int
-    public let nestedStringField: String
-}
-
 public class AuthUser: UserProfile, AuthenticatedUser {
+    required convenience public init(_ profile: UserProfile) {
+      self.init(id: profile.id, displayName: profile.displayName,
+                provider: profile.provider, name: profile.name,
+                emails: profile.emails, photos: profile.photos,
+                extendedProperties: profile.extendedProperties)
+    }
+  
     public static func createCredentials() -> Credentials {
         // Configuration of Credentials object would go here
         let credentials = Credentials()
