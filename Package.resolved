@@ -59,8 +59,8 @@
         "package": "Kitura-Credentials",
         "repositoryURL": "https://github.com/IBM-Swift/Kitura-Credentials.git",
         "state": {
-          "branch": "ro-codable",
-          "revision": "2a6d00970b14949207f0d46aabaea533c7837450",
+          "branch": "aml-auth-single-target",
+          "revision": "33afb2c3009dc8bdb4b289a979791c8b502c6431",
           "version": null
         }
       },
@@ -68,7 +68,7 @@
         "package": "Kitura-CredentialsHTTP",
         "repositoryURL": "https://github.com/IBM-Swift/Kitura-CredentialsHTTP.git",
         "state": {
-          "branch": "ro-codable",
+          "branch": "aml-auth-single-target",
           "revision": "2f4314ebdea7e16fd8ac6cba3fef5450912aa24c",
           "version": null
         }
@@ -113,8 +113,8 @@
         "package": "KituraKit",
         "repositoryURL": "https://github.com/IBM-Swift/KituraKit.git",
         "state": {
-          "branch": "ro-auth",
-          "revision": "2c1992cd72950001bcdf16b8d3c612a1d047de96",
+          "branch": "amlAuth",
+          "revision": "64d2907451518634367c097ed8ef6ff6d6e71c53",
           "version": null
         }
       },
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
         "state": {
           "branch": null,
-          "revision": "7adf7cacc447d447df5dcc3058cabd402177c5aa",
-          "version": "0.12.64"
+          "revision": "7f08ff22d8f50b2c25c2bb969a683cdf279a6af4",
+          "version": "0.12.67"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
         "state": {
           "branch": null,
-          "revision": "00b126a2c19520bbf51cd26e8c0cc41dacbc5a05",
-          "version": "0.12.76"
+          "revision": "f33e2d3e6da0b5b286073e7091eefd0ca56ebc63",
+          "version": "0.12.78"
         }
       },
       {

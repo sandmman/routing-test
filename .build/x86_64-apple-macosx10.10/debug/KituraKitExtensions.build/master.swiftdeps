@@ -1,5 +1,0 @@
-version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
-options: "25799803846ef6a3c2e28d107a12f408"
-build_time: [1512597002, 491704000]
-inputs:
-  "/Users/AaronLiberatore/Documents/auth/Sources/KituraKitExtensions/KituraKit.swift": !dirty [1512596104, 0]

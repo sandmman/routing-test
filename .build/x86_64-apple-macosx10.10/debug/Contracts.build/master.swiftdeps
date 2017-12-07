@@ -1,8 +1,0 @@
-version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
-options: "0ef9030dfef3cd4c01c0e857b5033204"
-build_time: [1512596565, 631881000]
-inputs:
-  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/Coder.swift": [1512163199, 0]
-  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/Contracts.swift": [1512163199, 0]
-  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/QueryDecoder.swift": [1512424061, 0]
-  "/Users/AaronLiberatore/Documents/auth/Sources/Contracts/QueryEncoder.swift": [1512163199, 0]

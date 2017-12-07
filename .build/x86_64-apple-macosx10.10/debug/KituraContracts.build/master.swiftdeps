@@ -1,6 +1,0 @@
-version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
-options: "8493968d1b064b66dbe5952aefcf6663"
-build_time: [1512596544, 530897000]
-inputs:
-  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/ClousureAliases.swift": [1512596539, 0]
-  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/Contracts.swift": [1512596539, 0]

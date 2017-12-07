@@ -1,5 +1,0 @@
-version: "Apple Swift version 4.0.2 (swift-4.0.2-RELEASE)"
-options: "3fd4f70fedbda53ad864f853771fdb44"
-build_time: [1512596544, 566142000]
-inputs:
-  "/Users/AaronLiberatore/Documents/auth/.build/checkouts/LoggerAPI.git--6449715459278086880/Sources/LoggerAPI/Logger.swift": [1512596537, 0]
