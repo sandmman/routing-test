@@ -1,14 +1,26 @@
 # pack-refs with: peeled fully-peeled 
-0c0c44a583a0d779df33450c0c249839567f2b01 refs/heads/doc_overhaul
+c8813e896a1ff6a60cfc98e4500b69d42fc0de66 refs/heads/add_requesterror_body
+198d079339707b6c5191b90519c3b61bb44ed5ca refs/heads/add_requesterror_body2
+fe9c65444f344ffd3e042da225f8f55c5b4315da refs/heads/doc_overhaul
 1a2e6a0e9806d0801e535e04d7c5d749d90133b8 refs/heads/issue.error-reason
 c0d8e38467e37f29736ecb3c09ff5230e81521fa refs/heads/issue.swift402
+eb378e9648d68f35d6b2f676409dd3876edc2fb9 refs/heads/issue.swift403
+b7ff10e8d5b1690c1b0fcc9b531486611c86fd39 refs/heads/jazzy-travis-dd
+0df6a71358365180d178dbf5ee67d23802c2cbf8 refs/heads/jazzy_travis
 b90b39a95fd682a5f7ad9e441bbafac89611fba7 refs/heads/master
+bc8f687bd1132459c66fa7c397c8ff174af68a34 refs/heads/query
 8e05e1ba400e7352d15d05f64654cf9b6d2ba9b2 refs/pull/1/head
+eb378e9648d68f35d6b2f676409dd3876edc2fb9 refs/pull/10/head
+c62faf29b774747dcdc580c73966cf73b3338ddb refs/pull/10/merge
 cf02f87b0b7c98f56e10ffda02d4e7086a05b1dc refs/pull/2/head
 1a2e6a0e9806d0801e535e04d7c5d749d90133b8 refs/pull/3/head
 3e31c26e600ad63e2ab1b48b9f4824c8569e1932 refs/pull/4/head
 c0d8e38467e37f29736ecb3c09ff5230e81521fa refs/pull/5/head
 66ecb46a48c984a9abf50398ba6e1bb56505fdc5 refs/pull/7/head
+bc8f687bd1132459c66fa7c397c8ff174af68a34 refs/pull/8/head
+acfb3227ead5b1c8e25d066cf8990e290d4c4e9b refs/pull/8/merge
+fe9c65444f344ffd3e042da225f8f55c5b4315da refs/pull/9/head
+b75d501223e2d74fe572b726a07032621c5e966c refs/pull/9/merge
 797b3784dbee05cedf13581a517eb9f81211115f refs/tags/0.0.1
 6f39367644ef5cd051d0475268c72d8e9b091e26 refs/tags/0.0.10
 0877fda2de0c4c53099471e354c3e365d86dad6f refs/tags/0.0.11

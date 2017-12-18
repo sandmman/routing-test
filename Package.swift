@@ -16,7 +16,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/IBM-Swift/Kitura.git", .branch("issue.encoding")),
+        .package(url: "https://github.com/IBM-Swift/Kitura.git", .branch("issue.queryParameters")),
         .package(url: "https://github.com/IBM-Swift/KituraKit.git", .branch("amlAuth")),
         .package(url: "https://github.com/IBM-Swift/Kitura-CredentialsHTTP.git", .branch("aml-auth-single-target")),
         .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", .upToNextMajor(from: "1.7.1")),
