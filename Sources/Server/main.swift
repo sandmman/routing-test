@@ -47,14 +47,14 @@ router.get("/basic/:id+") { request, response, error in
  "order": (id, "customer", respondWith(Order, RequestError)),
  ]
  
- // 1. this is route itself..
+ // 1. this is a route itself..
  router.get("customer") { Identifier, respondWith(Customer, RequestError) in
  
  }
  
  // 2. this is chained to route 1. This takes its respondWith checks for an error underneath and passes the custom on if it exists
  /// Problem...How do we guarantee the customer route exists
- router.get("order", for: "customer") { customer: Customer, respondWith(Order, RequestError) in
+ router.get("orders", for: "customer") { customer: Customer, respondWith([Order], RequestError) in
 
 }
  
@@ -64,14 +64,23 @@ router.get("/basic/:id+") { request, response, error in
  
  }
  */
+router.get("/user") { (id: Int, respondWith: (User?, RequestError?) -> Void) in
+    print("hello")
+    respondWith(userStore[1], nil)
+}
 
+// Could be interesting, but its likely limited and I'm not sure how this could be done.
+router.get("/orders", from: "user") { (user: User, respondWith: ([Order]?, RequestError?) -> Void) in
+    print("hello")
+    respondWith([], nil)
+}
 ////
 /// Instantiate your Params Object
 //  Since we do not have a way to look at the field types before instantiate we need a user to instantiate a default version for us.
 //  How should optional params work?
 //
 struct Parameters: Params {
-    let int: Int? //
+    let int: Int?
     let string: String
     let stringArray: [String]
 
@@ -124,6 +133,7 @@ struct Parameters: Params {
 // Partially inferred   "/customers*/orders/" --> "/customers/:id0*/orders/:id1"
 //                      "/customers*/orders" --> "/customers/:id0*/orders"
 //
+// This uses the explicit method
 // localhost:8080/customers/3233/orders/1432
 router.get("/customers/*/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
@@ -149,7 +159,7 @@ router.get("/customers/*/orders") { (identifiers: [Int], respondWith: (Order?, R
 // Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
 // way we do below...
 // localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
-router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
+router.get("users", [Int].parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     if let param1 = routeParams.next(Int.self) {
         print("route param1 (int): \(param1)")
     }

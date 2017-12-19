@@ -45,7 +45,19 @@ extension Params {
         return route
     }
 }
+
+let routes: [String: (Codable, (Codable?, RequestError?) -> Void) -> Void] = [:]
+
 extension Router {
+    
+    /// Piping
+    public func get<T: Codable, O: Codable>(_ route: String, from: String, handler: @escaping  (T, (O?, RequestError?) -> Void) -> Void) {
+        //getSafely(route, handler: handler)
+        print("hello")
+        get("") { request, response, error in
+            
+        }
+    }
 
     /**
      get("/orders") { Params, ([Object]?, RequestError?) -> Void in
