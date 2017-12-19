@@ -22,7 +22,6 @@ var orderStore: [Int: Order] = [1: Order(id: 1, name: "order1"),
 
 let router = Router()
 
-/// This is the current standard route. By default this doesn't return the user profile/request object pair so symmetric auth requests will fail during jsondecoding
 router.get("/basic/:id+") { request, response, error in
     print(request.parameters)
   let orders: [Order] = orderStore.map { return $1 }
@@ -96,9 +95,13 @@ struct Parameters: Params {
 // auto instantiate codable objects, but this would require essentially writing a reflection library ourselves.
 //
 // How should we handle optional params?
+// Arrays:
 // 1. Exclude preliminary tag "/string/:string/stringArray/:stringArray+/orders" --> /string/:string/orders
 // 2. Keep tag and simply use * identifier "/string/:string/stringArray/:stringArray*/orders" --> /string/:string/orders
 // I lean towards the second, but would like input
+// Non-Arrays
+// 1. Exclude preliinary tag in the middle? Lots of weird edge cases
+//
 //
 // "/int/:int(\\d+)/string/:string/stringArray/:stringArray+/orders"
  router.get("/orders") { (params: Parameters, respondWith: ([Order]?, RequestError?) -> Void) in
@@ -112,10 +115,15 @@ struct Parameters: Params {
 // Developer does not need to specify the identifiers for each entity in the path
 // Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity
 // Though these is a hole in this approach... it assumes that an identifier is needed for the last element in the path... which may or may not be the case
-// dependending on the use case :-/
+// dependending on the use case :-/ -- We can get around this by defining some symbol that the user must use. Perhaps if the last path component ends in a /
+// then that has an id. Otherwise, it doesn't
 //
-// Additional hole: How do you decide if its a route parameter list or not ?, +, * --- I added logic to enable + * -.
-// but we could eliminate that for simplicity
+// This should be improved to enable ?, +, *, :id
+// We could be explicit "/customers/*/orders/:" --> "/customers/:id0*/orders/:id1"
+//                      "/customers/*/orders" --> "/customers/:id0*/orders"
+// Partially inferred   "/customers*/orders/" --> "/customers/:id0*/orders/:id1"
+//                      "/customers*/orders" --> "/customers/:id0*/orders"
+//
 // localhost:8080/customers/3233/orders/1432
 router.get("/customers/*/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")

@@ -60,9 +60,7 @@ extension Router {
 
     public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
         // Construct parameter route for the user
-        print(try? ParamEncoder().encode(P()))
         let actual_route = P.createRoute() + route
-        print(actual_route)
 
         get(actual_route) { request, response, next in
             // Make param arrays compatible with query arrays
@@ -98,8 +96,10 @@ extension Router {
 
     /// router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     public func get<O: Codable>(_ routes: String..., handler: @escaping (RouteParams, QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
-        let route = "/" + routes.joined(separator: "/")
+
+        let route: String = routes.enumerated().map{ $0.element.first == ":" ? $0.element.insert(offset: $0.offset) : $0.element }.joined(separator: "/")
         Log.verbose("Computed route is: \(route)")
+
         get(route) { request, response, next in
             // Define result handler
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -154,34 +154,43 @@ extension Router {
     /// Identifier list
     public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
         
+        let symbols = [":", "*", "+", "?"]
+
+        // Separate into path components
+        var components = route.components(separatedBy: "/").filter { !$0.isEmpty }
+        var lastPathComponentExists: String? = nil
+        
+        // Last path component should be an :id
+        if let last = route.last, !symbols.contains(String(last)) { lastPathComponentExists = components.popLast() }
+
+        /// Param to type mapping
         var entities: [String: String] = [:]
-
-        let components = route.components(separatedBy: "/").filter { !$0.isEmpty }
-
-        for i in 0..<(components.count) {
-            let component = components[i]
-            print(component)
-            guard i != 0 || (i == 0 && !["*","+","?"].contains(component)) else {
-                print("Error: Unnamed route param")
+        
+        /// Map param to symbol
+        for i in stride(from: 0, to: components.count, by: 2) {
+            guard symbols.contains(components[i + 1]) else {
+                Log.verbose("Invalid Component expected one of \(symbols) received '\(components[i + 1])'")
                 return
             }
-            
-            if !["*","+","?"].contains(component) {
-                entities[component] = ""
-            } else {
-                entities[components[i - 1]] = component
-            }
+            entities[components[i]] = components[i + 1]
         }
 
+        /// Create params
         let params = (0...(entities.count-1)).map({ (index: Int) -> String in
             return "id\(index)"
         })
 
+        /// Combine into route
         let routeComponents = entities.enumerated().map { zip in
-            return "\(zip.element.key)/:id\(zip.offset)\(zip.element.value)"
+            return "\(zip.element.key)/:id\(zip.offset)\(zip.element.value != ":" ? zip.element.value : "")"
         }
 
-        let routeWithIds = "/" + routeComponents.joined(separator: "/")
+        /// Join Routes
+        var routeWithIds = "/" + routeComponents.joined(separator: "/")
+
+        // Last path component is not an :ID
+        if let component = lastPathComponentExists { routeWithIds += "/\(component)" }
+
         Log.verbose("routeWithIds: \(routeWithIds)")
 
         get(routeWithIds) { request, response, next in
