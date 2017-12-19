@@ -1457,7 +1457,7 @@
 		"Kitura-Next::Client::Product" /* Client */ = {isa = PBXFileReference; lastKnownFileType = text; path = Client; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Contracts::Product" /* Contracts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Contracts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Extensions::Product" /* Extensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Extensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"Kitura-Next::KituraKitExtensions::Product" /* KituraKitExtensions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KituraKitExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Kitura-Next::KituraKitExtensions::Product" /* KituraKitExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraKitExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Models::Product" /* Models.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Models.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::RouterExtension::Product" /* RouterExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RouterExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Server::Product" /* Server */ = {isa = PBXFileReference; lastKnownFileType = text; path = Server; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1467,7 +1467,7 @@
 		"Kitura-net::KituraNet::Product" /* KituraNet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraNet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura::Kitura::Product" /* Kitura.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Kitura.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"KituraContracts::KituraContracts::Product" /* KituraContracts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraContracts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"KituraKit::KituraKit::Product" /* KituraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KituraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"KituraKit::KituraKit::Product" /* KituraKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"LoggerAPI::LoggerAPI::Product" /* LoggerAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoggerAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_102 /* CodableRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableRouter.swift; sourceTree = "<group>"; };
 		OBJ_103 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -2462,7 +2462,7 @@
 			name = "Kitura-Session 2.0.0";
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -2471,7 +2471,6 @@
 				OBJ_25 /* Dependencies */,
 				OBJ_231 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_50 /* KituraSession */ = {
@@ -3414,7 +3413,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_231 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

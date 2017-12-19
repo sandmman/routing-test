@@ -113,7 +113,9 @@ struct Parameters: Params {
 // Instead, we infer them - assumption is that because it is a codable route then identifiers should be assigned/generated for each entity
 // Though these is a hole in this approach... it assumes that an identifier is needed for the last element in the path... which may or may not be the case
 // dependending on the use case :-/
-// Additional hole: How do you decide if its a route paramter list or not ?, +, *
+//
+// Additional hole: How do you decide if its a route parameter list or not ?, +, * --- I added logic to enable + * -.
+// but we could eliminate that for simplicity
 // localhost:8080/customers/3233/orders/1432
 router.get("/customers/*/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
@@ -133,6 +135,7 @@ router.get("/customers/*/orders") { (identifiers: [Int], respondWith: (Order?, R
 //     respondWith(order, nil)
 // }
 
+// 4 - Non type - safe. Vapor style
 // Another possible approach for URL route parameters & codable
 // We could also provide route params and query params as this: Params.route, Params.query
 // Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
