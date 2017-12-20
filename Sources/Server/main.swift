@@ -1,13 +1,17 @@
 import Foundation
 import Kitura
 import KituraContracts
+import Contracts
 import RouterExtension
 import Models
 import LoggerAPI
 import HeliumLogger
 import Credentials
 import CredentialsHTTP
+import SwiftKuery
+import SwiftKueryPostgreSQL
 
+let connection = PostgreSQLConnection(host: "", port: 8080, options: nil)
 // HeliumLogger disables all buffering on stdout
 HeliumLogger.use(LoggerMessageType.verbose)
 
@@ -65,13 +69,13 @@ router.get("/basic/:id+") { request, response, error in
  }
  */
 router.get("/user") { (id: Int, respondWith: (User?, RequestError?) -> Void) in
-    print("hello")
+    print("users")
     respondWith(userStore[1], nil)
 }
 
 // Could be interesting, but its likely limited and I'm not sure how this could be done.
 router.get("/orders", from: "user") { (user: User, respondWith: ([Order]?, RequestError?) -> Void) in
-    print("hello")
+    print("orders")
     respondWith([], nil)
 }
 ////
@@ -89,9 +93,7 @@ struct Parameters: Params {
         self.string = ""
         self.stringArray = []
     }
-    
-    static let excluded: [String] = []
- }
+}
 
 // 1
 // http://localhost:8080/int/3233/string/my_string/stringArray/str1/str2/str3/orders
@@ -112,7 +114,9 @@ struct Parameters: Params {
 // 1. Exclude preliinary tag in the middle? Lots of weird edge cases
 //
 //
-// "/int/:int(\\d+)/string/:string/stringArray/:stringArray+/orders"
+// "/int/:int(\\d+)?/string/:string/stringArray/:stringArray+/orders"
+//  localhost:8080/int/1/string/string/stringArray/abc/def/ghi/orders
+//  localhost:8080/int/string/string/stringArray/abc/def/ghi/orders
  router.get("/orders") { (params: Parameters, respondWith: ([Order]?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
     print("parameters: \(params)")
@@ -200,6 +204,131 @@ router.get("/orders") { (authUser: AuthUser, respondWith: ([Order]?, RequestErro
   let orders: [Order] = orderStore.map { return $1}
   respondWith(orders, nil)
 }
+
+
+///////////
+///
+// ORM Integration
+///
+//////////
+
+/**
+ 
+ Select(grades.course, round(avg(grades.grade), to: 1).as("average"), from: grades)
+ .group(by: grades.course)
+ .having(avg(grades.grade) > 90)
+ .order(by: .ASC(avg(grades.grade)))
+ 
+ */
+
+/// Define Tables
+public class GradesTable: Table {
+    let tableName = "grades"
+    let key = Column("key")
+    let course = Column("course")
+    let grade = Column("grade")
+    let studentId = Column("studentId")
+}
+
+
+/// Instantiate Tables
+let grades = GradesTable()
+
+/// Standard Queries
+public struct GradesQuery: KituraContracts.Query {
+    public let minGrade: Int = 1
+}
+
+/// Define Routes
+
+///
+/// New API
+///
+
+/// This is how it would currently be used. The user defines their table and then in their route handler
+/// takes the table query (query params) and inserts it into their query
+router.get("/specialorders") { (params: GradesQuery, respondWith: ([Order]?, RequestError?) -> Void) in
+    print("hello: retrieving special order: \(params.minGrade)")
+
+    let query = Select(grades.course, grades.grade, from: grades).having(avg(grades.grade) > params.minGrade)
+
+    connection.execute(query: query) { result in
+    
+    }
+}
+
+///
+/// Newer API - ORM
+///
+
+/// Define Table Queries --
+// We likely need a TableQuery and a normal Query, to simplify the use cases
+// People not using swift kuery wont want the extra bloat and vice versa.
+
+/// Really should be part of a plugin
+public struct Grades: TableQuery {
+    
+    public static let table: GradesTable = GradesTable()
+
+    public let minGrade: Int = 1
+    
+    /// Something like this could be used
+    /// The String column denotion will be replaced by a field directly from the associated typed table. This requies making a bunch of
+    /// stuff codable in SwiftKuery. I'm mildly worried about the default value Any that is stored in the Column
+    /// In the future, it can simple be - .lessThan(Int, table.Field)
+    public lazy var minimumGrade: WhereCondition = .lessThan(minGrade, "grade")
+
+}
+
+public struct AgnosticGrades: AgnosticTableQuery {
+    
+    public static let table = "student"
+    
+    /// Something like this could be used
+    /// no guarantee that grade is a part of table
+    public let minimumGrade: WhereCondition = .lessThan(70, "grade")
+    
+}
+
+
+/// User Defined ORM Model
+class Student: Model {
+    static var tableName = "student"
+}
+
+/// This is a route with Swift Kuery handling as a first class citizen
+// Is there anyway to guarantee Grades and Student have the same table?
+router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestError?) -> Void) in
+    var params = params
+    print("Retrieving grades for students where: \(params.minimumGrade)")
+    
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+
+    respondWith(students, nil)
+}
+
+// In the agnostic version. We can only guarantee the query and the orm model use the same table name
+// but we can't be sure at compile time that they are using appropriate field names. (might not exist)
+// the beneift thought is that kitura doesnt have it import swiftkuery or vice versa
+router.get("/agnosticStudents") { (params: AgnosticGrades, respondWith: ([Student]?, RequestError?) -> Void) in
+    print("Retrieving grades for students where: \(params.minimumGrade)")
+    
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+    
+    respondWith(students, nil)
+}
+
+////
+////
+////
+////
+////
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)

@@ -224,6 +224,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftKueryPostgreSQL::SwiftKueryPostgreSQL"
+               BuildableName = "SwiftKueryPostgreSQL.framework"
+               BlueprintName = "SwiftKueryPostgreSQL"
+               ReferencedContainer = "container:Kitura-Next.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftKuery::SwiftKuery"
+               BuildableName = "SwiftKuery.framework"
+               BlueprintName = "SwiftKuery"
+               ReferencedContainer = "container:Kitura-Next.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "Kitura::Kitura"
                BuildableName = "Kitura.framework"
                BlueprintName = "Kitura"

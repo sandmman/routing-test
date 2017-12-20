@@ -39,31 +39,30 @@ public class ParamEncoder: Encoder {
         return codingPath.flatMap({"\($0)"}).joined(separator: ".")
     }
     
-    /// Encodes an Encodable object to a String -> String dictionary
+    /// Encodes an Encodable object to a accepted URL string definition
     ///
     /// - Parameter _ value: The Encodable object to encode to its Parameter representation
     public func encode<T: Encodable>(_ value: T) throws -> String {
         let fieldName = ParamEncoder.getFieldName(from: codingPath)
         
-        Log.verbose("fieldName: \(fieldName), fieldValue: \(value)")
-        
-        switch value {
-        /// Ints
-        case _ as String                     : route += "/" + "\(fieldName)/:\(fieldName)"
-        case _ as Array<String>              : route += "/" + "\(fieldName)/:\(fieldName)+"
-        case _ as Int                        : route += "/" + "\(fieldName)/:\(fieldName)(\\d+)"
-        case _ as Array<Int>                 : route += "/" + "\(fieldName)/:\(fieldName)(\\d+)+"
+        Log.verbose("fieldName: \(fieldName), fieldType: \(T.self)")
+
+        guard let encodedName = fieldName.addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) else {
+            throw encodingError(value, underlyingError: NSError(domain: "Field name not valid in url: \(fieldName)", code: 1, userInfo: nil))
+        }
+
+        switch T.self {
+        case is String.Type         : route += "/" + "\(encodedName)/:\(encodedName)"
+        case is Int.Type            : route += "/" + "\(encodedName)/:\(encodedName)(\\d+)"
+        case is Array<Int>.Type     : route += "/" + "\(encodedName)/:\(encodedName)(\\d+)+"
+        case is Array<String>.Type  : route += "/" + "\(encodedName)/:\(encodedName)+"
         default:
             if fieldName.isEmpty {
                 self.route = ""   // Make encoder instance reusable
                 try value.encode(to: self)
             } else {
-                do {
-                    let jsonData = try JSONEncoder().encode(value)
-                    route += String(data: jsonData, encoding: .utf8)!
-                } catch let error {
-                    throw encodingError(value, underlyingError: error)
-                }
+                /// Error: URL regex not available for given type
+                throw encodingError(value, underlyingError: NSError(domain: "Regex not available for type: \(T.self)", code: 1, userInfo: nil))
             }
         }
         return self.route
@@ -99,19 +98,31 @@ public class ParamEncoder: Encoder {
         }
 
         //
-        // Custom encode if prsent methods to enable encoding optional values however we want
+        // Custom encode if present methods to enable encoding optional values however we want
         //
         
         public mutating func encodeIfPresent(_ value: Int?, forKey key: Key) throws {
-            print("encode if present int")
+            encoder.route = encoder.route + "/" + "\(key.stringValue)/:\(key.stringValue)(\\d+)?"
         }
     
+        public mutating func encodeIfPresent(_ value: String?, forKey key: Key) throws {
+            encoder.route = encoder.route + "/" + "\(key.stringValue)/:\(key.stringValue)?"
+        }
+
+        public mutating func encodeIfPresent(_ value: [String]?, forKey key: Key) throws {
+            encoder.route = encoder.route + "/" + "\(key.stringValue)/:\(key.stringValue)*"
+        }
+
+        public mutating func encodeIfPresent(_ value: [Int]?, forKey key: Key) throws {
+            encoder.route = encoder.route + "/" + "\(key.stringValue)/:\(key.stringValue)(\\d+)*"
+        }
+
         public mutating func encodeIfPresent<T : Encodable>(_ value: T?, forKey key: Key) throws {
-            print("encode if present")
+            print("This is never called")
         }
 
         func encodeNil(forKey key: Key) throws {
-            print("hello")
+            print("Encode if nil was called")
         }
         
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {

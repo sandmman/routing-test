@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CLibpq",
+        "repositoryURL": "https://github.com/IBM-Swift/CLibpq.git",
+        "state": {
+          "branch": null,
+          "revision": "20421e0c7890a2a9b1515eb1321ebcd76ad7231f",
+          "version": "0.1.2"
+        }
+      },
+      {
         "package": "CircuitBreaker",
         "repositoryURL": "https://github.com/IBM-Swift/CircuitBreaker.git",
         "state": {
@@ -143,6 +152,24 @@
           "branch": null,
           "revision": "ebd0fd8372c73fd467a447f80f2763d34f3dbe9c",
           "version": "0.12.79"
+        }
+      },
+      {
+        "package": "SwiftKuery",
+        "repositoryURL": "https://github.com/IBM-Swift/Swift-Kuery.git",
+        "state": {
+          "branch": null,
+          "revision": "81ec99e2c36645a09172299ea867bb2d2809e51c",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "SwiftKueryPostgreSQL",
+        "repositoryURL": "https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL.git",
+        "state": {
+          "branch": null,
+          "revision": "81ac4e0df13c14bf145eaddcc20d7ccd624bbef4",
+          "version": "1.0.2"
         }
       },
       {
