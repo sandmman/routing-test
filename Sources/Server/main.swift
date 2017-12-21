@@ -360,6 +360,7 @@ router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestErro
 /// - The ORM filter can just ignore any unrecognized types (In the Encoder or while Reflecting)
 /// Downsides:
 /// - No guarantee that the field name exists in the table
+/// - How do we extend this to different types? (Int8...String...)
 
 /// Note: this requires modifying the Query Encoder and Decoder. Currently KueryDecoder.swift under contracts is what we'd need
 public struct TypeAliasGrades: TableKuery {
