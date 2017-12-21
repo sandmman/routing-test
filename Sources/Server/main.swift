@@ -269,21 +269,49 @@ router.get("/specialorders") { (params: GradesQuery, respondWith: ([Order]?, Req
     }
 }
 
+/// User Defined ORM Model
+class Student: Model {
+    /// Currently the ORM Model uses a string to mark the table
+    //static var tableName = "table"
+    
+    /// If we change it to a specific type then we can ensure greater type safety
+    static var tableName: GradesTable.Type = GradesTable.self
+}
+
 ///
 /// Newer API - ORM
 ///
 
-/// Define Table Queries --
+/// Overarching Considerations
+/**
+    1. Is the Kordata Model actually the table or does it point to the table object. I would like the Model protocol to reference the Table object
+        directly if possible, so the Query object and the ORM object can be guaranteed to be referencing the same one, but I suppose we can
+        get close with strings if we keep the current state.
+ 
+    2. API-wise, there are two paths: The reflection/encoder path where the ORM will figure out what the query object is actually
+        looking for or the explicit definition/transform path where the ORM simply takes and transforms protocol definited values
+        I'm not sure of the time complexity of reflection but its definitely slower.
+ 
+    3. Readability vs. typesafety. In my examples, (hopefully they inspire better ideas) they range from high readability/usability to high safety, but neither is completely both. :(
+ 
+    4. Where do these things live? If the model points to a Table.Type we might have an issue as Kitura/Swift Kuery become coupled. We'd have to consider the layout a little more closely.
+ 
+    5. It seems to me as though there should be 2 Query Param protocols: something like a standard one `QueryParams` and for Kordata `TableQuery`.
+        People not using swift kuery wont want the extra bloat and vice versa.
+ 
+    Currently Example #2 below is my favorite.
+ */
 
-/// 1
-// We likely need a TableQuery and a normal Query, to simplify the use cases
-// People not using swift kuery wont want the extra bloat and vice versa.
+
+///
+/// Example 1
+///
+
 /// Upsides
 //  - Increased typesafety: assuming we can match tables and map to table fields
 //  Downsides
-//  - Personally, seeing the operation before its left/right operator is annoying
-//  - The user as to define the whole query computed property separately. Could it be done in one step
-/// Really should be part of a plugin
+//  - Personally, seeing the operation before its left/right operands is annoying
+//  - The user has to define the whole query computed property separately. Could it be done in one step?
 public struct Grades: TableQuery {
     
     public static let table: GradesTable = GradesTable()
@@ -303,22 +331,37 @@ public struct Grades: TableQuery {
 
 }
 
-/// 2
+// Problems:
+// 1. I feel as though Grades and Student should be requried to point to the same table. They can't because Model.tableName is a string not usable in the method signature where clause. I've converted this to an associatedtype referencing the Table.Type. Now Grades/Student refer to the same table at compile time
+// 2. Assuming point 1, in the TableQuery, the enum should map to the table fields directly .lessThan(70, table.grade). SwiftKuery Field has to be codable, but it currently isn't and will require lots of modifications.
+router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestError?) -> Void) in
+    print("Retrieving grades for students where: \(params.query)")
+    
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+    
+    respondWith(students, nil)
+}
+
+///
+/// Example 2
+///
+
 /// We define a set of accepted operations
 /// The field name of the Query object designates the table field
 /// The type designates the operation
 /// The value remains as the value
+
 /// Upsides:
 /// - It's by far the easiest to read and understand
-/// - It's much safer than the django version
-/// - The ORM filter can just ignore any unrecognized types
+/// - It's much safer than the django version (Example 4)
+/// - The ORM filter can just ignore any unrecognized types (In the Encoder or while Reflecting)
 /// Downsides:
 /// - No guarantee that the field name exists in the table
 
-/// Note: this requires modifying the Query Encoder and Decoder.
-/// I have attempted this and ran into some weird blockers that I didn't realize would exist
-/// It should be possible though
-/// Also, unfortunately typealiases don't work that would've been neat
+/// Note: this requires modifying the Query Encoder and Decoder. Currently KueryDecoder.swift under contracts is what we'd need
 public struct TypeAliasGrades: TableKuery {
     
     public static let table: GradesTable = GradesTable()
@@ -330,20 +373,58 @@ public struct TypeAliasGrades: TableKuery {
     
 }
 
-/// 3
+router.get("/typeAliasStudents") { (params: TypeAliasGrades, respondWith: ([Student]?, RequestError?) -> Void) in
+    print("Retrieving grades for students where: \(params)")
+    
+    /// The ORM reflects/decodes the params object and converts to where clause. Boom.
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+    
+    respondWith(students, nil)
+}
+
+///
+/// Example 3
+///
+
+// Still a work in progress. It has lots of flaws, so I moved on quickly
+// This is what it might look like if we forget about directly mapping to a table. (Decreasing type safety)
+// In the agnostic version. We can only guarantee the query and the orm model use the same table name
+// but we can't be sure at compile time that they are using appropriate field names. (might not exist)
+// the beneift thought is that kitura doesnt have it import swiftkuery or vice versa
 public struct AgnosticGrades: AgnosticTableQuery {
     
     public static let table = "student"
     
     /// Something like this could be used
     /// no guarantee that grade is a part of table
+    /// I stioll need to figure out how we could require .lessThan and "grade" and take the value from the url
+    /// Seems to me that it would turn towards #2 style quickly
     public let minimumGrade: WhereCondition = .lessThan(70, "grade")
     
 }
 
-/// 4
-/// In this style we discern the field name from the variables through reflection. Keywords after __ denote the operation and of course the value is the value
-/// I didn't fully implement this because it requires reworking the QueryDecoder, QueryDecoder to recognize/ignore symbols after the __. Lots of work haha.
+router.get("/agnosticStudents") { (params: AgnosticGrades, respondWith: ([Student]?, RequestError?) -> Void) in
+    print("Retrieving grades for students where: \(params.minimumGrade)")
+    
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+    
+    respondWith(students, nil)
+}
+
+///
+/// Example 4 (Django Style)
+///
+
+/// In this style we discern the field name from the variables through reflection/decoder. Keywords after __ denote
+/// the operation and of course the value is the value
+/// I didn't fully implement this because it requires reworking the QueryDecoder, QueryDecoder
+/// to recognize/ignore symbols after the __. Lots of work haha.
 /// Upsides:
 //     - Simplish to implement, to use, and is clear as anything
 // Downsides
@@ -358,60 +439,6 @@ public struct DjangoGrades: DjangoTableQuery {
     
 }
 
-/// Routes
-
-/// User Defined ORM Model
-class Student: Model {
-    /// Currently the ORM Model uses a string to mark the table
-    //static var tableName = "table"
-    
-    /// If we change it to a specific type then we can ensure greater type safety
-    static var tableName: GradesTable.Type = GradesTable.self
-}
-
-// 1
-/// This is a route with Swift Kuery handling as a first class citizen
-// Is there anyway to guarantee Grades and Student have the same table?
-// Problems:
-// 1. I feel as though Grades and Student should be requried to point to the same table. They can't because Model.tableName is not a class. Perhaps store the type there?
-// 2. Assuming point 1, in the TableQuery, the enum should map to the table fields directly .lessThan(70, table.grade). SwiftKuery Field has to be codable.
-router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestError?) -> Void) in
-    print("Retrieving grades for students where: \(params.query)")
-
-    guard let students = try? Student.findAll(where: params) else {
-        respondWith(nil, .internalServerError)
-        return
-    }
-
-    respondWith(students, nil)
-}
-
-// 2
-router.get("/typeAliasStudents") { (params: TypeAliasGrades, respondWith: ([Student]?, RequestError?) -> Void) in
-    print("Retrieving grades for students where: \(params)")
-
-    guard let students = try? Student.findAll(where: params) else {
-        respondWith(nil, .internalServerError)
-        return
-    }
-    
-    respondWith(students, nil)
-}
-
-// 3
-// In the agnostic version. We can only guarantee the query and the orm model use the same table name
-// but we can't be sure at compile time that they are using appropriate field names. (might not exist)
-// the beneift thought is that kitura doesnt have it import swiftkuery or vice versa
-router.get("/agnosticStudents") { (params: AgnosticGrades, respondWith: ([Student]?, RequestError?) -> Void) in
-    print("Retrieving grades for students where: \(params.minimumGrade)")
-    
-    guard let students = try? Student.findAll(where: params) else {
-        respondWith(nil, .internalServerError)
-        return
-    }
-    
-    respondWith(students, nil)
-}
 
 ////
 ////
