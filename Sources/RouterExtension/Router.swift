@@ -16,7 +16,7 @@ extension Router {
     ///
     /// Swift Kuery Conformance
     ///
-
+    
     // We need where `Q.QueryTable == M.table` This is currently unimplemented in swift kuery.
     public func get<Q: TableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void)  {
         getSafely(route, handler: handler)
@@ -123,7 +123,7 @@ extension Router {
     public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
         // Construct parameter route for the user
         let actual_route = try? ParamEncoder().encode(P()) + route
-
+        Log.verbose("Param Encoded route is: \(actual_route)")
         get(actual_route) { request, response, next in
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
                 do {

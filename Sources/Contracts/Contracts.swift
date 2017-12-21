@@ -8,10 +8,14 @@ import SwiftKueryPostgreSQL
 public protocol TableQuery: KituraContracts.Query {
     associatedtype QueryTable: Table
     static var table: QueryTable { get }
-    
+    var query: [WhereCondition] { get }
 }
 
 public protocol AgnosticTableQuery: KituraContracts.Query {
+    static var table: String { get }
+}
+
+public protocol DjangoTableQuery: KituraContracts.Query {
     static var table: String { get }
 }
 

@@ -262,24 +262,87 @@ router.get("/specialorders") { (params: GradesQuery, respondWith: ([Order]?, Req
 ///
 
 /// Define Table Queries --
+
+/// 1
 // We likely need a TableQuery and a normal Query, to simplify the use cases
 // People not using swift kuery wont want the extra bloat and vice versa.
-
+/// Upsides
+//  - Increased typesafety: assuming we can match tables and map to table fields
+//  Downsides
+//  - Personally, seeing the operation before its left/right operator is annoying
+//  - The user as to define the whole query computed property separately. Could it be done in one step
 /// Really should be part of a plugin
 public struct Grades: TableQuery {
     
     public static let table: GradesTable = GradesTable()
 
-    public let minGrade: Int = 1
+    // Define the query fields
+    public let minGrade: Int //.lessThan(minGrade, "grade")
     
-    /// Something like this could be used
+    /// Developer defines relationships
+
     /// The String column denotion will be replaced by a field directly from the associated typed table. This requies making a bunch of
     /// stuff codable in SwiftKuery. I'm mildly worried about the default value Any that is stored in the Column
-    /// In the future, it can simple be - .lessThan(Int, table.Field)
-    public lazy var minimumGrade: WhereCondition = .lessThan(minGrade, "grade")
+    /// In the future, it could simple be - .lessThan(Int, table.Field)
+    // Django uses a Blog.objects.get(name__iexact='beatles blog')
+    public var query: [WhereCondition] {
+       return [.lessThan(minGrade, "grade"), .greaterThan(100, "highest")]
+    }
 
 }
 
+/// 2
+/// We define a set of accepted operations
+/// The field name of the Query object designates the table field
+/// The type designates the operation
+/// The value remains as the value
+/// Upsides:
+/// - It's by far the easiest to read and understand
+/// - It's much safer than the django version
+/// - The ORM filter can just ignore any unrecognized types
+/// Downsides:
+/// - No guarantee that the field name exists in the table
+
+/// Note: this requires modifying the Query Encoder and Decoder.
+/// I have attempted this and ran into some weird blockers that I didn't realize would exist
+/// It should be possible though
+/// Also, unfortunately typealiases don't work that would've been neat
+public protocol QueryComparator: Codable {
+    var value: Int { get }
+    init(value: Int)
+}
+public struct GreaterThan: QueryComparator {
+    public var value: Int
+    public init(value: Int) { self.value = value }
+    public init(from decoder: Decoder) throws {
+        var values = try decoder.unkeyedContainer()
+        value = try values.decode(Int.self)
+    }
+}
+public struct LessThan: QueryComparator {
+    public var value: Int
+    public init(value: Int) { self.value = value }
+    public init(from decoder: Decoder) throws {
+        var values = try decoder.unkeyedContainer()
+        value = try values.decode(Int.self)
+    }
+}
+
+public struct TypeAliasGrades: TableQuery {
+    
+    public static let table: GradesTable = GradesTable()
+    
+    // Define the query fields
+    public let grade: GreaterThan
+    public let highest: LessThan
+
+    public var query: [WhereCondition] {
+        return [.lessThan(1, "grade"), .greaterThan(100, "highest")]
+    }
+    
+}
+
+/// 3
 public struct AgnosticGrades: AgnosticTableQuery {
     
     public static let table = "student"
@@ -290,18 +353,39 @@ public struct AgnosticGrades: AgnosticTableQuery {
     
 }
 
+/// 4
+/// In this style we discern the field name from the variables through reflection. Keywords after __ denote the operation and of course the value is the value
+/// I didn't fully implement this because it requires reworking the QueryDecoder, QueryDecoder to recognize/ignore symbols after the __. Lots of work haha.
+/// Upsides:
+//     - Simplish to implement, to use, and is clear as anything
+// Downsides
+//      - Effectively 0 typesafety. We can perhaps guarantee the ORM and Query reference the same table, but the fields can be anything.
+//        We can throw on bad extension names as well, but nothing is done at compile time
+public struct DjangoGrades: DjangoTableQuery {
+    
+    public static let table = "student"
+    
+    public let grade__gt: Int
+    public let grade__lt: Int
+    
+}
 
 /// User Defined ORM Model
 class Student: Model {
     static var tableName = "student"
 }
 
+/// Routes
+
+// 1
 /// This is a route with Swift Kuery handling as a first class citizen
 // Is there anyway to guarantee Grades and Student have the same table?
+// Problems:
+// 1. I feel as though Grades and Student should be requried to point to the same table. They can't because Model.tableName is not a class. Perhaps store the type there?
+// 2. Assuming point 1, in the TableQuery, the enum should map to the table fields directly .lessThan(70, table.grade). SwiftKuery Field has to be codable.
 router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestError?) -> Void) in
-    var params = params
-    print("Retrieving grades for students where: \(params.minimumGrade)")
-    
+    print("Retrieving grades for students where: \(params.query)")
+
     guard let students = try? Student.findAll(where: params) else {
         respondWith(nil, .internalServerError)
         return
@@ -310,6 +394,19 @@ router.get("/students") { (params: Grades, respondWith: ([Student]?, RequestErro
     respondWith(students, nil)
 }
 
+// 2
+router.get("/typeAliasStudents") { (params: TypeAliasGrades, respondWith: ([Student]?, RequestError?) -> Void) in
+    print("Retrieving grades for students where: \(params)")
+
+    guard let students = try? Student.findAll(where: params) else {
+        respondWith(nil, .internalServerError)
+        return
+    }
+    
+    respondWith(students, nil)
+}
+
+// 3
 // In the agnostic version. We can only guarantee the query and the orm model use the same table name
 // but we can't be sure at compile time that they are using appropriate field names. (might not exist)
 // the beneift thought is that kitura doesnt have it import swiftkuery or vice versa

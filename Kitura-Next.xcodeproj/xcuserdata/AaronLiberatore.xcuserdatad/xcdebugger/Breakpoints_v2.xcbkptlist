@@ -35,5 +35,69 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = ".build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
+            timestampString = "535573051.4666"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "decode(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = ".build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
+            timestampString = "535573051.466915"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
+            landmarkName = "decode(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "KituraContracts.QueryDecoder.decode&lt;A where A: Swift.Decodable&gt;(A.Type) throws -&gt; A"
+                  moduleName = "KituraContracts"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
+                  timestampString = "535571613.87337"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "109"
+                  endingLineNumber = "109"
+                  offsetFromSymbolStart = "12969">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 : @autoclosure () -&gt; Swift.String in KituraContracts.QueryDecoder.decode&lt;A where A: Swift.Decodable&gt;(A.Type) throws -&gt; A"
+                  moduleName = "KituraContracts"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/AaronLiberatore/Documents/auth/.build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
+                  timestampString = "535571613.87489"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "109"
+                  endingLineNumber = "109"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
