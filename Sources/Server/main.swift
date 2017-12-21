@@ -205,7 +205,19 @@ router.get("/orders") { (authUser: AuthUser, respondWith: ([Order]?, RequestErro
   respondWith(orders, nil)
 }
 
+struct Test: Codable {
+    let int: Int
+}
 
+ public func tester<T: Decodable>(_ type: T.Type) -> Bool {
+    
+    switch type {
+    case is Test.Type: return true
+    default: return false
+    }
+    
+}
+print(tester(Test.self))
 ///////////
 ///
 // ORM Integration
@@ -307,38 +319,14 @@ public struct Grades: TableQuery {
 /// I have attempted this and ran into some weird blockers that I didn't realize would exist
 /// It should be possible though
 /// Also, unfortunately typealiases don't work that would've been neat
-public protocol QueryComparator: Codable {
-    var value: Int { get }
-    init(value: Int)
-}
-public struct GreaterThan: QueryComparator {
-    public var value: Int
-    public init(value: Int) { self.value = value }
-    public init(from decoder: Decoder) throws {
-        var values = try decoder.unkeyedContainer()
-        value = try values.decode(Int.self)
-    }
-}
-public struct LessThan: QueryComparator {
-    public var value: Int
-    public init(value: Int) { self.value = value }
-    public init(from decoder: Decoder) throws {
-        var values = try decoder.unkeyedContainer()
-        value = try values.decode(Int.self)
-    }
-}
-
-public struct TypeAliasGrades: TableQuery {
+public struct TypeAliasGrades: TableKuery {
     
     public static let table: GradesTable = GradesTable()
     
     // Define the query fields
+    public let test: Int
     public let grade: GreaterThan
     public let highest: LessThan
-
-    public var query: [WhereCondition] {
-        return [.lessThan(1, "grade"), .greaterThan(100, "highest")]
-    }
     
 }
 
@@ -370,12 +358,16 @@ public struct DjangoGrades: DjangoTableQuery {
     
 }
 
+/// Routes
+
 /// User Defined ORM Model
 class Student: Model {
-    static var tableName = "student"
+    /// Currently the ORM Model uses a string to mark the table
+    //static var tableName = "table"
+    
+    /// If we change it to a specific type then we can ensure greater type safety
+    static var tableName: GradesTable.Type = GradesTable.self
 }
-
-/// Routes
 
 // 1
 /// This is a route with Swift Kuery handling as a first class citizen

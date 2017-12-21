@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = ".build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
-            timestampString = "535573051.4666"
+            timestampString = "535578919.085311"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
             landmarkName = "decode(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = ".build/checkouts/KituraContracts.git--3897699854862625585/Sources/KituraContracts/CodableQuery/QueryDecoder.swift"
-            timestampString = "535573051.466915"
+            timestampString = "535578919.085381"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
             landmarkName = "decode(_:)"
             landmarkType = "7">
             <Locations>

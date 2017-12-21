@@ -10,6 +10,10 @@ public protocol TableQuery: KituraContracts.Query {
     static var table: QueryTable { get }
     var query: [WhereCondition] { get }
 }
+public protocol TableKuery: KituraContracts.Query {
+    associatedtype QueryTable: Table
+    static var table: QueryTable { get }
+}
 
 public protocol AgnosticTableQuery: KituraContracts.Query {
     static var table: String { get }
@@ -80,17 +84,28 @@ extension WhereCondition: Codable {
 
 /// ORM (Kordata) Placeholder -
 public protocol Model: Codable {
-    static var tableName: String { get }
+    /// In Kordata, this is currently just a string
+    // static var tableName: String { get }
+    
+    // If we give it an associatedtype referencing the table we can test the the params and ORM reference the same Kuery Table
+    // If you need it to be a string later than simply convert the type name to a string :)
+    associatedtype QueryTable: Table
+    static var tableName: QueryTable.Type { get }
 }
 
 extension Model {
-    // ORM Placeholder
+    // ORM Placeholder - we'd only need 1 version of this of course.
     
     // We'd like the guarantee the same table is being used by params and table query. This can only be done if Model uses an associated type with the actual table class
     public static func findAll<Params: TableQuery>(where params: Params) throws -> [Self] {
         return []
     }
     
+    // We'd like the guarantee the same table is being used by params and table query. This can only be done if Model uses an associated type with the actual table class
+    public static func findAll<Params: TableKuery>(where params: Params) throws -> [Self] {
+        return []
+    }
+
     // We'd like the guarantee the same table is being used by params and table query. We can't do this at compile time and
     // even if we could theyre strings, which is iffy to begin with
     public static func findAll<Params: AgnosticTableQuery>(where params: Params) throws -> [Self]{

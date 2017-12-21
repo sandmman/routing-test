@@ -52,6 +52,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		E34DA7491FEC3F3600E3CA6E /* KueryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34DA7481FEC3F3600E3CA6E /* KueryDecoder.swift */; };
+		E34DA74A1FEC3F3600E3CA6E /* KueryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34DA7481FEC3F3600E3CA6E /* KueryDecoder.swift */; };
+		E34DA74C1FEC3FB600E3CA6E /* KueryTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34DA74B1FEC3FB600E3CA6E /* KueryTypes.swift */; };
+		E34DA74D1FEC3FB600E3CA6E /* KueryTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34DA74B1FEC3FB600E3CA6E /* KueryTypes.swift */; };
 		OBJ_1000 /* RangeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_207 /* RangeHeader.swift */; };
 		OBJ_1001 /* ResourcePathHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_208 /* ResourcePathHandler.swift */; };
 		OBJ_1002 /* ResponseHeadersSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_209 /* ResponseHeadersSetter.swift */; };
@@ -1611,6 +1615,8 @@
 /* Begin PBXFileReference section */
 		"CircuitBreaker::CircuitBreaker::Product" /* CircuitBreaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CircuitBreaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Cryptor::Cryptor::Product" /* Cryptor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Cryptor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E34DA7481FEC3F3600E3CA6E /* KueryDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KueryDecoder.swift; sourceTree = "<group>"; };
+		E34DA74B1FEC3FB600E3CA6E /* KueryTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KueryTypes.swift; sourceTree = "<group>"; };
 		"HeliumLogger::HeliumLogger::Product" /* HeliumLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HeliumLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Credentials::Credentials::Product" /* Credentials.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Credentials.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-CredentialsHTTP::CredentialsHTTP::Product" /* CredentialsHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CredentialsHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2222,6 +2228,8 @@
 				OBJ_11 /* Contracts.swift */,
 				OBJ_12 /* ParamDecoder.swift */,
 				OBJ_13 /* ParamEncoder.swift */,
+				E34DA7481FEC3F3600E3CA6E /* KueryDecoder.swift */,
+				E34DA74B1FEC3FB600E3CA6E /* KueryTypes.swift */,
 			);
 			name = Contracts;
 			path = Sources/Contracts;
@@ -3994,6 +4002,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				E34DA7491FEC3F3600E3CA6E /* KueryDecoder.swift in Sources */,
+				E34DA74C1FEC3FB600E3CA6E /* KueryTypes.swift in Sources */,
 				OBJ_323 /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4296,6 +4306,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				E34DA74D1FEC3FB600E3CA6E /* KueryTypes.swift in Sources */,
+				E34DA74A1FEC3F3600E3CA6E /* KueryDecoder.swift in Sources */,
 				OBJ_862 /* Contracts.swift in Sources */,
 				OBJ_863 /* ParamDecoder.swift in Sources */,
 				OBJ_864 /* ParamEncoder.swift in Sources */,
