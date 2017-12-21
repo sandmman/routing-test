@@ -8,21 +8,22 @@
 import Foundation
 
 public protocol QueryComparator: Codable {
-    var value: Int { get }
-    init(value: Int)
+    associatedtype T: Codable
+    var value: T { get }
+    init(value: T)
 }
 extension QueryComparator {
     public init(from decoder: Decoder) throws {
         var values = try decoder.unkeyedContainer()
-        self.init(value: try values.decode(Int.self))
+        self.init(value: try values.decode(T.self))
     }
 }
-public struct GreaterThan: QueryComparator {
-    public var value: Int
-    public init(value: Int) { self.value = value }
+public struct GreaterThan<T: Codable&Comparable>: QueryComparator {
+    public var value: T
+    public init(value: T) { self.value = value }
     
 }
-public struct LessThan: QueryComparator {
-    public var value: Int
-    public init(value: Int) { self.value = value }
+public struct LessThan<T: Codable&Comparable>: QueryComparator {
+    public var value: T
+    public init(value: T) { self.value = value }
 }

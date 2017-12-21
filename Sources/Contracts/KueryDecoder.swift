@@ -127,7 +127,8 @@ public class KueryDecoder: KueryCoder, Decoder {
             return try decodeType(fieldValue?.string, to: T.self)
         case is [String].Type:
             return try decodeType(fieldValue?.stringArray, to: T.self)
-        case is QueryComparator.Type:
+        /// Is there a placeholder type I can put here?
+        case is GreaterThan<Int>.Type, is LessThan<Int>.Type, is GreaterThan<String>.Type, is LessThan<String>.Type:
             return try decodeType(T.init(from: self), to: T.self)
         default:
             Log.verbose("Decoding Custom Type: \(T.Type.self)")
