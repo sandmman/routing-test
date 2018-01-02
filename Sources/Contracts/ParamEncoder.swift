@@ -16,6 +16,7 @@
 
 import Foundation
 import LoggerAPI
+import KituraContracts
 
 extension CharacterSet {
     static let customURLQueryAllowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~=:&")
@@ -52,10 +53,17 @@ public class ParamEncoder: Encoder {
         }
 
         switch T.self {
-        case is String.Type         : route += "/" + "\(encodedName)/:\(encodedName)"
+        case is String.Type         :
+            if encodedName.first == "_" {
+                route += "/" + encodedName.dropFirst()
+            } else {
+                route += "/" + "\(encodedName)/:\(encodedName)"
+            }
         case is Int.Type            : route += "/" + "\(encodedName)/:\(encodedName)(\\d+)"
         case is Array<Int>.Type     : route += "/" + "\(encodedName)/:\(encodedName)(\\d+)+"
         case is Array<String>.Type  : route += "/" + "\(encodedName)/:\(encodedName)+"
+        case is Query.Type: break
+        case is BaseRoute.Type: route += "/" + encodedName
         default:
             if fieldName.isEmpty {
                 self.route = ""   // Make encoder instance reusable

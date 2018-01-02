@@ -78,12 +78,14 @@ router.get("/orders", from: "user") { (user: User, respondWith: ([Order]?, Reque
     print("orders")
     respondWith([], nil)
 }
+
 ////
 /// Instantiate your Params Object
 //  Since we do not have a way to look at the field types before instantiate we need a user to instantiate a default version for us.
 //  How should optional params work?
 //
 struct Parameters: Params {
+
     let int: Int?
     let string: String
     let stringArray: [String]
@@ -95,7 +97,7 @@ struct Parameters: Params {
     }
 }
 
-// 1
+// 1a.
 // http://localhost:8080/int/3233/string/my_string/stringArray/str1/str2/str3/orders
 // A possible implementation for multiple URL route params using codable
 // This approach abstracts the parameter definitions from the user. It autogenerates the route url leaving the user to
@@ -114,6 +116,8 @@ struct Parameters: Params {
 // 1. Exclude preliinary tag in the middle? Lots of weird edge cases
 //
 //
+//// Less clarity in a way
+//
 // "/int/:int(\\d+)?/string/:string/stringArray/:stringArray+/orders"
 //  localhost:8080/int/1/string/string/stringArray/abc/def/ghi/orders
 //  localhost:8080/int/string/string/stringArray/abc/def/ghi/orders
@@ -122,6 +126,30 @@ struct Parameters: Params {
     print("parameters: \(params)")
     respondWith([], nil)
  }
+
+//// 1b. Route Definition with internal route customization
+struct MyRoute: Route {
+    let startofroute: BaseRoute // Could be replaced with a string/identifier _startofroute or optional BaseRoute
+    let int: Int?
+    let middleofroute: BaseRoute
+    let string: String
+    let stringArray: [String]
+    let endofroute: BaseRoute
+    
+    init() {
+        self.int = nil
+        self.string = ""
+        self.stringArray = []
+        (startofroute, middleofroute, endofroute) = (BaseRoute(), BaseRoute(), BaseRoute())
+    }
+}
+
+//// 1b. Enables internal customization of routes with all the benifits provided by 1a.
+router.get { (route: MyRoute, /* queryParams: MyQuery,*/ respondWith: ([Order]?, RequestError?) -> Void) in
+    print("GET on /orders with inferred route parameters")
+    print("parameters: \(route)")
+    respondWith([], nil)
+}
 
 // 2 - Identifier style with flaws
 // A possible implementation for multiple URL route params - codable
@@ -174,6 +202,17 @@ router.get("users", [Int].parameter, "orders", String.parameter) { (routeParams:
     respondWith(orderStore.map({ $0.value }), nil)
 }
 
+// 4 - Non type - safe. Vapor style
+// Another possible approach for URL route parameters & codable
+// We could also provide route params and query params as this: Params.route, Params.query
+// Now... if we were to take this approach, I am then thinking  we should change the new codable API we just released... so that the route is specified in the same
+// way we do below...
+// localhost:8080/users/1234/orders/1VZXY3/entity/4398/entity2/234r234 - think more from an API perspecitve as opposed to thinking of it in terms of URL
+/*
+ router.get() { (users: Int, orders: String, entity: String, respondWith: ([Order]?, RequestError?) -> Void) in
+    respondWith(orderStore.map({ $0.value }), nil)
+}
+*/
 
 ///////////
 ///

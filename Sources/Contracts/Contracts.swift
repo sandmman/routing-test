@@ -5,6 +5,13 @@ import KituraContracts
 import SwiftKuery
 import SwiftKueryPostgreSQL
 
+public protocol StringParameter: Codable, CustomStringConvertible {
+}
+
+public struct BaseRoute: Codable {
+    public init(){}
+}
+
 public protocol TableQuery: KituraContracts.Query {
     associatedtype QueryTable: Table
     static var table: QueryTable { get }

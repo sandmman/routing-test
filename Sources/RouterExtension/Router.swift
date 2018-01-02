@@ -4,6 +4,10 @@ import LoggerAPI
 import Foundation
 import Contracts
 
+public protocol Route: Codable {
+    init()
+}
+
 public protocol Params: Codable {
     // For simplicity, we need a default init method to work with reflection/encoders. There are ways of constructing default objects, but that requires a lot of resources/bloat. We could have an additional reflection package that gets imported. Then when swift addresses this problem we'll be able to remove it.
     init()
@@ -153,6 +157,45 @@ extension Router {
      }
     */
     
+    ///
+    /// Params - Full Route
+    ///
+
+    public func get<R: Route, O: Codable>(handler: @escaping  (R, ([O]?, RequestError?) -> Void) -> Void) {
+        getSafely(handler: handler)
+    }
+    
+    public func getSafely<R: Route, O: Codable>(handler: @escaping (R, ([O]?, RequestError?) -> Void) -> Void) {
+        // Construct parameter route for the user
+        let actual_route = try? ParamEncoder().encode(R())
+        Log.verbose("Full Route Encoded route is: \(actual_route)")
+        get(actual_route) { request, response, next in
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            // Make param arrays compatible with query arrays
+            let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
+            print(transformedParams)
+            
+            /// We can share the decoder as long as we map fixup the values a little bit
+            let route: R = try QueryDecoder(dictionary: transformedParams).decode(R.self)
+            handler(route, resultHandler)
+        }
+    }
+
     ///
     /// Params
     ///
