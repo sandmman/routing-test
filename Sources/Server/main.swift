@@ -214,6 +214,44 @@ router.get("users", [Int].parameter, "orders", String.parameter) { (routeParams:
 }
 */
 
+
+/// 5.
+/// We can do something like this..
+/// I did this real quick, but the real version could use the actual parameter name :testing, :orders etc.
+router.get("testing", Int.parameter, "orders", String.parameter) { (params: [String: Param], respondWith: ([Order]?, RequestError?) -> Void) in
+    if let int = params["int0"]?.int {
+        print("Int", int)
+    }
+    if let string = params["string1"]?.string {
+        print("String", string)
+    }
+    respondWith(orderStore.map({ $0.value }), nil)
+}
+
+
+//// 6
+
+router.get("six", Int.parameter, "test", String.parameter) { (params: RouteParamDict, respondWith: ([Order]?, RequestError?) -> Void) in
+    print("Six")
+    if let int: Int = params["int0"] {
+        print("Int", int)
+    }
+    if let string: String = params["string1"] {
+        print("String", string)
+    }
+    respondWith(orderStore.map({ $0.value }), nil)
+}
+
+router.get(.int("seven"), .string("test")) { (params: RouteParamDict, respondWith: ([Order]?, RequestError?) -> Void) in
+    print("Seven")
+    if let int: Int = params["int"] {
+        print("Int", int)
+    }
+    if let string: String = params["string"] {
+        print("String", string)
+    }
+    respondWith(orderStore.map({ $0.value }), nil)
+}
 ///////////
 ///
 // Authorization
