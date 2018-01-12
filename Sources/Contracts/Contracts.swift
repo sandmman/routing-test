@@ -5,6 +5,32 @@ import KituraContracts
 import SwiftKuery
 import SwiftKueryPostgreSQL
 
+public protocol Typed {
+    var myType: String { get }
+}
+
+public enum RouteParam: CustomStringConvertible, Typed {
+    case int(String)
+    case string(String)
+    case path(String)
+    
+    public var description: String {
+        switch self {
+        case .int(let s): return "int:\(s)"
+        case .string(let s): return "string:\(s)"
+        case .path(let s): return "path:\(s)"
+        }
+    }
+    
+    public var myType: String {
+        switch self {
+        case .int(_): return "int"
+        case .string(_): return "string"
+        case .path(_): return "path"
+        }
+    }
+}
+
 public protocol StringParameter: Codable, CustomStringConvertible {
 }
 

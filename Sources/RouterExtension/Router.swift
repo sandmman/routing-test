@@ -4,9 +4,15 @@ import LoggerAPI
 import Foundation
 import Contracts
 
+public protocol SafeString: CustomStringConvertible {
+
+}
+
 public protocol Route: Codable {
     init()
 }
+
+
 
 public protocol Params: Codable {
     // For simplicity, we need a default init method to work with reflection/encoders. There are ways of constructing default objects, but that requires a lot of resources/bloat. We could have an additional reflection package that gets imported. Then when swift addresses this problem we'll be able to remove it.
@@ -20,7 +26,7 @@ extension Router {
     ///
     /// Swift Kuery Conformance
     ///
-    
+
     // We need where `Q.QueryTable == M.table` This is currently unimplemented in swift kuery.
     public func get<Q: TableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) where Q.QueryTable == M.QueryTable  {
         getSafely(route, handler: handler)
@@ -66,7 +72,7 @@ extension Router {
     public func get<Q: TableKuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) where Q.QueryTable == M.QueryTable  {
         getSafely(route, handler: handler)
     }
-    
+
     // Get w/Query Parameters
     fileprivate func getSafely<Q: TableKuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) {
         get(route) { request, response, next in
@@ -99,6 +105,84 @@ extension Router {
         }
     }
 
+    /// 3a
+    public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
+        Log.verbose("Codable GET with route params - returning SINGLE object")
+
+        let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }
+        let params = (0...(entities.count-1)).map({ (index: Int) -> String in
+            return "id\(index)"
+        })
+        let routeComponents = (0...(entities.count-1)).map({ (index: Int) -> String in
+            return "\(entities[index])/:\(params[index])"
+        })
+        let routeWithIds = "/" + routeComponents.joined(separator: "/")
+        Log.verbose("routeWithIds: \(routeWithIds)")
+
+        get(routeWithIds) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request...")
+            // Define result handler
+            let resultHandler: CodableResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+
+            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try? Id(value: $0) }.filter { $0 != nil }.map { $0! }
+            handler(identifiers, resultHandler)
+        }
+    }
+
+    /// 3b
+    public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], ([O]?, RequestError?) -> Void) -> Void) {
+        Log.verbose("Codable GET with route params - returning MULTIPLE objects (e.g. array)")
+
+        let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }
+        let params = (0...(entities.count-2)).map({ (index: Int) -> String in
+            return "id\(index)"
+        })
+        let routeComponents = (0...(entities.count-2)).map({ (index: Int) -> String in
+            return "\(entities[index])/:\(params[index])"
+        })
+        let routeWithIds = "/" + routeComponents.joined(separator: "/") + "/" + entities[entities.count - 1]
+        Log.verbose("routeWithIds: \(routeWithIds)")
+
+        get(routeWithIds) { request, response, next in
+            Log.verbose("Received GET (plural) type-safe request...")
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+
+            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try? Id(value: $0) }.filter { $0 != nil }.map { $0! }
+            handler(identifiers, resultHandler)
+        }
+    }
+
     ///
     /// Swift Kuery Agnostic Conformance
     ///
@@ -106,7 +190,7 @@ extension Router {
     public func get<Q: AgnosticTableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void)  {
         getSafely(route, handler: handler)
     }
-    
+
     // Get w/Query Parameters
     fileprivate func getSafely<Q: AgnosticTableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) {
         get(route) { request, response, next in
@@ -142,21 +226,47 @@ extension Router {
     ///
     /// Piping
     ///
-
-    public func get<T: Codable, O: Codable>(_ route: String, from: String, handler: @escaping  (T, (O?, RequestError?) -> Void) -> Void) {
-        //getSafely(route, handler: handler)
-        get("") { request, response, error in
+    
+    class Input<I: Codable> {
+        
+        let closure: ((I?, String?) -> Void) -> Void
+        
+        func response(id: Int) -> I? {
+            return nil
+        }
+        
+        init(closure: @escaping ((I?, String?) -> Void) -> Void) {
+            self.closure = closure
+        }
+    }
+    
+    class Chain<I: Codable, O: Codable> {
+        
+        let input: Input<I>
+        
+        let closure: (I, (O?, String?) -> Void) -> Void
+        
+        let respondWith = { (result: O?, error: String?) in
             
+        }
+        
+        func response() -> O? {
+            return nil //input.response(id: 1)
+        }
+        
+        init(input: Input<I>, closure: @escaping ((I, (O?, String?) -> Void) -> Void)) {
+            self.input = input
+            self.closure = closure
         }
     }
 
     /**
      get("/orders") { Params, ([Object]?, RequestError?) -> Void in
-     
-     
+
+
      }
     */
-    
+
     ///
     /// Params - Full Route
     ///
@@ -164,7 +274,7 @@ extension Router {
     public func get<R: Route, O: Codable>(handler: @escaping  (R, ([O]?, RequestError?) -> Void) -> Void) {
         getSafely(handler: handler)
     }
-    
+
     public func getSafely<R: Route, O: Codable>(handler: @escaping (R, ([O]?, RequestError?) -> Void) -> Void) {
         // Construct parameter route for the user
         let actual_route = try? ParamEncoder().encode(R())
@@ -189,7 +299,7 @@ extension Router {
             // Make param arrays compatible with query arrays
             let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
             print(transformedParams)
-            
+
             /// We can share the decoder as long as we map fixup the values a little bit
             let route: R = try QueryDecoder(dictionary: transformedParams).decode(R.self)
             handler(route, resultHandler)
@@ -274,13 +384,13 @@ extension Router {
     /////
     //// route params new
     /////
-    
+
     /// router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     public func get<O: Codable>(_ routes: String..., handler: @escaping ([String: Param], ([O]?, RequestError?) -> Void) -> Void) {
-        
+
         let route: String = routes.enumerated().map{ $0.element.first == ":" ? $0.element.insert(offset: $0.offset) : $0.element }.joined(separator: "/")
         Log.verbose("Computed route is: \(route)")
-        
+
         get(route) { request, response, next in
             // Define result handler
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -299,7 +409,7 @@ extension Router {
                 }
                 next()
             }
-            let routeParamKeys = Router.extractParams(from: route)
+          _ = Router.extractParams(from: route)
             let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
                 var acc = acc
                 switch value.key.prefix(3) {
@@ -314,11 +424,34 @@ extension Router {
     }
 
     /// router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
-    public func get<O: Codable>(_ routes: String..., handler: @escaping (RouteParamDict, ([O]?, RequestError?) -> Void) -> Void) {
+    public func get<O: Codable>(_ routes: SafeString..., handler: @escaping (RouteParameters, ([O]?, RequestError?) -> Void) -> Void) {
         
-        let route: String = routes.enumerated().map{ $0.element.first == ":" ? $0.element.insert(offset: $0.offset) : $0.element }.joined(separator: "/")
-        Log.verbose("Computed route is: \(route)")
-        
+        let dict: [String: String] = routes.enumerated().reduce([String: String]()) { accumulator, element in
+            var accumulator = accumulator
+            if element.offset % 2 == 1 {
+                let prev = routes[element.offset - 1]
+                accumulator[prev.description] = routes[element.offset].description
+            } else {
+                if routes.count - 1 == element.offset {
+                    let prev = routes[element.offset - 1]
+                    accumulator[prev.description] = "end_route"
+                }
+            }
+            return accumulator
+        }
+
+        let route: String = routes.reduce("") { acc, element in
+            let value = element.description
+            guard let r: String = dict[value] else {
+                return acc
+            }
+
+            return r.starts(with: ":") ? (acc + "/" + value + "/:" + value) : (acc + "/" + value)
+            
+        }
+
+        Log.verbose("MY Computed route is: \(route)")
+
         get(route) { request, response, next in
             // Define result handler
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -337,24 +470,38 @@ extension Router {
                 }
                 next()
             }
-            let routeParamKeys = Router.extractParams(from: route)
+
             let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
                 var acc = acc
-                switch value.key.prefix(3) {
-                case "str": acc[value.key] = Param(string: value.value, int: nil)
-                case "int": acc[value.key] = Param(string: nil, int: Int(value.value))
+                guard let type = dict[value.key] else {
+                    print("Nope")
+                    return acc
+                }
+                switch type {
+                case ":string": acc[value.key] = Param(string: value.value, int: nil)
+                case ":int": acc[value.key] = Param(string: nil, int: Int(value.value))
                 default: print("error"); acc[value.key] = Param(string: nil, int: nil)
                 }
                 return acc
             }
-            handler(RouteParamDict(dict: routeParams), resultHandler)
+            print(routeParams)
+            handler(RouteParameters(dict: routeParams), resultHandler)
         }
     }
 
-    public func get<O: Codable>(_ routes: RouteParam..., handler: @escaping (RouteParamDict, ([O]?, RequestError?) -> Void) -> Void) {
-        let route: String = routes.map { $0.description }.joined(separator: "/")
-        Log.verbose("RouteParam Computed route is: \(route)")
-        
+    public func get<O: Codable>(_ routes: Typed..., handler: @escaping (RouteParameters, ([O]?, RequestError?) -> Void) -> Void) {
+        let routes = routes.reduce([String]()) { acc, element in
+            var acc = acc
+            if element.myType.split(separator: ":").count != 0 {
+                acc.append(contentsOf: element.myType.split(separator: ":").map { String($0) })
+            } else {
+                acc.append(element.myType)
+            }
+            return acc
+        }
+        let route: String = routes.enumerated().map{ $0.element.first == ":" ? $0.element.insert(offset: $0.offset) : $0.element }.joined(separator: "/")
+        Log.verbose("Computed route is: \(route)")
+
         get(route) { request, response, next in
             // Define result handler
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -383,7 +530,43 @@ extension Router {
                 }
                 return acc
             }
-            handler(RouteParamDict(dict: routeParams), resultHandler)
+            handler(RouteParameters(dict: routeParams), resultHandler)
+        }
+    }
+
+    public func get<O: Codable>(_ routes: RouteParam..., handler: @escaping (RouteParameters, ([O]?, RequestError?) -> Void) -> Void) {
+        let route: String = routes.map { $0.description }.joined(separator: "/")
+        Log.verbose("RouteParam Computed route is: \(route)")
+
+        get(route) { request, response, next in
+            // Define result handler
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
+                do {
+                    if let err = error {
+                        let status = self.httpStatusCode(from: err)
+                        response.status(status)
+                    } else {
+                        let encoded = try JSONEncoder().encode(result)
+                        response.status(.OK)
+                        response.send(data: encoded)
+                    }
+                } catch {
+                    // Http 500 error
+                    response.status(.internalServerError)
+                }
+                next()
+            }
+            let routeParamKeys = Router.extractParams(from: route)
+            let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
+                var acc = acc
+                switch value.key.prefix(3) {
+                case "str": acc[value.key] = Param(string: value.value, int: nil)
+                case "int": acc[value.key] = Param(string: nil, int: Int(value.value))
+                default: print("error"); acc[value.key] = Param(string: nil, int: nil)
+                }
+                return acc
+            }
+            handler(RouteParameters(dict: routeParams), resultHandler)
         }
     }
 
@@ -412,73 +595,6 @@ extension Router {
         }
     }
 
-    /// Identifier list
-    public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
-        
-        let symbols = [":", "*", "+", "?"]
-
-        // Separate into path components
-        var components = route.components(separatedBy: "/").filter { !$0.isEmpty }
-        var lastPathComponentExists: String? = nil
-        
-        // Last path component should be an :id
-        if let last = route.last, !symbols.contains(String(last)) { lastPathComponentExists = components.popLast() }
-
-        /// Param to type mapping
-        var entities: [String: String] = [:]
-        
-        /// Map param to symbol
-        for i in stride(from: 0, to: components.count, by: 2) {
-            guard symbols.contains(components[i + 1]) else {
-                Log.verbose("Invalid Component expected one of \(symbols) received '\(components[i + 1])'")
-                return
-            }
-            entities[components[i]] = components[i + 1]
-        }
-
-        /// Create params
-        let params = (0...(entities.count-1)).map({ (index: Int) -> String in
-            return "id\(index)"
-        })
-
-        /// Combine into route
-        let routeComponents = entities.enumerated().map { zip in
-            return "\(zip.element.key)/:id\(zip.offset)\(zip.element.value != ":" ? zip.element.value : "")"
-        }
-
-        /// Join Routes
-        var routeWithIds = "/" + routeComponents.joined(separator: "/")
-
-        // Last path component is not an :ID
-        if let component = lastPathComponentExists { routeWithIds += "/\(component)" }
-
-        Log.verbose("routeWithIds: \(routeWithIds)")
-
-        get(routeWithIds) { request, response, next in
-            Log.verbose("HERE!!!! Received GET (plural) type-safe request")
-            // Define result handler
-            let resultHandler: CodableResultClosure<O> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        let encoded = try JSONEncoder().encode(result)
-                        response.status(.OK)
-                        response.send(data: encoded)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
-            }
-
-            let identifiers: [Id] = params.map { request.parameters[$0]! }.map { try? Id(value: $0) }.filter { $0 != nil }.map { $0! }
-            handler(identifiers, resultHandler)
-        }
-    }
-
     private static func extractParams(from route: String) -> [String] {
         //https://code.tutsplus.com/tutorials/swift-and-regular-expressions-swift--cms-26626
         let pattern = "/:([^/]*)(?:/|\\z)"
@@ -503,7 +619,7 @@ extension Router {
 public class QueryParams {
     private let params: [String : String]
     public var count: Int {
-        get { return params.count } 
+        get { return params.count }
     }
     public subscript(key: String) -> String? {
         let value: String? = params[key]
@@ -530,31 +646,31 @@ public class RouteParams {
     }
 }
 
-public struct RouteParamDict {
+public struct RouteParameters {
     private var dict: [String: Param]
-    
+
     public init(dict: [String: Param]) {
         self.dict = dict
     }
-
-    public subscript(index: String) -> Int? {
-        get {
-            print(dict)
-            return dict[index]?.int
-        }
+  
+    public subscript(_ index: SafeString) -> Int? {
+      get {
+        print(dict)
+        return dict[index.description]?.int
+      }
     }
-    
-    public subscript(index: String) -> String? {
-        get {
-            return dict[index]?.string
-        }
+  
+    public subscript(_ index: SafeString) -> String? {
+      get {
+        return dict[index.description]?.string
+      }
     }
 }
 public struct Param {
 
     public var string: String?
     public var int: Int?
-    
+
     init(string: String?, int: Int?){
         self.string = string
         self.int = int
@@ -564,25 +680,29 @@ public struct Param {
 public enum RouteParam: CustomStringConvertible {
     case int(String)
     case string(String)
-    
+    case path(String)
+
     public var description: String {
         switch self {
         case .string(let str): return "\(str)/:string"
         case .int(let str): return "\(str)/:int"
+        case .path(let str): return "\(str)"
         }
     }
-    
+
     public var type: String {
         switch self {
         case .string(_): return "string"
         case .int(_): return "int"
+        case .path(_): return "path"
         }
     }
-    
+
     public var value: String {
         switch self {
         case .string(let str): return ":\(str)"
         case .int(let str): return ":\(str)"
+        case .path(let str): return "\(str)"
         }
     }
 }
