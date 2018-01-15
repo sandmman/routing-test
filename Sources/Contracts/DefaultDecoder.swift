@@ -17,6 +17,7 @@
 import Foundation
 import LoggerAPI
 import KituraContracts
+import Contracts
 
 /// Param Parameter Decoder
 /// Decodes a [String: String] object to a Decodable object instance
@@ -45,6 +46,7 @@ public class DefaultDecoder: Decoder {
         let fieldValue = dictionary[fieldName]
 
         switch type {
+        case is BaseRoute.Type: return try decodeType(BaseRoute(), to: T.self)
         /// Ints
         case is Int.Type:
             return try decodeType(1, to: T.self)

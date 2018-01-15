@@ -57,6 +57,8 @@
 		E3346B94200D45D80062F0DA /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B92200D45D80062F0DA /* Decoder.swift */; };
 		E3346B96200D473F0062F0DA /* DefaultDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B95200D473F0062F0DA /* DefaultDecoder.swift */; };
 		E3346B97200D473F0062F0DA /* DefaultDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B95200D473F0062F0DA /* DefaultDecoder.swift */; };
+		E3346B99200D50BB0062F0DA /* SwiftKuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B98200D50BB0062F0DA /* SwiftKuery.swift */; };
+		E3346B9C200D53C80062F0DA /* Piping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B9B200D53C80062F0DA /* Piping.swift */; };
 		OBJ_1000 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_204 /* types.swift */; };
 		OBJ_1001 /* CacheRelatedHeadersSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_206 /* CacheRelatedHeadersSetter.swift */; };
 		OBJ_1002 /* CompositeHeadersSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_207 /* CompositeHeadersSetter.swift */; };
@@ -1621,6 +1623,8 @@
 		E3346B90200D3AB10062F0DA /* Mike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mike.swift; sourceTree = "<group>"; };
 		E3346B92200D45D80062F0DA /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		E3346B95200D473F0062F0DA /* DefaultDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDecoder.swift; sourceTree = "<group>"; };
+		E3346B98200D50BB0062F0DA /* SwiftKuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftKuery.swift; sourceTree = "<group>"; };
+		E3346B9B200D53C80062F0DA /* Piping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piping.swift; sourceTree = "<group>"; };
 		"HeliumLogger::HeliumLogger::Product" /* HeliumLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HeliumLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Credentials::Credentials::Product" /* Credentials.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Credentials.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-CredentialsHTTP::CredentialsHTTP::Product" /* CredentialsHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CredentialsHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2490,6 +2494,8 @@
 			children = (
 				OBJ_21 /* Router.swift */,
 				E3346B90200D3AB10062F0DA /* Mike.swift */,
+				E3346B98200D50BB0062F0DA /* SwiftKuery.swift */,
+				E3346B9B200D53C80062F0DA /* Piping.swift */,
 			);
 			name = RouterExtension;
 			path = Sources/RouterExtension;
@@ -4187,7 +4193,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				E3346B9C200D53C80062F0DA /* Piping.swift in Sources */,
 				OBJ_569 /* Router.swift in Sources */,
+				E3346B99200D50BB0062F0DA /* SwiftKuery.swift in Sources */,
 				E3346B91200D3AB10062F0DA /* Mike.swift in Sources */,
 				E3346B96200D473F0062F0DA /* DefaultDecoder.swift in Sources */,
 				E3346B93200D45D80062F0DA /* Decoder.swift in Sources */,

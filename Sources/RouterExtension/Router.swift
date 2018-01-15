@@ -14,82 +14,42 @@ public protocol SafeString: CustomStringConvertible {
 
 }
 
-public protocol Route: Codable {
-    init()
-}
+public protocol Route: Codable { init() }
 
-
-
-public protocol Params: Codable {
-}
+public protocol Params: Codable {}
 
 
 let routes: [String: (Codable, (Codable?, RequestError?) -> Void) -> Void] = [:]
 
 extension Router {
-    ///
-    /// Swift Kuery Conformance
-    ///
 
-    // We need where `Q.QueryTable == M.table` This is currently unimplemented in swift kuery.
-    public func get<Q: TableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) where Q.QueryTable == M.QueryTable  {
-        getSafely(route, handler: handler)
+    ///
+    /// 1a/1b --- Params
+    ///
+    
+    public func get<P: Params, O: Codable>(_ route: String? = nil, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
+        getSafely(route ?? "", handler: handler)
     }
-
-    // Get w/Query Parameters
-    fileprivate func getSafely<Q: TableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) {
-        get(route) { request, response, next in
-            Log.verbose("Received GET (plural) type-safe request with Query Parameters")
-            // Define result handler
-            let resultHandler: CodableArrayResultClosure<M> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        response.status(.OK)
-                        try response.send(result)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
-            }
-            Log.verbose("Query Parameters: \(request.queryParameters)")
-            do {
-                let query: Q = try QueryDecoder(dictionary: request.queryParameters).decode(Q.self)
-                handler(query, resultHandler)
-            } catch {
-                // Http 400 error
-                response.status(.badRequest)
-                next()
-            }
+    
+    public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
+        
+        guard let default_object = try? DefaultDecoder([:]).decode(P.self),
+            let encoded_route = try? ParamEncoder().encode(default_object) else {
+                return
         }
-    }
-
-    ///
-    /// 2 - This just uses the necessary decoder- otherwise the same
-    ///
-
-    // We need where `Q.QueryTable == M.table` This is currently unimplemented in swift kuery.
-    public func get<Q: TableKuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) where Q.QueryTable == M.QueryTable  {
-        getSafely(route, handler: handler)
-    }
-
-    // Get w/Query Parameters
-    fileprivate func getSafely<Q: TableKuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) {
-        get(route) { request, response, next in
-            Log.verbose("Received GET (plural) type-safe request with Query Parameters")
-            // Define result handler
-            let resultHandler: CodableArrayResultClosure<M> = { result, error in
+        
+        Log.verbose("1b --- Param Encoded route is: \(encoded_route + route)")
+        
+        get(encoded_route + route) { request, response, next in
+            let resultHandler: CodableArrayResultClosure<O> = { result, error in
                 do {
                     if let err = error {
                         let status = self.httpStatusCode(from: err)
                         response.status(status)
                     } else {
+                        let encoded = try JSONEncoder().encode(result)
                         response.status(.OK)
-                        try response.send(result)
+                        response.send(data: encoded)
                     }
                 } catch {
                     // Http 500 error
@@ -97,15 +57,12 @@ extension Router {
                 }
                 next()
             }
-            Log.verbose("Query Parameters: \(request.queryParameters)")
-            do {
-                let query: Q = try KueryDecoder(dictionary: request.queryParameters).decode(Q.self)
-                handler(query, resultHandler)
-            } catch {
-                // Http 400 error
-                response.status(.badRequest)
-                next()
-            }
+            // Make param arrays compatible with query arrays
+            let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
+            
+            /// We can share the decoder as long as we map fixup the values a little bit
+            let params: P = try QueryDecoder(dictionary: transformedParams).decode(P.self)
+            handler(params, resultHandler)
         }
     }
 
@@ -187,177 +144,6 @@ extension Router {
         }
     }
 
-    ///
-    /// Swift Kuery Agnostic Conformance
-    ///
-
-    public func get<Q: AgnosticTableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void)  {
-        getSafely(route, handler: handler)
-    }
-
-    // Get w/Query Parameters
-    fileprivate func getSafely<Q: AgnosticTableQuery, M: Model>(_ route: String, handler: @escaping (Q, @escaping CodableArrayResultClosure<M>) -> Void) {
-        get(route) { request, response, next in
-            Log.verbose("Received GET (plural) type-safe request with Query Parameters")
-            // Define result handler
-            let resultHandler: CodableArrayResultClosure<M> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        response.status(.OK)
-                        try response.send(result)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
-            }
-            Log.verbose("Query Parameters: \(request.queryParameters)")
-            do {
-                let query: Q = try QueryDecoder(dictionary: request.queryParameters).decode(Q.self)
-                handler(query, resultHandler)
-            } catch {
-                // Http 400 error
-                response.status(.badRequest)
-                next()
-            }
-        }
-    }
-
-    ///
-    /// Piping
-    ///
-    
-    class Input<I: Codable> {
-        
-        let closure: ((I?, String?) -> Void) -> Void
-        
-        func response(id: Int) -> I? {
-            return nil
-        }
-        
-        init(closure: @escaping ((I?, String?) -> Void) -> Void) {
-            self.closure = closure
-        }
-    }
-    
-    class Chain<I: Codable, O: Codable> {
-        
-        let input: Input<I>
-        
-        let closure: (I, (O?, String?) -> Void) -> Void
-        
-        let respondWith = { (result: O?, error: String?) in
-            
-        }
-        
-        func response() -> O? {
-            return nil //input.response(id: 1)
-        }
-        
-        init(input: Input<I>, closure: @escaping ((I, (O?, String?) -> Void) -> Void)) {
-            self.input = input
-            self.closure = closure
-        }
-    }
-
-    /**
-     get("/orders") { Params, ([Object]?, RequestError?) -> Void in
-
-
-     }
-    */
-
-    ///
-    /// Params - Full Route
-    ///
-
-    public func get<R: Route, O: Codable>(handler: @escaping  (R, ([O]?, RequestError?) -> Void) -> Void) {
-        getSafely(handler: handler)
-    }
-
-    public func getSafely<R: Route, O: Codable>(handler: @escaping (R, ([O]?, RequestError?) -> Void) -> Void) {
-        // Construct parameter route for the user
-        let actual_route = try? ParamEncoder().encode(R())
-        Log.verbose("Full Route Encoded route is: \(actual_route)")
-        get(actual_route) { request, response, next in
-            let resultHandler: CodableArrayResultClosure<O> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        let encoded = try JSONEncoder().encode(result)
-                        response.status(.OK)
-                        response.send(data: encoded)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
-            }
-            // Make param arrays compatible with query arrays
-            let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
-            print(transformedParams)
-
-            /// We can share the decoder as long as we map fixup the values a little bit
-            let route: R = try QueryDecoder(dictionary: transformedParams).decode(R.self)
-            handler(route, resultHandler)
-        }
-    }
-
-    ///
-    /// Params
-    ///
-
-    public func get<P: Params, O: Codable>(_ route: String, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
-        getSafely(route, handler: handler)
-    }
-
-    public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
-        
-        guard let default_object = try? DefaultDecoder([:]).decode(P.self),
-              let encoded_route = try? ParamEncoder().encode(default_object) else {
-            return
-        }
-        
-        Log.verbose("Special Param Encoded route is: \(encoded_route + route)")
-        
-        get(encoded_route + route) { request, response, next in
-            let resultHandler: CodableArrayResultClosure<O> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        let encoded = try JSONEncoder().encode(result)
-                        response.status(.OK)
-                        response.send(data: encoded)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
-            }
-            // Make param arrays compatible with query arrays
-            let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
-            print(transformedParams)
-
-            /// We can share the decoder as long as we map fixup the values a little bit
-            let params: P = try QueryDecoder(dictionary: transformedParams).decode(P.self)
-            handler(params, resultHandler)
-        }
-    }
-
-    public func get<O: Codable>(_ route: String, handler: (String..., ([O]?, RequestError?) -> Void) -> Void) {
-        //getSafely(route, handler: handler)
-    }
-
     /// router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     public func get<O: Codable>(_ routes: String..., handler: @escaping (RouteParams, QueryParams, ([O]?, RequestError?) -> Void) -> Void) {
 
@@ -389,10 +175,6 @@ extension Router {
             handler(routeParams, queryParameters, resultHandler)
         }
     }
-
-    /////
-    //// route params new
-    /////
 
     /// router.get("users", Int.parameter, "orders", String.parameter) { (routeParams: RouteParams, queryParams: QueryParams, respondWith: ([Order]?, RequestError?) -> Void) in
     public func get<O: Codable>(_ routes: String..., handler: @escaping ([String: Param], ([O]?, RequestError?) -> Void) -> Void) {
@@ -493,7 +275,7 @@ extension Router {
                 }
                 return acc
             }
-            print(routeParams)
+
             handler(RouteParameters(dict: routeParams), resultHandler)
         }
     }
@@ -509,6 +291,7 @@ extension Router {
             return acc
         }
         let route: String = routes.enumerated().map{ $0.element.first == ":" ? $0.element.insert(offset: $0.offset) : $0.element }.joined(separator: "/")
+        
         Log.verbose("Computed route is: \(route)")
 
         get(route) { request, response, next in
