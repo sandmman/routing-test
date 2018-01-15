@@ -124,10 +124,6 @@ struct Parameters: Params {
 // This approach abstracts the parameter definitions from the user. It autogenerates the route url leaving the user to
 // add an end route as was a hole in #2 or nothing.
 //
-// The hole in this approach is that the Developer must implement a default constructor, so we can easily construct
-// an instance to use our encoder on. There are packages I have seen that we could leverage or create or own to
-// auto instantiate codable objects, but this would require essentially writing a reflection library ourselves.
-//
 // How should we handle optional params?
 // Arrays:
 // 1. Exclude preliminary tag "/string/:string/stringArray/:stringArray+/orders" --> /string/:string/orders
