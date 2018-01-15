@@ -118,11 +118,27 @@ struct Parameters: Params {
 
 }
 
+// 0
+// Mike's initial prototype
+//
+//
+// Likes
+//  - We return a codable object
+//  - Our params are binded to that object
+//  - The route construction is more easily accessible that 1a and 1b
+// Dislikes
+//  - You aren't required to use all the values in the params object, which will potentially make it fail on initialization or be wrongfully instantiated to avoid it.
+// - Id really like create the route without have to specifiy 'literal'. I haven't been able to find a solution to this.
+//
+/// users/:string/blog/:id
+router.get(.literal("users"), .stringParam(\MyParams.name), .literal("blog"), .intParam(\MyParams.id)) { (params: MyParams, respondWith: (Int?, RequestError?) -> Void) in
+    print("Mike's:", params)
+}
+
 // 1a.
 // http://localhost:8080/int/3233/string/my_string/stringArray/str1/str2/str3/orders
 // A possible implementation for multiple URL route params using codable
-// This approach abstracts the parameter definitions from the user. It autogenerates the route url leaving the user to
-// add an end route as was a hole in #2 or nothing.
+// This approach abstracts the parameter definitions from the user. It autogenerates the route url.
 //
 // How should we handle optional params?
 // Arrays:
@@ -144,7 +160,8 @@ struct Parameters: Params {
     respondWith([], nil)
  }
 
-//// 1b. Route Definition with internal route customization
+// 1b.
+// Route Definition with internal route customization
 struct MyRouteParameters: Params {
     let startofroute: BaseRoute // Could be replaced with a string/identifier _startofroute or optional BaseRoute
     let int: Int?
@@ -154,7 +171,7 @@ struct MyRouteParameters: Params {
     let endofroute: BaseRoute
 }
 
-//// 1b. Enables internal customization of routes with all the benifits provided by 1a.
+// Enables internal customization of routes with all the benifits provided by 1a.
 router.get { (params: MyRouteParameters, respondWith: ([Order]?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
     print("parameters: \(params)")
@@ -561,17 +578,6 @@ public struct DjangoGrades: DjangoTableQuery {
 
 }
 
-
-////
-////
-////
-////
-////
-
-/// users/:string/blog/:id
-router.get(.literal("users"), .stringParam(\MyParams.name), .literal("blog"), .intParam(\MyParams.id)) { (params: MyParams, respondWith: (Int?, RequestError?) -> Void) in
-    print("Mike's:", params)
-}
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)

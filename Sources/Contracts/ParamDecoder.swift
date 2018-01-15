@@ -101,8 +101,8 @@ public class ParamDecoder: Decoder {
         case is [Double].Type:
             return try decodeType(fieldValue?.doubleArray, to: T.self)
         /// Dates
-        case is Date.Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)
-        case is [Date].Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)
+        case is Date.Type: return try decodeType(fieldValue?.doubleArray, to: T.self)
+        case is [Date].Type: return try decodeType(fieldValue?.doubleArray, to: T.self)
         /// Strings
         case is String.Type:
             return try decodeType(fieldValue?.string, to: T.self)

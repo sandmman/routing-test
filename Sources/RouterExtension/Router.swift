@@ -38,7 +38,7 @@ extension Router {
                 return
         }
         
-        Log.verbose("1b --- Param Encoded route is: \(encoded_route + route)")
+        Log.verbose("1a / 1b --- Param Encoded route is: \(encoded_route + route)")
         
         get(encoded_route + route) { request, response, next in
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
@@ -68,7 +68,7 @@ extension Router {
 
     /// 3a
     public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], (O?, RequestError?) -> Void) -> Void) {
-        Log.verbose("Codable GET with route params - returning SINGLE object")
+        Log.verbose("3a - Codable GET with route params - \(route)")
 
         let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }
         let params = (0...(entities.count-1)).map({ (index: Int) -> String in
@@ -81,7 +81,6 @@ extension Router {
         Log.verbose("routeWithIds: \(routeWithIds)")
 
         get(routeWithIds) { request, response, next in
-            Log.verbose("Received GET (plural) type-safe request...")
             // Define result handler
             let resultHandler: CodableResultClosure<O> = { result, error in
                 do {
@@ -107,7 +106,7 @@ extension Router {
 
     /// 3b
     public func get<Id: Identifier, O: Codable>(_ route: String, handler: @escaping ([Id], ([O]?, RequestError?) -> Void) -> Void) {
-        Log.verbose("Codable GET with route params - returning MULTIPLE objects (e.g. array)")
+        Log.verbose("3b - Codable GET with route params - \(route)")
 
         let entities: [String] = route.components(separatedBy: "/").filter { !$0.isEmpty }
         let params = (0...(entities.count-2)).map({ (index: Int) -> String in
@@ -265,7 +264,6 @@ extension Router {
             let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
                 var acc = acc
                 guard let type = dict[value.key] else {
-                    print("Nope")
                     return acc
                 }
                 switch type {
@@ -447,7 +445,6 @@ public struct RouteParameters {
   
     public subscript(_ index: SafeString) -> Int? {
       get {
-        print(dict)
         return dict[index.description]?.int
       }
     }
