@@ -4,6 +4,12 @@ import LoggerAPI
 import Foundation
 import Contracts
 
+public enum RouteSubPath<R: Route> {
+    case literal(String)
+    case stringParam(R)
+    case intParam(Int)
+}
+
 public protocol SafeString: CustomStringConvertible {
 
 }
@@ -15,8 +21,6 @@ public protocol Route: Codable {
 
 
 public protocol Params: Codable {
-    // For simplicity, we need a default init method to work with reflection/encoders. There are ways of constructing default objects, but that requires a lot of resources/bloat. We could have an additional reflection package that gets imported. Then when swift addresses this problem we'll be able to remove it.
-    init()
 }
 
 
@@ -315,10 +319,15 @@ extension Router {
     }
 
     public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
-        // Construct parameter route for the user
-        let actual_route = try? ParamEncoder().encode(P()) + route
-        Log.verbose("Param Encoded route is: \(actual_route)")
-        get(actual_route) { request, response, next in
+        
+        guard let default_object = try? DefaultDecoder([:]).decode(P.self),
+              let encoded_route = try? ParamEncoder().encode(default_object) else {
+            return
+        }
+        
+        Log.verbose("Special Param Encoded route is: \(encoded_route + route)")
+        
+        get(encoded_route + route) { request, response, next in
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
                 do {
                     if let err = error {

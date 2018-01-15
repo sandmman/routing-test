@@ -71,21 +71,39 @@ router.get("/basic/:id+") { request, response, error in
  */
 struct MyOrder: Codable {
     let id: Int
-    let ingredients: [String]
+    let ingredients: [Ingredient]
 }
 
-let orders = [1: MyOrder(id: 1, ingredients: ["pesto", "pasta", "chicken"])]
+struct Ingredient: Codable {
+    let id: Int
+    let name: String
+}
+
+let orders = [1: MyOrder(id: 1, ingredients: [Ingredient(id: 0, name: "pesto"),
+                                              Ingredient(id: 1, name: "pasta"),
+                                              Ingredient(id: 2, name: "chicken")])
+             ]
 
 func handler(id: Int, respondWith: (MyOrder?, RequestError?) -> Void) {
+    print("Handler: MyOrder \(orders[id]!)")
     respondWith(orders[id], nil)
 }
 
-func handler2(order: MyOrder, respondWith: ([String]?, RequestError?) -> Void) {
+func handler2(order: MyOrder, respondWith: ([Ingredient]?, RequestError?) -> Void) {
+    print("Handler2: MyOrder \(order)")
     respondWith(order.ingredients, nil)
 }
-router.chainedGet("/order/:id", handler: handler)
 
-router.chainedGet("/order/:id/ingredients", from: "order", handler: handler2)
+func handler3(id: Int, order: MyOrder, respondWith: (Ingredient?, RequestError?) -> Void) {
+    print("Handler3: MyOrder \(order)")
+    respondWith(order.ingredients.filter { $0.id == id }.first, nil)
+}
+
+router.chainedGet("/pipe_order/:id", handler: handler)
+
+router.chainedGet("/pipe_order/:id/ingredients", handler: handler2)
+
+router.chainedGet("/pipe_order/:id0/ingredients/:id1", handler: handler3)
 
 ////
 /// Instantiate your Params Object
@@ -98,11 +116,6 @@ struct Parameters: Params {
     let string: String
     let stringArray: [String]
 
-    init() {
-        self.int = nil
-        self.string = ""
-        self.stringArray = []
-    }
 }
 
 // 1a.
@@ -166,9 +179,6 @@ router.get { (route: MyRoute, respondWith: ([Order]?, RequestError?) -> Void) in
 // We can infer that the last element in the route does require an identifier because the respondWidth closure receives a single Codable object.
 // localhost:8080/customers/1/orders/1
 router.get("/two/orders") { (identifiers: [Int], respondWith: (Order?, RequestError?) -> Void) in
-    print("GET on /orders with inferred route parameters")
-    // In this case, we should have TWO identifiers in the array...
-    print("identifiers: \(identifiers)")
     let order = orderStore[identifiers[1]]
     respondWith(order, nil)
 }
@@ -239,7 +249,7 @@ public enum Prms: SafeString {
 
 router.get(Prms.five, Int.parameter, Prms.test, String.parameter) { (params: RouteParameters, respondWith: ([Order]?, RequestError?) -> Void) in
     guard let int: Int = params[Prms.five],
-        let string: String = params[Prms.test] else {
+          let string: String = params[Prms.test] else {
             
             respondWith(nil, .badRequest)
             return
@@ -568,6 +578,11 @@ public struct DjangoGrades: DjangoTableQuery {
 ////
 ////
 ////
+
+/// users/:string/blog/:id
+router.get(.literal("users"), .stringParam(\MyParams.name), .literal("blog"), .intParam(\MyParams.id)) { (params: MyParams, respondWith: (Int?, RequestError?) -> Void) in
+    print("Mike's:", params)
+}
 
 // Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)

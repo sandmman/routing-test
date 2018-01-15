@@ -52,6 +52,11 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		E3346B91200D3AB10062F0DA /* Mike.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B90200D3AB10062F0DA /* Mike.swift */; };
+		E3346B93200D45D80062F0DA /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B92200D45D80062F0DA /* Decoder.swift */; };
+		E3346B94200D45D80062F0DA /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B92200D45D80062F0DA /* Decoder.swift */; };
+		E3346B96200D473F0062F0DA /* DefaultDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B95200D473F0062F0DA /* DefaultDecoder.swift */; };
+		E3346B97200D473F0062F0DA /* DefaultDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3346B95200D473F0062F0DA /* DefaultDecoder.swift */; };
 		OBJ_1000 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_204 /* types.swift */; };
 		OBJ_1001 /* CacheRelatedHeadersSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_206 /* CacheRelatedHeadersSetter.swift */; };
 		OBJ_1002 /* CompositeHeadersSetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_207 /* CompositeHeadersSetter.swift */; };
@@ -1613,13 +1618,16 @@
 /* Begin PBXFileReference section */
 		"CircuitBreaker::CircuitBreaker::Product" /* CircuitBreaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CircuitBreaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Cryptor::Cryptor::Product" /* Cryptor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Cryptor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3346B90200D3AB10062F0DA /* Mike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mike.swift; sourceTree = "<group>"; };
+		E3346B92200D45D80062F0DA /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
+		E3346B95200D473F0062F0DA /* DefaultDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDecoder.swift; sourceTree = "<group>"; };
 		"HeliumLogger::HeliumLogger::Product" /* HeliumLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HeliumLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Credentials::Credentials::Product" /* Credentials.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Credentials.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-CredentialsHTTP::CredentialsHTTP::Product" /* CredentialsHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CredentialsHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Client::Product" /* Client */ = {isa = PBXFileReference; lastKnownFileType = text; path = Client; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Contracts::Product" /* Contracts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Contracts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Extensions::Product" /* Extensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Extensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"Kitura-Next::KituraKitExtensions::Product" /* KituraKitExtensions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KituraKitExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Kitura-Next::KituraKitExtensions::Product" /* KituraKitExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraKitExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Models::Product" /* Models.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Models.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::RouterExtension::Product" /* RouterExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RouterExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura-Next::Server::Product" /* Server */ = {isa = PBXFileReference; lastKnownFileType = text; path = Server; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1629,7 +1637,7 @@
 		"Kitura-net::KituraNet::Product" /* KituraNet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraNet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Kitura::Kitura::Product" /* Kitura.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Kitura.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"KituraContracts::KituraContracts::Product" /* KituraContracts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraContracts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"KituraKit::KituraKit::Product" /* KituraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KituraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"KituraKit::KituraKit::Product" /* KituraKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KituraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"LoggerAPI::LoggerAPI::Product" /* LoggerAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoggerAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_102 /* BaseCacheElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCacheElement.swift; sourceTree = "<group>"; };
 		OBJ_103 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -2228,6 +2236,8 @@
 				OBJ_13 /* KueryTypes.swift */,
 				OBJ_14 /* ParamDecoder.swift */,
 				OBJ_15 /* ParamEncoder.swift */,
+				E3346B92200D45D80062F0DA /* Decoder.swift */,
+				E3346B95200D473F0062F0DA /* DefaultDecoder.swift */,
 			);
 			name = Contracts;
 			path = Sources/Contracts;
@@ -2479,6 +2489,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_21 /* Router.swift */,
+				E3346B90200D3AB10062F0DA /* Mike.swift */,
 			);
 			name = RouterExtension;
 			path = Sources/RouterExtension;
@@ -2891,7 +2902,7 @@
 			path = ".build/checkouts/Swift-Kuery.git-1645988340584907058/Sources/SwiftKuery";
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -2900,7 +2911,6 @@
 				OBJ_27 /* Dependencies */,
 				OBJ_293 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -3830,7 +3840,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_293 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -4178,6 +4188,9 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_569 /* Router.swift in Sources */,
+				E3346B91200D3AB10062F0DA /* Mike.swift in Sources */,
+				E3346B96200D473F0062F0DA /* DefaultDecoder.swift in Sources */,
+				E3346B93200D45D80062F0DA /* Decoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4304,8 +4317,10 @@
 			files = (
 				OBJ_864 /* Contracts.swift in Sources */,
 				OBJ_865 /* KueryDecoder.swift in Sources */,
+				E3346B94200D45D80062F0DA /* Decoder.swift in Sources */,
 				OBJ_866 /* KueryTypes.swift in Sources */,
 				OBJ_867 /* ParamDecoder.swift in Sources */,
+				E3346B97200D473F0062F0DA /* DefaultDecoder.swift in Sources */,
 				OBJ_868 /* ParamEncoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
