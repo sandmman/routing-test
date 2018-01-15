@@ -112,7 +112,7 @@ router.chainedGet("/pipe_order/:id0/ingredients/:id1", handler: handler3)
 //
 struct Parameters: Params {
 
-    let int: Int?
+    let int: Int
     let string: String
     let stringArray: [String]
 
@@ -173,6 +173,15 @@ struct MyRouteParameters: Params {
 
 // Enables internal customization of routes with all the benifits provided by 1a.
 router.get { (params: MyRouteParameters, respondWith: ([Order]?, RequestError?) -> Void) in
+    print("GET on /orders with inferred route parameters")
+    print("parameters: \(params)")
+    respondWith([], nil)
+}
+
+// 1c.
+
+// Enables internal customization of routes with all the benifits provided by 1a.
+router.get(.literal("literal"), .int(\.int)) { (params: Parameters, respondWith: ([Order]?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
     print("parameters: \(params)")
     respondWith([], nil)

@@ -4,43 +4,52 @@ import LoggerAPI
 import Foundation
 import Contracts
 
-public enum RouteSubPath<R: Route> {
+public enum RouteSubPath<Params: Codable> {
     case literal(String)
-    case stringParam(R)
-    case intParam(Int)
+    case string(KeyPath<Params, String>)
+    case int(KeyPath<Params, Int>)
 }
 
-public protocol SafeString: CustomStringConvertible {
-
-}
-
-public protocol Route: Codable { init() }
+public protocol SafeString: CustomStringConvertible {}
 
 public protocol Params: Codable {}
-
-
-let routes: [String: (Codable, (Codable?, RequestError?) -> Void) -> Void] = [:]
 
 extension Router {
 
     ///
-    /// 1a/1b --- Params
+    /// 1 a/b/c --- Params
     ///
     
-    public func get<P: Params, O: Codable>(_ route: String? = nil, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
-        getSafely(route ?? "", handler: handler)
-    }
-    
-    public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
+    public func get<P: Params, O: Codable>(_ parts: RouteSubPath<P>..., handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
         
+        var route = [""]
+        for part in parts {
+            switch part {
+            case .literal(let literal): route.append(literal)
+            case .string(let keypath): route.append("\(keypath)".addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) ?? "")
+            case .int(let keypath): route.append("\(keypath)".addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) ?? "")
+            }
+            
+        }
+
+        getSafely(route.joined(separator: "/"), handler: handler)
+    }
+
+    public func get<P: Params, O: Codable>(_ route: String? = nil, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
+
         guard let default_object = try? DefaultDecoder([:]).decode(P.self),
             let encoded_route = try? ParamEncoder().encode(default_object) else {
                 return
         }
+
+        getSafely(encoded_route + "\(route ?? "")", handler: handler)
+    }
+    
+    public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
         
-        Log.verbose("1a / 1b --- Param Encoded route is: \(encoded_route + route)")
+        Log.verbose("1 - Param Encoded route is: \(route)")
         
-        get(encoded_route + route) { request, response, next in
+        get(route) { request, response, next in
             let resultHandler: CodableArrayResultClosure<O> = { result, error in
                 do {
                     if let err = error {

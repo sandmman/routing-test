@@ -43,7 +43,6 @@ public class ParamDecoder: Decoder {
     public func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let fieldName = ParamDecoder.getFieldName(from: codingPath)
         let fieldValue = dictionary[fieldName]
-        Log.verbose("fieldName: \(fieldName), fieldValue: \(String(describing: fieldValue))")
         
         switch type {
         /// Ints
@@ -109,7 +108,6 @@ public class ParamDecoder: Decoder {
         case is [String].Type:
             return try decodeType(fieldValue?.stringArray, to: T.self)
         default:
-            Log.verbose("Decoding Custom Type: \(T.Type.self)")
             if fieldName.isEmpty {
                 return try T(from: self)
             } else {

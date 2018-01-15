@@ -19,7 +19,7 @@ import LoggerAPI
 import KituraContracts
 
 extension CharacterSet {
-    static let customURLQueryAllowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~=:&")
+    public static let customURLQueryAllowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~=:&")
 }
 
 /// Param Encoder
@@ -46,8 +46,6 @@ public class ParamEncoder: Encoder {
     public func encode<T: Encodable>(_ value: T) throws -> String {
         let fieldName = ParamEncoder.getFieldName(from: codingPath)
         
-        Log.verbose("fieldName: \(fieldName), fieldType: \(T.self)")
-
         guard let encodedName = fieldName.addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) else {
             throw encodingError(value, underlyingError: NSError(domain: "Field name not valid in url: \(fieldName)", code: 1, userInfo: nil))
         }
