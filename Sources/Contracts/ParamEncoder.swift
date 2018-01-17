@@ -20,6 +20,7 @@ import KituraContracts
 
 extension CharacterSet {
     public static let customURLQueryAllowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~=:&")
+    public static let customURLParamAllowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:")
 }
 
 /// Param Encoder
@@ -45,7 +46,7 @@ public class ParamEncoder: Encoder {
     /// - Parameter _ value: The Encodable object to encode to its Parameter representation
     public func encode<T: Encodable>(_ value: T) throws -> String {
         let fieldName = ParamEncoder.getFieldName(from: codingPath)
-        
+
         guard let encodedName = fieldName.addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) else {
             throw encodingError(value, underlyingError: NSError(domain: "Field name not valid in url: \(fieldName)", code: 1, userInfo: nil))
         }
@@ -61,7 +62,7 @@ public class ParamEncoder: Encoder {
         case is Array<Int>.Type     : route += "/" + "\(encodedName)/:\(encodedName)(\\d+)+"
         case is Array<String>.Type  : route += "/" + "\(encodedName)/:\(encodedName)+"
         case is Query.Type: break
-        case is BaseRoute.Type: route += "/" + encodedName
+        case is Literal.Type: route += "/" + encodedName
         default:
             if fieldName.isEmpty {
                 self.route = ""   // Make encoder instance reusable

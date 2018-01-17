@@ -34,7 +34,7 @@ public enum RouteParam: CustomStringConvertible, Typed {
 public protocol StringParameter: Codable, CustomStringConvertible {
 }
 
-public struct BaseRoute: Codable {
+public struct Literal: Codable {
     public init(){}
 }
 

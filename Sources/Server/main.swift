@@ -163,12 +163,12 @@ router.get(.literal("users"), .stringParam(\MyParams.name), .literal("blog"), .i
 // 1b.
 // Route Definition with internal route customization
 struct MyRouteParameters: Params {
-    let startofroute: BaseRoute // Could be replaced with a string/identifier _startofroute or optional BaseRoute
+    let startofroute: Literal // Could be replaced with a string/identifier _startofroute or optional BaseRoute
     let int: Int?
-    let middleofroute: BaseRoute
+    let middleofroute: Literal
     let string: String
     let stringArray: [String]
-    let endofroute: BaseRoute
+    let endofroute: Literal
 }
 
 // Enables internal customization of routes with all the benifits provided by 1a.
@@ -181,7 +181,7 @@ router.get { (params: MyRouteParameters, respondWith: ([Order]?, RequestError?) 
 // 1c.
 
 // Enables internal customization of routes with all the benifits provided by 1a.
-router.get(.literal("literal"), .int(\.int)) { (params: Parameters, respondWith: ([Order]?, RequestError?) -> Void) in
+router.get("literal", .int(\.int)) { (params: Parameters, respondWith: ([Order]?, RequestError?) -> Void) in
     print("GET on /orders with inferred route parameters")
     print("parameters: \(params)")
     respondWith([], nil)

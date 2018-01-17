@@ -19,17 +19,20 @@ import LoggerAPI
 import KituraContracts
 
 /// Initializes a Codable object with a default value
-public class DefaultDecoder: Decoder {
+public class PathComponentDecoder: Decoder {
+    
     public var codingPath: [CodingKey] = []
     
     public var userInfo: [CodingUserInfoKey : Any] = [:]
     
-
-    public init() throws {}
+    public var dictionary: [String : String]
+    
+    public init(dictionary: [String : String]) {
+        self.dictionary = dictionary
+    }
     
     /// Helper method to extract the field name from a CodingKey array
     public static func getFieldName(from codingPath: [CodingKey]) -> String {
-        print("codingPath", codingPath)
         return codingPath.flatMap({"\($0)"}).joined(separator: ".")
     }
     
@@ -37,72 +40,79 @@ public class DefaultDecoder: Decoder {
     ///
     /// - Parameter _ value: The Decodable object to decode the dictionary into
     public func decode<T: Decodable>(_ type: T.Type) throws -> T {
+        let fieldName = PathComponentDecoder.getFieldName(from: codingPath)
+        
         switch type {
         case is Literal.Type: return try decodeType(Literal(), to: T.self)
         /// Ints
         case is Int.Type:
             return try decodeType(1, to: T.self)
-        /*case is Int8.Type:
-            return try decodeType(fieldValue?.int8, to: T.self)
-        case is Int16.Type:
-            return try decodeType(fieldValue?.int16, to: T.self)
-        case is Int32.Type:
-            return try decodeType(fieldValue?.int32, to: T.self)
-        case is Int64.Type:
-            return try decodeType(fieldValue?.int64, to: T.self)*/
+            /*case is Int8.Type:
+             return try decodeType(fieldValue?.int8, to: T.self)
+             case is Int16.Type:
+             return try decodeType(fieldValue?.int16, to: T.self)
+             case is Int32.Type:
+             return try decodeType(fieldValue?.int32, to: T.self)
+             case is Int64.Type:
+             return try decodeType(fieldValue?.int64, to: T.self)*/
         /// Int Arrays
         case is [Int].Type:
             return try decodeType([1, 2, 3], to: T.self)
-        /*case is [Int8].Type:
-            return try decodeType(fieldValue?.int8Array, to: T.self)
-        case is [Int16].Type:
-            return try decodeType(fieldValue?.int16Array, to: T.self)
-        case is [Int32].Type:
-            return try decodeType(fieldValue?.int32Array, to: T.self)
-        case is [Int64].Type:
-            return try decodeType(fieldValue?.int64Array, to: T.self)
-        /// UInts
-        case is UInt.Type:
-            return try decodeType(fieldValue?.uInt, to: T.self)
-        case is UInt8.Type:
-            return try decodeType(fieldValue?.uInt8, to: T.self)
-        case is UInt16.Type:
-            return try decodeType(fieldValue?.uInt16, to: T.self)
-        case is UInt32.Type:
-            return try decodeType(fieldValue?.uInt32, to: T.self)
-        case is UInt64.Type:
-            return try decodeType(fieldValue?.uInt64, to: T.self)
-        /// UInt Arrays
-        case is [UInt].Type:
-            return try decodeType(fieldValue?.uIntArray, to: T.self)
-        case is [UInt8].Type:
-            return try decodeType(fieldValue?.uInt8Array, to: T.self)
-        case is [UInt16].Type:
-            return try decodeType(fieldValue?.uInt16Array, to: T.self)
-        case is [UInt32].Type:
-            return try decodeType(fieldValue?.uInt32Array, to: T.self)
-        case is [UInt64].Type:
-            return try decodeType(fieldValue?.uInt64Array, to: T.self)
-        /// Floats
-        case is Float.Type:
-            return try decodeType(fieldValue?.float, to: T.self)
-        case is [Float].Type:
-            return try decodeType(fieldValue?.floatArray, to: T.self)
-        /// Doubles
-        case is Double.Type:
-            return try decodeType(fieldValue?.double, to: T.self)
-        case is [Double].Type:
-            return try decodeType(fieldValue?.doubleArray, to: T.self)
-        /// Dates
-        case is Date.Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)
-        case is [Date].Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)*/
+            /*case is [Int8].Type:
+             return try decodeType(fieldValue?.int8Array, to: T.self)
+             case is [Int16].Type:
+             return try decodeType(fieldValue?.int16Array, to: T.self)
+             case is [Int32].Type:
+             return try decodeType(fieldValue?.int32Array, to: T.self)
+             case is [Int64].Type:
+             return try decodeType(fieldValue?.int64Array, to: T.self)
+             /// UInts
+             case is UInt.Type:
+             return try decodeType(fieldValue?.uInt, to: T.self)
+             case is UInt8.Type:
+             return try decodeType(fieldValue?.uInt8, to: T.self)
+             case is UInt16.Type:
+             return try decodeType(fieldValue?.uInt16, to: T.self)
+             case is UInt32.Type:
+             return try decodeType(fieldValue?.uInt32, to: T.self)
+             case is UInt64.Type:
+             return try decodeType(fieldValue?.uInt64, to: T.self)
+             /// UInt Arrays
+             case is [UInt].Type:
+             return try decodeType(fieldValue?.uIntArray, to: T.self)
+             case is [UInt8].Type:
+             return try decodeType(fieldValue?.uInt8Array, to: T.self)
+             case is [UInt16].Type:
+             return try decodeType(fieldValue?.uInt16Array, to: T.self)
+             case is [UInt32].Type:
+             return try decodeType(fieldValue?.uInt32Array, to: T.self)
+             case is [UInt64].Type:
+             return try decodeType(fieldValue?.uInt64Array, to: T.self)
+             /// Floats
+             case is Float.Type:
+             return try decodeType(fieldValue?.float, to: T.self)
+             case is [Float].Type:
+             return try decodeType(fieldValue?.floatArray, to: T.self)
+             /// Doubles
+             case is Double.Type:
+             return try decodeType(fieldValue?.double, to: T.self)
+             case is [Double].Type:
+             return try decodeType(fieldValue?.doubleArray, to: T.self)
+             /// Dates
+             case is Date.Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)
+             case is [Date].Type: print("date");  return try decodeType(fieldValue?.doubleArray, to: T.self)*/
         /// Strings
         case is String.Type:
             return try decodeType("", to: T.self)
         case is [String].Type:
             return try decodeType(["a", "b", "c"], to: T.self)
         default:
-            return try T(from: self)
+            if fieldName.isEmpty {
+                return try T(from: self)
+            } else {
+                // Processing an instance member of the class/struct
+                return try decode(T.self)
+            }
         }
     }
     
@@ -135,7 +145,7 @@ public class DefaultDecoder: Decoder {
     }
     
     private struct KeyedContainer<Key: CodingKey>: KeyedDecodingContainerProtocol {
-        var decoder: DefaultDecoder
+        var decoder: PathComponentDecoder
         
         var codingPath: [CodingKey] { return [] }
         
@@ -174,7 +184,7 @@ public class DefaultDecoder: Decoder {
     }
     
     private struct UnkeyedContainer: UnkeyedDecodingContainer, SingleValueDecodingContainer {
-        var decoder: DefaultDecoder
+        var decoder: PathComponentDecoder
         
         var codingPath: [CodingKey] { return [] }
         
@@ -205,3 +215,4 @@ public class DefaultDecoder: Decoder {
         }
     }
 }
+

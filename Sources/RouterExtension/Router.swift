@@ -4,10 +4,19 @@ import LoggerAPI
 import Foundation
 import Contracts
 
-public enum RouteSubPath<Params: Codable> {
-    case literal(String)
-    case string(KeyPath<Params, String>)
-    case int(KeyPath<Params, Int>)
+extension KeyPath {
+    var stringValue: String {
+        return "\(self)"
+    }
+}
+public enum PathComponent<T>: ExpressibleByStringLiteral {
+    case lit(String)
+    case str(KeyPath<T, String>)
+    case int(KeyPath<T, Int>)
+    
+    public init(stringLiteral: String) {
+        self = .lit(stringLiteral)
+    }
 }
 
 public protocol SafeString: CustomStringConvertible {}
@@ -20,55 +29,66 @@ extension Router {
     /// 1 a/b/c --- Params
     ///
     
-    public func get<P: Params, O: Codable>(_ parts: RouteSubPath<P>..., handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
-        
-        var route = [""]
-        for part in parts {
-            switch part {
-            case .literal(let literal): route.append(literal)
-            case .string(let keypath): route.append("\(keypath)".addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) ?? "")
-            case .int(let keypath): route.append("\(keypath)".addingPercentEncoding(withAllowedCharacters: .customURLQueryAllowed) ?? "")
-            }
-            
-        }
-
-        getSafely(route.joined(separator: "/"), handler: handler)
-    }
-
-    public func get<P: Params, O: Codable>(_ route: String? = nil, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
-
-        guard let default_object = try? DefaultDecoder([:]).decode(P.self),
-            let encoded_route = try? ParamEncoder().encode(default_object) else {
-                return
-        }
-
-        getSafely(encoded_route + "\(route ?? "")", handler: handler)
+    // 1c
+    public func get<P: Params, O: Codable>(_ parts: PathComponent<P>..., handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
+        getSafely(parts, handler: handler)
     }
     
-    public func getSafely<P: Params, O: Codable>(_ route: String, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
+    // 1c
+    public func getSafely<P: Params, O: Codable>(_ components: [PathComponent<P>], handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
         
-        Log.verbose("1 - Param Encoded route is: \(route)")
-        
-        get(route) { request, response, next in
-            let resultHandler: CodableArrayResultClosure<O> = { result, error in
-                do {
-                    if let err = error {
-                        let status = self.httpStatusCode(from: err)
-                        response.status(status)
-                    } else {
-                        let encoded = try JSONEncoder().encode(result)
-                        response.status(.OK)
-                        response.send(data: encoded)
-                    }
-                } catch {
-                    // Http 500 error
-                    response.status(.internalServerError)
-                }
-                next()
+        // Convert components to route
+        var route = [""]
+        for part in components {
+            switch part {
+            case .lit(let literal): route.append(literal)
+            case .str(let keypath):
+                let path = keypath.stringValue.addingPercentEncoding(withAllowedCharacters: .customURLParamAllowed)
+                route.append(":\(path ?? "")")
+            case .int(let keypath):
+                let path = keypath.stringValue.addingPercentEncoding(withAllowedCharacters: .customURLParamAllowed)
+                route.append(":\(path ?? "")")
             }
+        }
+
+        Log.verbose("1 - Param Encoded route is: \(route.joined(separator: "/"))")
+        
+        get(route.joined(separator: "/")) { request, response, next in
+            let resultHandler: CodableArrayResultClosure<O> = self.resultHandler(response: response, next: next)
+
             // Make param arrays compatible with query arrays
             let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
             
+            /// We can share the decoder as long as we map fixup the values a little bit
+            let params: P = try QueryDecoder(dictionary: transformedParams).decode(P.self)
+            handler(params, resultHandler)
+        }
+    }
+
+    // 1a + 1b
+    public func get<P: Params, O: Codable>(_ route: String? = nil, handler: @escaping  (P, ([O]?, RequestError?) -> Void) -> Void) {
+        getSafely(route, handler: handler)
+    }
+    
+    // 1a + 1b
+    public func getSafely<P: Params, O: Codable>(_ route: String?, handler: @escaping (P, ([O]?, RequestError?) -> Void) -> Void) {
+
+        // Create default object and then encode it to a route
+        guard let default_object = try? DefaultDecoder().decode(P.self),
+              let encoded_route = try? ParamEncoder().encode(default_object) else {
+                return
+        }
+    
+        let route = encoded_route + "\(route ?? "")"
+
+        Log.verbose("1 - Param Encoded route is: \(route)")
+
+        get(route) { request, response, next in
+            let resultHandler: CodableArrayResultClosure<O> = self.resultHandler(response: response, next: next)
+
+            // Make param arrays compatible with query arrays
+            let transformedParams = request.parameters.mapValues { $0.replacingOccurrences(of: "/", with: ",") }
+
             /// We can share the decoder as long as we map fixup the values a little bit
             let params: P = try QueryDecoder(dictionary: transformedParams).decode(P.self)
             handler(params, resultHandler)
@@ -412,6 +432,25 @@ extension Router {
             return String(route[start..<end])
         })
         return parameters
+    }
+    
+    private func resultHandler<O: Codable>(response: RouterResponse, next: @escaping () -> ()) -> CodableArrayResultClosure<O> {
+        return { result, error in
+            do {
+                if let err = error {
+                    let status = self.httpStatusCode(from: err)
+                    response.status(status)
+                } else {
+                    let encoded = try JSONEncoder().encode(result)
+                    response.status(.OK)
+                    response.send(data: encoded)
+                }
+            } catch {
+                // Http 500 error
+                response.status(.internalServerError)
+            }
+            next()
+        }
     }
 }
 
