@@ -339,7 +339,7 @@ extension Router {
                 }
                 next()
             }
-            let routeParamKeys = Router.extractParams(from: route)
+
             let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
                 var acc = acc
                 switch value.key.prefix(3) {
@@ -375,7 +375,7 @@ extension Router {
                 }
                 next()
             }
-            let routeParamKeys = Router.extractParams(from: route)
+
             let routeParams: [String: Param] = request.parameters.reduce([String: Param]()) { (acc, value) in
                 var acc = acc
                 switch value.key.prefix(3) {

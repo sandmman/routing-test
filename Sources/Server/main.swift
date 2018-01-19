@@ -11,7 +11,6 @@ import CredentialsHTTP
 import SwiftKuery
 import SwiftKueryPostgreSQL
 
-let connection = PostgreSQLConnection(host: "", port: 8080, options: nil)
 // HeliumLogger disables all buffering on stdout
 HeliumLogger.use(LoggerMessageType.verbose)
 
@@ -29,7 +28,7 @@ let router = Router()
 router.get("/basic/:id+") { request, response, error in
     print(request.parameters)
   let orders: [Order] = orderStore.map { return $1 }
-  try? response.send(orders)
+  _ = try? response.send(orders)
   try? response.end()
 }
 
@@ -404,6 +403,7 @@ public struct GradesQuery: KituraContracts.Query {
 ///
 /// New API
 ///
+let connection = PostgreSQLConnection(host: "", port: 8080, options: nil)
 
 /// This is how it would currently be used. The user defines their table and then in their route handler
 /// takes the table query (query params) and inserts it into their query
